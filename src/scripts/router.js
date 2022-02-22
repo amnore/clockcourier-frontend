@@ -1,6 +1,7 @@
 import { createRouter,createWebHashHistory} from "vue-router";
-import Login from '../views/login.vue' 
+import Repositories from '../views/repositories.vue' 
 import Projects from '../views/projects.vue'
+import Project from '../views/project.vue'
 
 
 const routes = [
@@ -10,11 +11,21 @@ const routes = [
     component: Projects
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/repositories',
+    name: 'Repositories',
+    component: Repositories
   },
   //在这里添加路径
+  {
+    path: '/projects',
+    name: 'Projects',
+    component: Projects
+  },
+  {
+    path: '/project',
+    name: 'Project',
+    component: Project
+  },
 ]
 
 export const router = new  createRouter({
