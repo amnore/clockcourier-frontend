@@ -2,7 +2,7 @@ import axios from "axios";
 
 export function search_project(name, platform, language, url, lastestReleaseN, dependency, page, sort, isReverse) {
     return axios({
-        url: `/API/project`, //后端的接口地址
+        url: `/API/project/query`, //后端的接口地址
         method: "post",
         data: {
             "name": name,
@@ -15,5 +15,13 @@ export function search_project(name, platform, language, url, lastestReleaseN, d
             "sort": sort,
             "isReverse": isReverse
         },
+    })
+}
+
+export function get_project_by_id(id) {
+    console.log(id);
+    return axios({
+        url: `/API/project/`+id+`/get`, //后端的接口地址
+        method: "get"
     })
 }
