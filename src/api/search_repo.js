@@ -25,3 +25,17 @@ export function get_repo_by_id(id) {
         method: "get",
     })
 }
+
+export function get_repo_dependency(repo_id, dependency_name, dependency_type, page, isReverse) {
+    return axios({
+        url: `/API/repository/`+repo_id+`/dependency/query`, //后端的接口地址
+        method: "post",
+        params: {},
+        data: {
+            "dependencyProjectName": dependency_name,
+            "dependencyType": dependency_type,
+            "page": page,
+            "isReverse": isReverse
+        }
+    })
+}
