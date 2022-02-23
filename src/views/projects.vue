@@ -5,7 +5,16 @@
     <label>平台:</label>
     <input type="text" value="" placeholder="platform" id="platform" />
     <label>所用语言:</label>
-    <input type="text" value="" placeholder="language" id="language" />
+    <select name="language" id="language">
+      <option value="">请选择语言</option>
+      <option
+        v-for="language in language_list"
+        v-bind:key="language"
+        v-bind:value="language.name"
+      >
+        {{ language.name }}
+      </option>
+    </select>
     <label>项目地址:</label>
     <input type="text" value="" placeholder="url" id="url" />
     <!--
@@ -40,6 +49,9 @@
     <input type="radio" name="sort_key" value="4" v-model="sort_key" /><label
       >最新发布日期</label
     >
+    <input type="radio" name="sort_key" value="5" v-model="sort_key" /><label
+      >最新发布版本</label
+    >
     <br />
     <input
       type="radio"
@@ -69,7 +81,11 @@
         <td>仓库地址</td>
       </tr>
       <tr v-for="project in project_data" v-bind:key="project">
-        <td width="80">{{ project.projectName }}</td>
+        <td width="80">
+          <router-link :to="'/project/?id=' + project.projectId">{{
+            project.projectName
+          }}</router-link>
+        </td>
         <td width="80">{{ project.platform }}</td>
         <td width="80">{{ project.language }}</td>
         <td width="80">
@@ -84,39 +100,142 @@
       </tr>
     </table>
   </div>
+  <div>
+    <ul class="page">
+      <li>
+        <span v-if="page > 1"
+          ><b @click="page--, searchProject()">上一页</b></span
+        >
+        <span v-if="page == 1">上一页</span>
+        <span v-if="Number(pageAll) <= 10">
+          <span
+            v-for="index in pageAll"
+            :key="index"
+            :class="{ active: page == index }"
+            @click="goPage(index)"
+            >{{ index }}</span
+          ></span
+        >
+        <span v-if="Number(pageAll) > 10">
+          <span @click="goPage(1)">1</span>
+          <span v-if="page > 3">...</span>
+          <span v-if="page > 2" @click="goPage(page - 1)">{{ page - 1 }}</span>
+          <span v-if="page > 1 && page < pageAll" @click="goPage(page)">{{
+            page
+          }}</span>
+          <span v-if="page < pageAll - 1" @click="goPage(page + 1)">{{
+            page + 1
+          }}</span>
+          <span v-if="page < pageAll - 2">...</span>
+          <span @click="goPage(pageAll)">{{ pageAll }}</span>
+        </span>
+        <span v-if="page != pageAll"
+          ><b @click="page++, searchProject()">下一页</b></span
+        >
+        <span v-if="page == pageAll">下一页</span>
+      </li>
+      <li>共{{ pageAll }}页 当前{{ page }}页</li>
+      <li>
+        到<input type="text" class="int02" v-model="jumpPage" /> 页<input
+          type="button"
+          class="bt03"
+          value="确定"
+          @click="goPage(jumpPage)"
+        />
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
 import { search_project } from "../api/search_project";
+
 export default {
   name: "Projects", //注册在路由（router.js）里的就是这个
   props: {},
   data() {
     return {
-      project_data: [
+      project_data: [],
+
+      language_list: [
         {
-          projectId: 0,
-          projectName: "string",
-          platform: "string",
-          language: "string",
-          description: "string",
-          homepageUrl: "string",
-          createT: "2022-02-22T15:34:00.587Z",
-          updateT: "2022-02-22T15:34:00.587Z",
-          latestReleaseT: "2022-02-22T15:34:00.587Z",
-          lastestReleaseN: "string",
-          repositoryId: 0,
-          repositoryUrl: "string",
-          licenses: ["string"],
+          name: "C",
+        },
+        {
+          name: "C++",
+        },
+        {
+          name: "Java",
+        },
+        {
+          name: "Python",
+        },
+        {
+          name: "PHP",
+        },
+        {
+          name: "JavaScript",
+        },
+        {
+          name: "Ruby",
+        },
+        {
+          name: "Groovy",
+        },
+        {
+          name: "Scala",
+        },
+        {
+          name: "",
         },
       ],
       sort_key: 1,
       sort_method: 1,
+      page: 1,
+      pageAll: 11,
+      jumpPage: "",
     };
+  },
+  watch: {
+    sort_key: "searchProject",
+    sort_method: "searchProject",
   },
   methods: {
     searchProject() {
-      search_project(1,2,3,4,5,6,7,8,9)
+      let name = document.getElementById("project_name").value;
+      let platform = document.getElementById("platform").value;
+      let language = document.getElementById("language").value;
+      let url = document.getElementById("url").value;
+      let lastestReleaseN = document.getElementById("lastestReleaseN").value;
+      let dependency = document.getElementById("dependency").value;
+      let page = this.page;
+      let sort = "";
+      if (this.sort_key == 1) {
+        sort = "Name";
+      } else if (this.sort_key == 2) {
+        sort = "CreateT";
+      } else if (this.sort_key == 3) {
+        sort = "UpdateT";
+      } else if (this.sort_key == 4) {
+        sort = "LatestReleaseT";
+      } else if (this.sort_key == 5) {
+        sort = "LatestReleaseN";
+      }
+      let isReverse = true;
+      if (this.sort_method == 1) {
+        isReverse = false;
+      }
+      search_project(
+        name,
+        platform,
+        language,
+        url,
+        lastestReleaseN,
+        dependency,
+        page,
+        sort,
+        isReverse
+      )
         .then((res) => {
           console.log("连接成功"); //这里打印出来是为了更直观的看到连接成功了
           //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
@@ -126,6 +245,12 @@ export default {
           console.log("连接失败");
           console.log(error); //如果连接失败，则抛出错误的信息
         });
+    },
+    goPage(index) {
+      if (Number(index) > 0 && Number(index) <= this.pageAll) {
+        this.page = Number(index);
+        this.searchProject();
+      }
     },
   },
   mounted() {
@@ -140,5 +265,18 @@ export default {
 .table {
   text-align: center;
   margin: auto;
+}
+
+.page li {
+  display: inline-block;
+  margin: 0 5px;
+}
+.page li span {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #dfdfdf;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
