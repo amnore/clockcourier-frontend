@@ -21,14 +21,14 @@ export function search_project(name, platform, language, url, lastestReleaseN, d
 
 export function get_project_by_id(id) {
     return axios({
-        url: `/API/project/` + id + `/get`, //后端的接口地址
+        url: `http://`+baseurl+`/project/` + id + `/get`, //后端的接口地址
         method: "get"
     })
 }
 
 export function get_project_dependency(project_id, project_version, dependency_name, dependency_platform, dependency_type, page, isReverse) {
     return axios({
-        url: `/API/project/`+project_id+`/dependency/query`, //后端的接口地址
+        url: `http://`+baseurl+`/project/`+project_id+`/dependency/query`, //后端的接口地址
         method: "post",
         data: {
             "projectVersion": project_version,
