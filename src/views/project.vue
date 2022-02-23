@@ -28,7 +28,7 @@
         <td width="80">{{ project.updateT }}</td>
         <td width="80">{{ project.latestReleaseT }}</td>
         <td width="80">{{ project.lastestReleaseN }}</td>
-        <td width="80">{{ project.language }}</td>
+        <td width="80">{{ repo_name }}</td>
         <td width="80">{{ project.repositoryUrl }}</td>
       </tr>
     </table>
@@ -44,11 +44,115 @@
   <div>
     {{ project.description }}
   </div>
+  <div>
+    <p>筛选依赖</p>
+    <label>名称:</label>
+    <input type="text" value="" placeholder="name" id="dependency_name" />
+    <label>平台:</label>
+    <input
+      type="text"
+      value=""
+      placeholder="platform"
+      id="dependency_platform"
+    />
+    <label>依赖类型:</label>
+    <select name="" id="dependency_type">
+      <option value="">请选择依赖类型</option>
+      <option
+        v-for="type in dependency_type_list"
+        v-bind:key="type"
+        v-bind:value="type"
+      >
+        {{ type }}
+      </option>
+    </select>
+    <div>
+      <button id="searchbutton" v-on:click="getDependency()">搜索</button>
+    </div>
+    <input
+      type="radio"
+      name="sort_method"
+      value="1"
+      v-model="sort_method"
+    /><label>正序</label>
+    <input
+      type="radio"
+      name="sort_method"
+      value="2"
+      v-model="sort_method"
+    /><label>倒序</label>
+  </div>
+  <div>
+    <table border="1" class="table">
+      <tr>
+        <td width="80">依赖名称</td>
+        <td width="80">依赖的所属平台</td>
+        <td width="80">依赖的版本要求</td>
+        <td width="80">依赖类型</td>
+      </tr>
+      <tr v-for="dependency in dependencies" v-bind:key="dependency">
+        <td width="80">{{ dependency.dependencyProjectName }}</td>
+        <td width="80">{{ dependency.dependencyProjectPlatform }}</td>
+        <td width="80">{{ dependency.dependencyReqirements }}</td>
+        <td width="80">{{ dependency.dependencyType }}</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <ul class="page">
+      <li>
+        <span v-if="page > 1"
+          ><b @click="page--, getDependency()">上一页</b></span
+        >
+        <span v-if="page == 1">上一页</span>
+        <span v-if="Number(pageAll) <= 10">
+          <span
+            v-for="index in pageAll"
+            :key="index"
+            :class="{ active: page == index }"
+            @click="goPage(index)"
+            >{{ index }}</span
+          ></span
+        >
+        <span v-if="Number(pageAll) > 10">
+          <span @click="goPage(1)">1</span>
+          <span v-if="page > 3">...</span>
+          <span v-if="page > 2" @click="goPage(page - 1)">{{ page - 1 }}</span>
+          <span v-if="page > 1 && page < pageAll" @click="goPage(page)">{{
+            page
+          }}</span>
+          <span v-if="page < pageAll - 1" @click="goPage(page + 1)">{{
+            page + 1
+          }}</span>
+          <span v-if="page < pageAll - 2">...</span>
+          <span @click="goPage(pageAll)">{{ pageAll }}</span>
+        </span>
+        <span v-if="page != pageAll"
+          ><b @click="page++, getDependency()">下一页</b></span
+        >
+        <span v-if="page == pageAll">下一页</span>
+      </li>
+      <li>共{{ pageAll }}页 当前{{ page }}页</li>
+      <li>
+        到<input type="text" class="int02" v-model="jumpPage" /> 页<input
+          type="button"
+          class="bt03"
+          value="确定"
+          @click="goPage(jumpPage)"
+        />
+      </li>
+    </ul>
+  </div>
 </template>
 
 
 <script>
-import { get_project_by_id } from "../api/search_project";
+import {
+  get_project_by_id,
+  get_project_dependency,
+} from "../api/search_project";
+import { get_repo_by_id } from "../api/search_repo";
+
 export default {
   name: "Project", //注册在路由（router.js）里的就是这个
   props: {},
@@ -56,34 +160,89 @@ export default {
     return {
       project: {
         projectId: 0,
-        projectName: "string",
-        platform: "string",
-        language: "string",
-        description: "string",
-        homepageUrl: "string",
-        createT: "2022-02-22T16:38:00.814Z",
-        updateT: "2022-02-22T16:38:00.814Z",
-        latestReleaseT: "2022-02-22T16:38:00.814Z",
-        lastestReleaseN: "string",
+        projectName: "",
+        platform: "",
+        language: "",
+        description: "",
+        homepageUrl: "",
+        createT: "",
+        updateT: "",
+        latestReleaseT: "",
+        lastestReleaseN: "",
         repositoryId: 0,
-        repositoryUrl: "string",
-        licenses: ["string"],
+        repositoryUrl: "",
+        licenses: [""],
       },
+      dependencies: [
+        {
+          dependencyId: 0,
+          projectId: 0,
+          projectName: "",
+          platform: "",
+          projectVersion: "",
+          dependencyProjectId: 0,
+          dependencyProjectName: "",
+          dependencyProjectPlatform: "",
+          dependencyReqirements: "",
+          dependencyType: "",
+        },
+      ],
+      dependency_type_list: ["runtime", "test", "development", "build"],
+      repo_name: "",
+      page: 1,
+      pageAll: 1,
+      jumpPage: "",
+      sort_method: 1,
     };
   },
-  methods: {},
+  watch: {
+    sort_method: "getDependency",
+  },
+  methods: {
+    getDependency() {
+      let id = this.project.projectId;
+      let version = this.project.lastestReleaseN;
+      let name = document.getElementById("dependency_name").value;
+      let platform = document.getElementById("dependency_platform").value;
+      let type = document.getElementById("dependency_type").value;
+      let page = this.page;
+      let isReverse = true;
+      if (this.sort_method == 1) {
+        isReverse = false;
+      }
+      get_project_dependency(id, version, name, platform, type, page, isReverse)
+        .then((res) => {
+          this.dependencies = res.data.data.projDeps;
+          this.pageAll = res.data.data.pageAll;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    goPage(index) {
+      if (Number(index) > 0 && Number(index) <= this.pageAll) {
+        this.page = Number(index);
+        this.getDependency();
+      }
+    },
+  },
   mounted() {
     let id = document.URL.split("?")[1].split("=")[1];
     get_project_by_id(Number(id))
       .then((res) => {
-        console.log("连接成功"); //这里打印出来是为了更直观的看到连接成功了
-        //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
-        this.project_data = res.data.data;
+        this.project = res.data.data;
+        get_repo_by_id(this.project.repositoryId)
+          .then((res) => {
+            this.repo_name = res.data.data.repositoryName;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       })
       .catch(function (error) {
-        console.log("连接失败");
-        console.log(error); //如果连接失败，则抛出错误的信息
+        console.log(error);
       });
+    this.getDependency();
   },
   created() {},
 };
@@ -93,5 +252,18 @@ export default {
 .table {
   text-align: center;
   margin: auto;
+}
+
+.page li {
+  display: inline-block;
+  margin: 0 5px;
+}
+.page li span {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #dfdfdf;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
