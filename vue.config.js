@@ -12,7 +12,8 @@ module.exports = {
         },
         proxy: {
             '/API': {
-                target: `http://localhost:3001`,
+                //target: `http://localhost:3001`,
+                target: `http://114.116.230.11:8082/api/it1`,
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
