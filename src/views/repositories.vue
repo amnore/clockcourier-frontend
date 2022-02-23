@@ -113,7 +113,7 @@
     </tr>
     <tr v-for="repository in repository_data" v-bind:key="repository">
       <td width="80">
-        <router-link :to="'/repository/?id=' + repository.repositoryId">{{
+        <router-link :to="'/repository?id=' + repository.repositoryId">{{
           repository.repositoryName
         }}</router-link>
       </td>
