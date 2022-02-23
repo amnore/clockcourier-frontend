@@ -5,6 +5,7 @@
     <label>平台:</label>
     <input type="text" value="" placeholder="platform" id="platform" />
     <label>所用语言:</label>
+    <input type="text" value="" placeholder="language" id="language_text" />
     <select name="language" id="language">
       <option value="">请选择语言</option>
       <option
@@ -77,7 +78,6 @@
         <td>更新时间</td>
         <td>最新发布版本时间</td>
         <td>最新版本号</td>
-        <td>所属仓库</td>
         <td>仓库地址</td>
       </tr>
       <tr v-for="project in project_data" v-bind:key="project">
@@ -95,7 +95,6 @@
         <td width="80">{{ project.updateT }}</td>
         <td width="80">{{ project.latestReleaseT }}</td>
         <td width="80">{{ project.lastestReleaseN }}</td>
-        <td width="80">{{ project.language }}</td>
         <td width="80">{{ project.repositoryUrl }}</td>
       </tr>
     </table>
@@ -192,7 +191,7 @@ export default {
       sort_key: 1,
       sort_method: 1,
       page: 1,
-      pageAll: 11,
+      pageAll: 1,
       jumpPage: "",
     };
   },
@@ -205,6 +204,9 @@ export default {
       let name = document.getElementById("project_name").value;
       let platform = document.getElementById("platform").value;
       let language = document.getElementById("language").value;
+      if (language == "") {
+        language = document.getElementById("language_text").value;
+      }
       let url = document.getElementById("url").value;
       let lastestReleaseN = document.getElementById("lastestReleaseN").value;
       let dependency = document.getElementById("dependency").value;
@@ -237,13 +239,13 @@ export default {
         isReverse
       )
         .then((res) => {
-          console.log("连接成功"); //这里打印出来是为了更直观的看到连接成功了
-          //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
-          this.project_data = res.data.data;
+          console.log("连接成功");
+          this.project_data = res.data.data.projects;
+          this.pageAll = res.data.data.pageAll;
         })
         .catch(function (error) {
           console.log("连接失败");
-          console.log(error); //如果连接失败，则抛出错误的信息
+          console.log(error);
         });
     },
     goPage(index) {

@@ -7,6 +7,7 @@
     <label>所有者:</label>
     <input type="text" value="" placeholder="owner" id="owner" />
     <label>所用语言:</label>
+    <input type="text" value="" placeholder="language" id="language_text" />
     <select name="language" id="language">
       <option value="">请选择语言</option>
       <option
@@ -225,7 +226,7 @@ export default {
       sort_method: 0,
       canFork: 0,
       page: 1,
-      pageAll: 11,
+      pageAll: 1,
       jumpPage: "",
     };
   },
@@ -239,6 +240,9 @@ export default {
       let hostType = document.getElementById("hostType").value;
       let owner = document.getElementById("owner").value;
       let language = document.getElementById("language").value;
+      if (language == "") {
+        language = document.getElementById("language_text").value;
+      }
       let url = document.getElementById("url").value;
       let page = this.page;
       let sort = "";
@@ -280,7 +284,8 @@ export default {
         .then((res) => {
           console.log("连接成功"); //这里打印出来是为了更直观的看到连接成功了
           //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
-          this.repository_data = res.data.data;
+          this.repository_data = res.data.data.repositories;
+          this.pageAll = res.data.data.pageAll;
         })
         .catch(function (error) {
           console.log("连接失败");
