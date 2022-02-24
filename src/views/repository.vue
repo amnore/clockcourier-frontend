@@ -50,6 +50,7 @@
       </td>
     </tr>
   </table>
+  <div>{{ repository.description }}</div>
   <div>
     <p>筛选依赖</p>
     <label>名称:</label>
