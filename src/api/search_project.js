@@ -1,6 +1,6 @@
 import axios from "axios";
 
-var baseurl="localhost:8080"
+var baseurl="114.116.230.11:8082/api/it1"
 export function search_project(name, platform, language, url, lastestReleaseN, dependency, page, sort, isReverse) {
     return axios({
         url: `http://`+baseurl+`/project/query`, //后端的接口地址
