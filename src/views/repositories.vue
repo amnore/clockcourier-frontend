@@ -306,7 +306,6 @@ export default {
 };
 </script>
 
-
 <style>
 .table {
   text-align: center;

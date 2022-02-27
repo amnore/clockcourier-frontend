@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "Login",//注册在路由（router.js）里的就是这个
+  name: "Login", //注册在路由（router.js）里的就是这个
   props: {},
   data() {
     return {
@@ -31,16 +31,14 @@ export default {
     };
   },
   methods: {
-    submitlogin(){
-      this.verifycode="hello"
-    }
+    submitlogin() {
+      this.verifycode = "hello";
+    },
   },
-  created() {
-  },
+  created() {},
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <!-- 样式写这里 -->
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

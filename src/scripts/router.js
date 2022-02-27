@@ -1,5 +1,5 @@
-import { createRouter,createWebHashHistory} from "vue-router";
-import Repositories from '../views/repositories.vue' 
+import { createRouter, createWebHashHistory } from "vue-router";
+import Repositories from '../views/repositories.vue'
 import Projects from '../views/projects.vue'
 import Project from '../views/project.vue'
 import Repository from '../views/repository.vue'
@@ -34,7 +34,7 @@ const routes = [
   },
 ]
 
-export const router = new  createRouter({
+export const router = new createRouter({
   history: createWebHashHistory(),
   routes: routes
 })

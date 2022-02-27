@@ -1,15 +1,15 @@
 <template>
-    <el-container >
-      <el-header>
+  <el-container>
+    <el-header>
       <!-- 导航栏 -->
-        <myheader></myheader>
-      </el-header>
-    </el-container>
+      <myheader></myheader>
+    </el-header>
+  </el-container>
   <router-view></router-view>
 </template>
 
 <script>
-import header from './components/Header.vue';
+import header from "./components/Header.vue";
 export default {
   name: "App",
   components: {

@@ -145,7 +145,6 @@
   </div>
 </template>
 
-
 <script>
 import {
   get_project_by_id,
