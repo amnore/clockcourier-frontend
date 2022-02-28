@@ -69,6 +69,7 @@
   </div>
   <div>
     <table border="1" class="table">
+<<<<<<< HEAD
       <tr>
         <td>名称</td>
         <td>平台</td>
@@ -99,6 +100,40 @@
           <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
         </td>
       </tr>
+=======
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>平台</th>
+          <th>语言</th>
+          <th>地址</th>
+          <th>创建时间</th>
+          <th>更新时间</th>
+          <th>最新发布版本时间</th>
+          <th>最新版本号</th>
+          <th>仓库地址</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="project in project_data" v-bind:key="project">
+          <td class='project-name' width="80">
+            <router-link :to="'/project?id=' + project.projectId">{{
+              project.projectName
+            }}</router-link>
+          </td>
+          <td class='project-platform' width="80">{{ project.platform }}</td>
+          <td class='project-language' width="80">{{ project.language }}</td>
+          <td class='project-url' width="80">
+            <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
+          </td>
+          <td class='project-creation-time' width="80">{{ project.createT }}</td>
+          <td class='project-update-time' width="80">{{ project.updateT }}</td>
+          <td class='project-release-time' width="80">{{ project.latestReleaseT }}</td>
+          <td class='project-version' width="80">{{ project.lastestReleaseN }}</td>
+          <td class='project-repo-url' width="80">{{ project.repositoryUrl }}</td>
+        </tr>
+      </tbody>
+>>>>>>> c7b3663 (test: add projects)
     </table>
   </div>
   <div>
