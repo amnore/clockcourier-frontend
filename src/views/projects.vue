@@ -129,7 +129,7 @@
           <td class='project-creation-time' width="80">{{ project.createT }}</td>
           <td class='project-update-time' width="80">{{ project.updateT }}</td>
           <td class='project-release-time' width="80">{{ project.latestReleaseT }}</td>
-          <td class='project-version' width="80">{{ project.lastestReleaseN }}</td>
+          <td class='project-version' width="80">{{ project.latestReleaseN }}</td>
           <td class='project-repo-url' width="80">{{ project.repositoryUrl }}</td>
         </tr>
       </tbody>

@@ -27,7 +27,7 @@
         <td width="80">{{ project.createT }}</td>
         <td width="80">{{ project.updateT }}</td>
         <td width="80">{{ project.latestReleaseT }}</td>
-        <td width="80">{{ project.lastestReleaseN }}</td>
+        <td width="80">{{ project.latestReleaseN }}</td>
         <td width="80">{{ repo_name }}</td>
         <td width="80">
           <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
@@ -173,7 +173,7 @@ export default {
         createT: "",
         updateT: "",
         latestReleaseT: "",
-        lastestReleaseN: "",
+        latestReleaseN: "",
         repositoryId: 0,
         repositoryUrl: "",
         licenses: [""],
