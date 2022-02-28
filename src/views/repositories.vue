@@ -113,27 +113,27 @@
       <td>默认分支</td>
     </tr>
     <tr v-for="repository in repository_data" v-bind:key="repository">
-      <td width="80">
+      <td class="repo-name" width="80">
         <router-link :to="'/repository/' + repository.repositoryId">{{
           repository.repositoryName
         }}</router-link>
       </td>
-      <td width="80">{{ repository.hostType }}</td>
-      <td width="80">{{ repository.repositoryOwner }}</td>
-      <td width="80">{{ repository.language }}</td>
-      <td width="80">
+      <td class="repo-host-type" width="80">{{ repository.hostType }}</td>
+      <td class="repo-owner" width="80">{{ repository.repositoryOwner }}</td>
+      <td class="repo-lang" width="80">{{ repository.language }}</td>
+      <td class="repo-url" width="80">
         <a :href="repository.homepageUrl">{{ repository.homepageUrl }}</a>
       </td>
-      <td width="80">{{ repository.createT }}</td>
-      <td width="80">{{ repository.updateT }}</td>
-      <td width="80">{{ repository.latestPushT }}</td>
-      <td width="80">{{ repository.canFork }}</td>
-      <td width="80">{{ repository.forkCount }}</td>
-      <td width="80">{{ repository.watcherCount }}</td>
-      <td width="80">{{ repository.starCount }}</td>
-      <td width="80">{{ repository.contributorCount }}</td>
-      <td width="80">{{ repository.openIssueCount }}</td>
-      <td width="80">{{ repository.defaultBranch }}</td>
+      <td class="repo-creation-time" width="80">{{ repository.createT }}</td>
+      <td class="repo-update-time" width="80">{{ repository.updateT }}</td>
+      <td class="repo-latest-push-time" width="80">{{ repository.latestPushT }}</td>
+      <td class="repo-canfork" width="80">{{ repository.canFork }}</td>
+      <td class="repo-fork-count" width="80">{{ repository.forkCount }}</td>
+      <td class="repo-watcher-count" width="80">{{ repository.watcherCount }}</td>
+      <td class="repo-star-count" width="80">{{ repository.starCount }}</td>
+      <td class="repo-contributor-count" width="80">{{ repository.contributorCount }}</td>
+      <td class="repo-open-issue-count" width="80">{{ repository.openIssueCount }}</td>
+      <td class="repo-default-branch" width="80">{{ repository.defaultBranch }}</td>
     </tr>
   </table>
 
