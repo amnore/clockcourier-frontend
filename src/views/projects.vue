@@ -69,38 +69,6 @@
   </div>
   <div>
     <table border="1" class="table">
-<<<<<<< HEAD
-      <tr>
-        <td>名称</td>
-        <td>平台</td>
-        <td>语言</td>
-        <td>地址</td>
-        <td>创建时间</td>
-        <td>更新时间</td>
-        <td>最新发布版本时间</td>
-        <td>最新版本号</td>
-        <td>仓库地址</td>
-      </tr>
-      <tr v-for="project in project_data" v-bind:key="project">
-        <td width="80">
-          <router-link :to="'/project/' + project.projectId">{{
-            project.projectName
-          }}</router-link>
-        </td>
-        <td width="80">{{ project.platform }}</td>
-        <td width="80">{{ project.language }}</td>
-        <td width="80">
-          <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
-        </td>
-        <td width="80">{{ project.createT }}</td>
-        <td width="80">{{ project.updateT }}</td>
-        <td width="80">{{ project.latestReleaseT }}</td>
-        <td width="80">{{ project.lastestReleaseN }}</td>
-        <td width="80">
-          <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
-        </td>
-      </tr>
-=======
       <thead>
         <tr>
           <th>名称</th>
@@ -117,7 +85,7 @@
       <tbody>
         <tr v-for="project in project_data" v-bind:key="project">
           <td class='project-name' width="80">
-            <router-link :to="'/project?id=' + project.projectId">{{
+            <router-link :to="'/project/' + project.projectId">{{
               project.projectName
             }}</router-link>
           </td>
@@ -130,10 +98,11 @@
           <td class='project-update-time' width="80">{{ project.updateT }}</td>
           <td class='project-release-time' width="80">{{ project.latestReleaseT }}</td>
           <td class='project-version' width="80">{{ project.latestReleaseN }}</td>
-          <td class='project-repo-url' width="80">{{ project.repositoryUrl }}</td>
+          <td class='project-repo-url' width="80">
+            <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
+          </td>
         </tr>
       </tbody>
->>>>>>> c7b3663 (test: add projects)
     </table>
   </div>
   <div>
