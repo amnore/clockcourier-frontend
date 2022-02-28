@@ -19,7 +19,7 @@
     </tr>
     <tr>
       <td width="80">
-        <router-link :to="'/repository?id=' + repository.repositoryId">{{
+        <router-link :to="'/repository/' + repository.repositoryId">{{
           repository.repositoryName
         }}</router-link>
       </td>
@@ -90,7 +90,11 @@
         <td width="80">依赖类型</td>
       </tr>
       <tr v-for="dependency in dependencies" v-bind:key="dependency">
-        <td width="80">{{ dependency.dependencyProjectName }}</td>
+        <td width="80">
+          <router-link :to="'/project/' + dependency.dependencyProjectId">{{
+            dependency.dependencyProjectName
+          }}</router-link>
+        </td>
         <td width="80">{{ dependency.dependencyReqirements }}</td>
         <td width="80">{{ dependency.dependencyType }}</td>
       </tr>
@@ -175,12 +179,28 @@ export default {
       pageAll: 1,
       jumpPage: "",
       sort_method: 1,
+      id: 0,
     };
   },
   watch: {
     sort_method: "getDependency",
+    $route: "refresh",
   },
   methods: {
+    refresh() {
+      this.getRepo();
+      this.getDependency();
+    },
+    getRepo() {
+      this.id = this.$route.params.id;
+      get_repo_by_id(Number(this.id))
+        .then((res) => {
+          this.repository = res.data.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
     getDependency() {
       let id = this.repository.repositoryId;
       let name = document.getElementById("dependency_name").value;
@@ -207,15 +227,8 @@ export default {
     },
   },
   mounted() {
-    let id = document.URL.split("?")[1].split("=")[1];
-    get_repo_by_id(Number(id))
-      .then((res) => {
-        this.repository = res.data.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    this.getDependency();
+    //let id = document.URL.split("?")[1].split("=")[1];
+    this.refresh();
   },
   created() {},
 };

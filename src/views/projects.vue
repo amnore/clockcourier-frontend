@@ -82,7 +82,7 @@
       </tr>
       <tr v-for="project in project_data" v-bind:key="project">
         <td width="80">
-          <router-link :to="'/project?id=' + project.projectId">{{
+          <router-link :to="'/project/' + project.projectId">{{
             project.projectName
           }}</router-link>
         </td>

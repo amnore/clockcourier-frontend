@@ -15,7 +15,7 @@
       </tr>
       <tr>
         <td width="80">
-          <router-link :to="'/project?id=' + project.projectId">{{
+          <router-link :to="'/project/' + project.projectId">{{
             project.projectName
           }}</router-link>
         </td>
@@ -93,7 +93,11 @@
         <td width="80">依赖类型</td>
       </tr>
       <tr v-for="dependency in dependencies" v-bind:key="dependency">
-        <td width="80">{{ dependency.dependencyProjectName }}</td>
+        <td width="80">
+          <router-link :to="'/project/' + dependency.dependencyProjectId">{{
+            dependency.dependencyProjectName
+          }}</router-link>
+        </td>
         <td width="80">{{ dependency.dependencyProjectPlatform }}</td>
         <td width="80">{{ dependency.dependencyReqirements }}</td>
         <td width="80">{{ dependency.dependencyType }}</td>
@@ -194,12 +198,35 @@ export default {
       pageAll: 1,
       jumpPage: "",
       sort_method: 1,
+      id: 0,
     };
   },
   watch: {
     sort_method: "getDependency",
+    $route:"refresh",
   },
   methods: {
+    refresh(){
+      this.getProject();
+      this.getDependency();
+    },
+    getProject() {
+      this.id = this.$route.params.id;
+      get_project_by_id(Number(this.id))
+        .then((res) => {
+          this.project = res.data.data;
+          get_repo_by_id(this.project.repositoryId)
+            .then((res) => {
+              this.repo_name = res.data.data.repositoryName;
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
     getDependency() {
       let id = this.project.projectId;
       let version = this.project.lastestReleaseN;
@@ -228,22 +255,8 @@ export default {
     },
   },
   mounted() {
-    let id = document.URL.split("?")[1].split("=")[1];
-    get_project_by_id(Number(id))
-      .then((res) => {
-        this.project = res.data.data;
-        get_repo_by_id(this.project.repositoryId)
-          .then((res) => {
-            this.repo_name = res.data.data.repositoryName;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    this.getDependency();
+    //let id = document.URL.split("?")[1].split("=")[1];
+    this.refresh();
   },
   created() {},
 };
