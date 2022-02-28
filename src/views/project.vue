@@ -29,7 +29,9 @@
         <td width="80">{{ project.latestReleaseT }}</td>
         <td width="80">{{ project.lastestReleaseN }}</td>
         <td width="80">{{ repo_name }}</td>
-        <td width="80">{{ project.repositoryUrl }}</td>
+        <td width="80">
+          <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
+        </td>
       </tr>
     </table>
     <table border="1" class="table">

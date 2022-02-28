@@ -95,7 +95,9 @@
         <td width="80">{{ project.updateT }}</td>
         <td width="80">{{ project.latestReleaseT }}</td>
         <td width="80">{{ project.lastestReleaseN }}</td>
-        <td width="80">{{ project.repositoryUrl }}</td>
+        <td width="80">
+          <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
+        </td>
       </tr>
     </table>
   </div>
