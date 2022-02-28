@@ -2,8 +2,8 @@
   <div>
     <table class="head">
       <tr>
-        <td><router-link to="/repositories">仓库</router-link></td>
-        <td><router-link to="/projects">项目</router-link></td>
+        <td><router-link id="link-repos" to="/repositories">仓库</router-link></td>
+        <td><router-link id="link-projects" to="/projects">项目</router-link></td>
       </tr>
     </table>
   </div>
@@ -15,7 +15,7 @@ export default {
   props: {},
 };
 </script>
-、
+
 
 <style>
 .head {
