@@ -266,6 +266,13 @@ export default {
         sort = "OpenIssueCount";
       }
       let can_be_fork = this.canFork;
+      let canFork=null;
+      if(can_be_fork==1){
+        canFork=true;
+      }
+      else if(can_be_fork==2){
+        canFork=false;
+      }
       let isReverse = true;
       if (this.sort_method == 1) {
         isReverse = false;
@@ -276,7 +283,7 @@ export default {
         owner,
         language,
         url,
-        can_be_fork,
+        canFork,
         page,
         sort,
         isReverse
