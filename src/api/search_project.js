@@ -1,7 +1,7 @@
 import axios from "axios";
 
 var baseurl = "114.116.230.11:8082/api/it1"
-export function search_project(name, platform, language, url, lastestReleaseN, dependency, page, sort, isReverse) {
+export function search_project(name, platform, language, url, latestReleaseN, dependency, page, sort, isReverse) {
   return axios({
     url: `http://` + baseurl + `/project/query`, //后端的接口地址
     method: "post",
@@ -10,7 +10,7 @@ export function search_project(name, platform, language, url, lastestReleaseN, d
       "platform": platform,
       "language": language,
       "homepageUrl": url,
-      "lastestReleaseN": lastestReleaseN,
+      "latestReleaseN": latestReleaseN,
       "dependency": dependency,
       "page": page,
       "sort": sort,

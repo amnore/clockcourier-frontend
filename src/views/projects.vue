@@ -1,71 +1,107 @@
 <template>
   <div>
     <label>名称:</label>
-    <input type="text" value="" placeholder="name" id="project_name" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="name"
+      id="project_name"
+      v-model="project_name"
+    />
     <label>平台:</label>
-    <input type="text" value="" placeholder="platform" id="platform" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="platform"
+      id="platform"
+      v-model="platform"
+    />
     <label>所用语言:</label>
-    <input type="text" value="" placeholder="language" id="language_text" />
-    <select name="language" id="language">
-      <option value="">请选择语言</option>
-      <option
+    <el-input
+      type="text"
+      value=""
+      placeholder="language"
+      id="language_text"
+      v-model="language_text"
+    />
+    <el-select
+      name="language"
+      id="language"
+      v-model="language_select"
+      placeholder="请选择语言"
+    >
+      <el-option
         v-for="language in language_list"
         v-bind:key="language"
         v-bind:value="language.name"
       >
         {{ language.name }}
-      </option>
-    </select>
+      </el-option>
+    </el-select>
     <label>项目地址:</label>
-    <input type="text" value="" placeholder="url" id="url" />
+    <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
     <!--
     <label>创建时间:</label>
-    <input type="date" value="2022-02-22" id="create_date" />
+    <el-input type="date" value="2022-02-22" id="create_date" />
     <label>更新时间:</label>
-    <input type="date" value="2022-02-22" id="update_date" />
+    <el-input type="date" value="2022-02-22" id="update_date" />
     <label>最新发布时间:</label>
-    <input type="date" value="2022-02-22" id="latest_pub_date" />
+    <el-input type="date" value="2022-02-22" id="latest_pub_date" />
 	-->
     <label>版本:</label>
-    <input type="text" value="" placeholder="version" id="lastestReleaseN" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="version"
+      id="latestReleaseN"
+      v-model="version"
+    />
     <label>依赖库:</label>
-    <input type="text" value="" placeholder="dependency" id="dependency" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="dependency"
+      id="dependency"
+      v-model="dependency"
+    />
     <label>所属仓库:</label>
-    <input type="text" value="" placeholder="repository" id="repository" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="repository"
+      id="repository"
+      v-model="repository"
+    />
     <div>
-      <button id="searchbutton" v-on:click="searchProject()">搜索</button>
+      <el-button id="searchbutton" v-on:click="searchProject(1)" round
+        >搜索</el-button
+      >
     </div>
   </div>
   <div>
     <p>排序方式</p>
-    <input type="radio" name="sort_key" value="1" v-model="sort_key" /><label
-      >名称</label
+    <el-radio name="sort_key" label="1" v-model="sort_key"
+      ><label>名称</label></el-radio
     >
-    <input type="radio" name="sort_key" value="2" v-model="sort_key" /><label
-      >创建日期</label
+    <el-radio name="sort_key" label="2" v-model="sort_key"
+      ><label>创建日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="3" v-model="sort_key" /><label
-      >更新日期</label
+    <el-radio name="sort_key" label="3" v-model="sort_key"
+      ><label>更新日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="4" v-model="sort_key" /><label
-      >最新发布日期</label
+    <el-radio name="sort_key" label="4" v-model="sort_key"
+      ><label>最新发布日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="5" v-model="sort_key" /><label
-      >最新发布版本</label
+    <el-radio name="sort_key" label="5" v-model="sort_key"
+      ><label>最新发布版本</label></el-radio
     >
     <br />
-    <input
-      type="radio"
-      name="sort_method"
-      value="1"
-      v-model="sort_method"
-    /><label>正序</label>
-    <input
-      type="radio"
-      name="sort_method"
-      value="2"
-      v-model="sort_method"
-    /><label>倒序</label>
+    <el-radio name="sort_method" label="1" v-model="sort_method"
+      ><label>正序</label></el-radio
+    >
+    <el-radio name="sort_method" label="2" v-model="sort_method"
+      ><label>倒序</label></el-radio
+    >
   </div>
   <div>
     <table border="1" class="table">
@@ -84,21 +120,27 @@
       </thead>
       <tbody>
         <tr v-for="project in project_data" v-bind:key="project">
-          <td class='project-name' width="80">
+          <td class="project-name" width="80">
             <router-link :to="'/project/' + project.projectId">{{
               project.projectName
             }}</router-link>
           </td>
-          <td class='project-platform' width="80">{{ project.platform }}</td>
-          <td class='project-language' width="80">{{ project.language }}</td>
-          <td class='project-url' width="80">
+          <td class="project-platform" width="80">{{ project.platform }}</td>
+          <td class="project-language" width="80">{{ project.language }}</td>
+          <td class="project-url" width="80">
             <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
           </td>
-          <td class='project-creation-time' width="80">{{ project.createT }}</td>
-          <td class='project-update-time' width="80">{{ project.updateT }}</td>
-          <td class='project-release-time' width="80">{{ project.latestReleaseT }}</td>
-          <td class='project-version' width="80">{{ project.latestReleaseN }}</td>
-          <td class='project-repo-url' width="80">
+          <td class="project-creation-time" width="80">
+            {{ project.createT }}
+          </td>
+          <td class="project-update-time" width="80">{{ project.updateT }}</td>
+          <td class="project-release-time" width="80">
+            {{ project.latestReleaseT }}
+          </td>
+          <td class="project-version" width="80">
+            {{ project.latestReleaseN }}
+          </td>
+          <td class="project-repo-url" width="80">
             <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
           </td>
         </tr>
@@ -109,7 +151,7 @@
     <ul class="page">
       <li>
         <span v-if="page > 1"
-          ><b @click="page--, searchProject()">上一页</b></span
+          ><b @click="page--, searchProject(page)">上一页</b></span
         >
         <span v-if="page == 1">上一页</span>
         <span v-if="Number(pageAll) <= 10">
@@ -135,7 +177,7 @@
           <span @click="goPage(pageAll)">{{ pageAll }}</span>
         </span>
         <span v-if="page != pageAll"
-          ><b @click="page++, searchProject()">下一页</b></span
+          ><b @click="page++, searchProject(page)">下一页</b></span
         >
         <span v-if="page == pageAll">下一页</span>
       </li>
@@ -161,7 +203,14 @@ export default {
   data() {
     return {
       project_data: [],
-
+      project_name: "",
+      platform: "",
+      language_text: "",
+      language_select: "",
+      url: "",
+      version: "",
+      dependency: "",
+      repository: "",
       language_list: [
         {
           name: "C",
@@ -194,19 +243,25 @@ export default {
           name: "",
         },
       ],
-      sort_key: 1,
-      sort_method: 1,
+      sort_key: "1",
+      sort_method: "1",
       page: 1,
       pageAll: 1,
       jumpPage: "",
     };
   },
   watch: {
-    sort_key: "searchProject",
-    sort_method: "searchProject",
+    sort_key: "changeSortKey",
+    sort_method: "changeSortMethod",
   },
   methods: {
-    searchProject() {
+    changeSortKey() {
+      this.searchProject(1);
+    },
+    changeSortMethod() {
+      this.searchProject(1);
+    },
+    searchProject(page) {
       let name = document.getElementById("project_name").value;
       let platform = document.getElementById("platform").value;
       let language = document.getElementById("language").value;
@@ -214,9 +269,9 @@ export default {
         language = document.getElementById("language_text").value;
       }
       let url = document.getElementById("url").value;
-      let lastestReleaseN = document.getElementById("lastestReleaseN").value;
+      let latestReleaseN = document.getElementById("latestReleaseN").value;
       let dependency = document.getElementById("dependency").value;
-      let page = this.page;
+      this.page = page;
       let sort = "";
       if (this.sort_key == 1) {
         sort = "Name";
@@ -238,7 +293,7 @@ export default {
         platform,
         language,
         url,
-        lastestReleaseN,
+        latestReleaseN,
         dependency,
         page,
         sort,
@@ -257,7 +312,7 @@ export default {
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
-        this.searchProject();
+        this.searchProject(this.page);
       }
     },
   },

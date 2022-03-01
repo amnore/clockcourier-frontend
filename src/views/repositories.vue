@@ -1,98 +1,115 @@
 <template>
   <div>
     <label>名称:</label>
-    <input type="text" value="" placeholder="name" id="repo_name" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="name"
+      id="repo_name"
+      v-model="repo_name"
+    />
     <label>平台:</label>
-    <input type="text" value="" placeholder="platform" id="hostType" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="platform"
+      id="hostType"
+      v-model="platform"
+    />
     <label>所有者:</label>
-    <input type="text" value="" placeholder="owner" id="owner" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="owner"
+      id="owner"
+      v-model="owner"
+    />
     <label>所用语言:</label>
-    <input type="text" value="" placeholder="language" id="language_text" />
-    <select name="language" id="language">
-      <option value="">请选择语言</option>
-      <option
+    <el-input
+      type="text"
+      value=""
+      placeholder="language"
+      id="language_text"
+      v-model="language_text"
+    />
+    <el-select
+      name="language"
+      id="language"
+      v-model="language_select"
+      placeholder="请选择语言"
+    >
+      <el-option
         v-for="language in language_list"
         v-bind:key="language"
         v-bind:value="language.name"
       >
         {{ language.name }}
-      </option>
-    </select>
+      </el-option>
+    </el-select>
     <label>仓库地址:</label>
-    <input type="text" value="" placeholder="url" id="url" />
+    <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
     <!--
     <label>创建时间:</label>
-    <input type="date" value="2022-02-22" id="create_date" />
+    <el-input type="date" value="2022-02-22" id="create_date" />
     <label>更新时间:</label>
-    <input type="date" value="2022-02-22" id="update_date" />
+    <el-input type="date" value="2022-02-22" id="update_date" />
     <label>最新push时间:</label>
-    <input type="date" value="2022-02-22" id="latest_push_date" />
+    <el-input type="date" value="2022-02-22" id="latest_push_date" />
     -->
     <div>
       <label>能否fork</label>
-      <input
-        type="radio"
-        name="can_be_fork"
-        value="0"
-        v-model="canFork"
-      /><label>不选择</label>
-      <input
-        type="radio"
-        name="can_be_fork"
-        value="1"
-        v-model="canFork"
-      /><label>能</label>
-      <input
-        type="radio"
-        name="can_be_fork"
-        value="2"
-        v-model="canFork"
-      /><label>不能</label>
+      <el-radio name="can_be_fork" label="0" v-model="canFork"
+        ><label>不选择</label></el-radio
+      >
+      <el-radio name="can_be_fork" label="1" v-model="canFork"
+        ><label>能</label></el-radio
+      >
+      <el-radio name="can_be_fork" label="2" v-model="canFork"
+        ><label>不能</label></el-radio
+      >
     </div>
-    <button id="searchbutton" v-on:click="searchRepo()">搜索</button>
+    <div>
+      <el-button id="searchbutton" v-on:click="searchRepo(1)" round
+        >搜索</el-button
+      >
+    </div>
   </div>
   <div>
     <p>排序方式</p>
-    <input type="radio" name="sort_key" value="1" v-model="sort_key" /><label
-      >名称</label
+    <el-radio name="sort_key" label="1" v-model="sort_key"
+      ><label>名称</label></el-radio
     >
-    <input type="radio" name="sort_key" value="2" v-model="sort_key" /><label
-      >创建日期</label
+    <el-radio name="sort_key" label="2" v-model="sort_key"
+      ><label>创建日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="3" v-model="sort_key" /><label
-      >更新日期</label
+    <el-radio name="sort_key" label="3" v-model="sort_key"
+      ><label>更新日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="4" v-model="sort_key" /><label
-      >最新发布日期</label
+    <el-radio name="sort_key" label="4" v-model="sort_key"
+      ><label>最新发布日期</label></el-radio
     >
-    <input type="radio" name="sort_key" value="5" v-model="sort_key" /><label
-      >fork数量</label
+    <el-radio name="sort_key" label="5" v-model="sort_key"
+      ><label>fork数量</label></el-radio
     >
-    <input type="radio" name="sort_key" value="6" v-model="sort_key" /><label
-      >watcher数量</label
+    <el-radio name="sort_key" label="6" v-model="sort_key"
+      ><label>watcher数量</label></el-radio
     >
-    <input type="radio" name="sort_key" value="7" v-model="sort_key" /><label
-      >star数量</label
+    <el-radio name="sort_key" label="7" v-model="sort_key"
+      ><label>star数量</label></el-radio
     >
-    <input type="radio" name="sort_key" value="8" v-model="sort_key" /><label
-      >贡献者数量</label
+    <el-radio name="sort_key" label="8" v-model="sort_key"
+      ><label>贡献者数量</label></el-radio
     >
-    <input type="radio" name="sort_key" value="9" v-model="sort_key" /><label
-      >开放的issue数量</label
+    <el-radio name="sort_key" label="9" v-model="sort_key"
+      ><label>开放的issue数量</label></el-radio
     >
     <br />
-    <input
-      type="radio"
-      name="sort_method"
-      value="0"
-      v-model="sort_method"
-    /><label>正序</label>
-    <input
-      type="radio"
-      name="sort_method"
-      value="1"
-      v-model="sort_method"
-    /><label>倒序</label>
+    <el-radio name="sort_method" label="0" v-model="sort_method"
+      ><label>正序</label></el-radio
+    >
+    <el-radio name="sort_method" label="1" v-model="sort_method"
+      ><label>倒序</label></el-radio
+    >
   </div>
   <table border="1" class="table">
     <tr>
@@ -126,21 +143,31 @@
       </td>
       <td class="repo-creation-time" width="80">{{ repository.createT }}</td>
       <td class="repo-update-time" width="80">{{ repository.updateT }}</td>
-      <td class="repo-latest-push-time" width="80">{{ repository.latestPushT }}</td>
+      <td class="repo-latest-push-time" width="80">
+        {{ repository.latestPushT }}
+      </td>
       <td class="repo-canfork" width="80">{{ repository.canFork }}</td>
       <td class="repo-fork-count" width="80">{{ repository.forkCount }}</td>
-      <td class="repo-watcher-count" width="80">{{ repository.watcherCount }}</td>
+      <td class="repo-watcher-count" width="80">
+        {{ repository.watcherCount }}
+      </td>
       <td class="repo-star-count" width="80">{{ repository.starCount }}</td>
-      <td class="repo-contributor-count" width="80">{{ repository.contributorCount }}</td>
-      <td class="repo-open-issue-count" width="80">{{ repository.openIssueCount }}</td>
-      <td class="repo-default-branch" width="80">{{ repository.defaultBranch }}</td>
+      <td class="repo-contributor-count" width="80">
+        {{ repository.contributorCount }}
+      </td>
+      <td class="repo-open-issue-count" width="80">
+        {{ repository.openIssueCount }}
+      </td>
+      <td class="repo-default-branch" width="80">
+        {{ repository.defaultBranch }}
+      </td>
     </tr>
   </table>
 
   <div>
     <ul class="page">
       <li>
-        <span v-if="page > 1"><b @click="page--, searchRepo()">上一页</b></span>
+        <span v-if="page > 1"><b @click="page--, searchRepo(page)">上一页</b></span>
         <span v-if="page == 1">上一页</span>
         <span v-if="Number(pageAll) <= 10">
           <span
@@ -165,7 +192,7 @@
           <span @click="goPage(pageAll)">{{ pageAll }}</span>
         </span>
         <span v-if="page != pageAll"
-          ><b @click="page++, searchRepo()">下一页</b></span
+          ><b @click="page++, searchRepo(page)">下一页</b></span
         >
         <span v-if="page == pageAll">下一页</span>
       </li>
@@ -190,6 +217,15 @@ export default {
   data() {
     return {
       repository_data: [],
+      repo_name: "",
+      platform: "",
+      owner: "",
+      language_text: "",
+      language_select: "",
+      url: "",
+      version: "",
+      dependency: "",
+      repository: "",
       language_list: [
         {
           name: "C",
@@ -222,20 +258,26 @@ export default {
           name: "",
         },
       ],
-      sort_key: 1,
-      sort_method: 0,
-      canFork: 0,
+      sort_key: "1",
+      sort_method: "0",
+      canFork: "0",
       page: 1,
       pageAll: 1,
       jumpPage: "",
     };
   },
   watch: {
-    sort_key: "searchRepo",
-    sort_method: "searchRepo",
+    sort_key: "changeSortKey",
+    sort_method: "changeSortMethod",
   },
   methods: {
-    searchRepo() {
+    changeSortKey() {
+      this.searchRepo(1);
+    },
+    changeSortMethod() {
+      this.searchRepo(1);
+    },
+    searchRepo(page) {
       let name = document.getElementById("repo_name").value;
       let hostType = document.getElementById("hostType").value;
       let owner = document.getElementById("owner").value;
@@ -244,7 +286,7 @@ export default {
         language = document.getElementById("language_text").value;
       }
       let url = document.getElementById("url").value;
-      let page = this.page;
+      this.page = page;
       let sort = "";
       if (this.sort_key == 1) {
         sort = "Name";
@@ -266,12 +308,11 @@ export default {
         sort = "OpenIssueCount";
       }
       let can_be_fork = this.canFork;
-      let canFork=null;
-      if(can_be_fork==1){
-        canFork=true;
-      }
-      else if(can_be_fork==2){
-        canFork=false;
+      let canFork = null;
+      if (can_be_fork == 1) {
+        canFork = true;
+      } else if (can_be_fork == 2) {
+        canFork = false;
       }
       let isReverse = true;
       if (this.sort_method == 1) {
@@ -302,7 +343,7 @@ export default {
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
-        this.searchRepo();
+        this.searchRepo(this.page);
       }
     },
   },

@@ -49,40 +49,47 @@
   <div>
     <p>筛选依赖</p>
     <label>名称:</label>
-    <input type="text" value="" placeholder="name" id="dependency_name" />
+    <el-input
+      type="text"
+      value=""
+      placeholder="name"
+      id="dependency_name"
+      v-model="dependency_name"
+    />
     <label>平台:</label>
-    <input
+    <el-input
       type="text"
       value=""
       placeholder="platform"
       id="dependency_platform"
+      v-model="dependency_platform"
     />
     <label>依赖类型:</label>
-    <select name="" id="dependency_type">
-      <option value="">请选择依赖类型</option>
-      <option
+    <el-select
+      name=""
+      id="dependency_type"
+      placeholder="请选择依赖类型"
+      v-model="dependency_type"
+    >
+      <el-option
         v-for="type in dependency_type_list"
         v-bind:key="type"
         v-bind:value="type"
       >
         {{ type }}
-      </option>
-    </select>
+      </el-option>
+    </el-select>
     <div>
-      <button id="searchbutton" v-on:click="getDependency()">搜索</button>
+      <el-button id="searchbutton" v-on:click="getDependency(1)" round
+        >搜索</el-button
+      >
     </div>
-    <input
-      type="radio"
-      name="sort_method"
-      value="1"
-      v-model="sort_method"
-    /><label>正序</label>
-    <input
-      type="radio"
-      name="sort_method"
-      value="2"
-      v-model="sort_method"
-    /><label>倒序</label>
+    <el-radio name="sort_method" label="1" v-model="sort_method"
+      ><label>正序</label></el-radio
+    >
+    <el-radio name="sort_method" label="2" v-model="sort_method"
+      ><label>倒序</label></el-radio
+    >
   </div>
   <div>
     <table border="1" class="table">
@@ -108,7 +115,7 @@
     <ul class="page">
       <li>
         <span v-if="page > 1"
-          ><b @click="page--, getDependency()">上一页</b></span
+          ><b @click="page--, getDependency(page)">上一页</b></span
         >
         <span v-if="page == 1">上一页</span>
         <span v-if="Number(pageAll) <= 10">
@@ -134,7 +141,7 @@
           <span @click="goPage(pageAll)">{{ pageAll }}</span>
         </span>
         <span v-if="page != pageAll"
-          ><b @click="page++, getDependency()">下一页</b></span
+          ><b @click="page++, getDependency(page)">下一页</b></span
         >
         <span v-if="page == pageAll">下一页</span>
       </li>
@@ -194,21 +201,27 @@ export default {
       ],
       dependency_type_list: ["runtime", "test", "development", "build"],
       repo_name: "",
+      dependency_name: "",
+      dependency_platform: "",
+      dependency_type: "",
       page: 1,
       pageAll: 1,
       jumpPage: "",
-      sort_method: 1,
+      sort_method: "1",
       id: 0,
     };
   },
   watch: {
-    sort_method: "getDependency",
-    $route:"refresh",
+    sort_method: "changeSortMethod",
+    $route: "refresh",
   },
   methods: {
-    refresh(){
+    refresh() {
       this.getProject();
-      this.getDependency();
+      this.getDependency(1);
+    },
+    changeSortMethod() {
+      this.getDependency(1);
     },
     getProject() {
       this.id = this.$route.params.id;
@@ -227,13 +240,13 @@ export default {
           console.log(error);
         });
     },
-    getDependency() {
+    getDependency(page) {
       let id = this.project.projectId;
-      let version = this.project.lastestReleaseN;
+      let version = this.project.latestReleaseN;
       let name = document.getElementById("dependency_name").value;
       let platform = document.getElementById("dependency_platform").value;
       let type = document.getElementById("dependency_type").value;
-      let page = this.page;
+      this.page = page;
       let isReverse = true;
       if (this.sort_method == 1) {
         isReverse = false;
@@ -250,7 +263,7 @@ export default {
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
-        this.getDependency();
+        this.getDependency(this.page);
       }
     },
   },
