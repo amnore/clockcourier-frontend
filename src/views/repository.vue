@@ -195,7 +195,6 @@ export default {
   methods: {
     refresh() {
       this.getRepo();
-      this.getDependency(1);
     },
     changeSortMethod() {
       this.getDependency(1);
@@ -205,6 +204,7 @@ export default {
       get_repo_by_id(Number(this.id))
         .then((res) => {
           this.repository = res.data.data;
+          this.getDependency(1);
         })
         .catch(function (error) {
           console.log(error);

@@ -209,6 +209,7 @@ export default {
       jumpPage: "",
       sort_method: "1",
       id: 0,
+      latestReleaseN: "",
     };
   },
   watch: {
@@ -218,7 +219,6 @@ export default {
   methods: {
     refresh() {
       this.getProject();
-      this.getDependency(1);
     },
     changeSortMethod() {
       this.getDependency(1);
@@ -228,6 +228,7 @@ export default {
       get_project_by_id(Number(this.id))
         .then((res) => {
           this.project = res.data.data;
+          this.getDependency(1);
           get_repo_by_id(this.project.repositoryId)
             .then((res) => {
               this.repo_name = res.data.data.repositoryName;
@@ -241,7 +242,7 @@ export default {
         });
     },
     getDependency(page) {
-      let id = this.project.projectId;
+      let id = this.id;
       let version = this.project.latestReleaseN;
       let name = document.getElementById("dependency_name").value;
       let platform = document.getElementById("dependency_platform").value;
