@@ -20,12 +20,26 @@ export default {
       activeIndex: '1',
     };
   },
+  watch:{
+    $route:"changeRoute",
+  },
   methods: {
     handleSelect(key) {
       if (key == 1) {
         this.$router.push("/projects");
       } else if (key == 2) {
         this.$router.push("/repositories");
+      }
+    },
+    changeRoute(){
+      if(this.$route.path=="/projects"){
+        this.activeIndex="1";
+      }
+      else if(this.$route.path=="/repositories"){
+        this.activeIndex="2";
+      }
+      else{
+        this.activeIndex="0";
       }
     },
   },
