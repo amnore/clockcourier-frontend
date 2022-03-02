@@ -348,7 +348,7 @@ export default {
     },
   },
   mounted() {
-    this.searchRepo();
+    this.searchRepo(1);
   },
   created() {},
 };

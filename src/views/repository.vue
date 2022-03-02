@@ -195,7 +195,7 @@ export default {
   methods: {
     refresh() {
       this.getRepo();
-      this.getDependency();
+      this.getDependency(1);
     },
     changeSortMethod() {
       this.getDependency(1);

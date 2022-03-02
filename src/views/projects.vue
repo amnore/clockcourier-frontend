@@ -317,7 +317,7 @@ export default {
     },
   },
   mounted() {
-    this.searchProject();
+    this.searchProject(1);
   },
   created() {},
 };
