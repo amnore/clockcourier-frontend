@@ -103,16 +103,16 @@
       border>
       <el-table-column prop="projectName" label="名称" sortable='custom'>
         <template #default="scope">
-          <router-link :to="'/project/' + scope.row.projectId">{{
-            scope.row.projectName
-          }}</router-link>
+          <el-link v-on:click="$router.push('/project/' + scope.row.projectId)">
+              {{ scope.row.projectName }}
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column prop="platform" label="平台" />
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
+          <el-link href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="createT" label="创建时间" sortable='custom'/>
@@ -120,7 +120,7 @@
       <el-table-column prop="latestReleaseN" label="版本" sortable='custom'/>
       <el-table-column prop="repositoryUrl" label="仓库地址">
         <template #default="scope">
-          <a :href="scope.row.repositoryUrl">{{ scope.row.repositoryUrl }}</a>
+          <el-link href="scope.row.repositoryUrl">{{ scope.row.repositoryUrl }}</el-link>
         </template>
       </el-table-column>
     </el-table>

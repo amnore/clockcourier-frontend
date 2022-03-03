@@ -1,14 +1,12 @@
 <template>
-  <div class="head">
-    <el-menu
-      :default-active="activeIndex"
-      mode="horizontal"
-      @select="handleSelect"
-    >
-      <el-menu-item index="1">项目</el-menu-item>
-      <el-menu-item index="2">仓库</el-menu-item>
-    </el-menu>
-  </div>
+  <el-menu
+    :default-active="activeIndex"
+    mode="horizontal"
+    @select="handleSelect"
+  >
+    <el-menu-item index="1">项目</el-menu-item>
+    <el-menu-item index="2">仓库</el-menu-item>
+  </el-menu>
 </template>
 
 <script>

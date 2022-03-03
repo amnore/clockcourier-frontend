@@ -1,5 +1,5 @@
 <template>
-  <el-form label-position="right" label-width="80px" :inline="true">
+  <el-form id="search-form" label-position="right" label-width="80px" :inline="true">
     <el-form-item label="名称:">
       <el-input
         type="text"
@@ -73,9 +73,9 @@
     >
       <el-table-column prop="repositoryName" label="名称" sortable='custom'>
         <template #default="scope">
-          <router-link :to="'/repository/' + scope.row.repositoryId">{{
-            scope.row.repositoryName
-          }}</router-link>
+          <el-link v-on:click="$router.push('/repository/' + scope.row.repositoryId)">
+            {{ scope.row.repositoryName }}
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column prop="hostType" label="平台" />
@@ -83,13 +83,13 @@
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
+          <el-link href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</el-link>
         </template>
       </el-table-column>
       <el-table-column prop="createT" label="创建时间" sortable='custom'/>
       <el-table-column prop="updateT" label="更新时间" sortable='custom'/>
       <el-table-column prop="canFork" label="能否fork" />
-      <el-table-column prop="forkCount" label="fork数量" />
+      <el-table-column prop="forkCount" label="fork数量" sortable='custom'/>
       <el-table-column prop="watcherCount" label="watcher数量" sortable='custom'/>
       <el-table-column prop="starCount" label="star数量" sortable='custom'/>
       <el-table-column prop="contributorCount" label="贡献者数量" sortable='custom'/>
@@ -148,7 +148,7 @@ const sortKeys = {
   createT: "CreateT",
   updateT: "UpdateT",
   latestPushT: "LatestPushT",
-  // forkCount: "ForkCount",
+  forkCount: "ForkCount",
   watcherCount: "WatcherCount",
   starCount: "StarCount",
   contributorCount: "ContributorCount",
@@ -260,5 +260,9 @@ export default {
   margin: 0 5px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#search-form {
+  margin: 2% 0;
 }
 </style>
