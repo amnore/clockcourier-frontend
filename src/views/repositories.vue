@@ -117,59 +117,33 @@
       ><label>倒序</label></el-radio
     >
   </div>
-  <table border="1" class="table">
-    <tr>
-      <td>名称</td>
-      <td>平台</td>
-      <td>所有者</td>
-      <td>语言</td>
-      <td>地址</td>
-      <td>创建时间</td>
-      <td>更新时间</td>
-      <td>最新push时间</td>
-      <td>是否可以fork</td>
-      <td>fork数量</td>
-      <td>watcher数量</td>
-      <td>star数量</td>
-      <td>贡献者数量</td>
-      <td>issue数量</td>
-      <td>默认分支</td>
-    </tr>
-    <tr v-for="repository in repository_data" v-bind:key="repository">
-      <td class="repo-name">
-        <router-link :to="'/repository/' + repository.repositoryId">{{
-          repository.repositoryName
-        }}</router-link>
-      </td>
-      <td class="repo-host-type">{{ repository.hostType }}</td>
-      <td class="repo-owner">{{ repository.repositoryOwner }}</td>
-      <td class="repo-lang">{{ repository.language }}</td>
-      <td class="repo-url">
-        <a :href="repository.homepageUrl">{{ repository.homepageUrl }}</a>
-      </td>
-      <td class="repo-creation-time">{{ repository.createT }}</td>
-      <td class="repo-update-time">{{ repository.updateT }}</td>
-      <td class="repo-latest-push-time">
-        {{ repository.latestPushT }}
-      </td>
-      <td class="repo-canfork">{{ repository.canFork }}</td>
-      <td class="repo-fork-count">{{ repository.forkCount }}</td>
-      <td class="repo-watcher-count">
-        {{ repository.watcherCount }}
-      </td>
-      <td class="repo-star-count">{{ repository.starCount }}</td>
-      <td class="repo-contributor-count">
-        {{ repository.contributorCount }}
-      </td>
-      <td class="repo-open-issue-count">
-        {{ repository.openIssueCount }}
-      </td>
-      <td class="repo-default-branch">
-        {{ repository.defaultBranch }}
-      </td>
-    </tr>
-  </table>
-
+  <div>
+    <el-table :data="repository_data" border>
+      <el-table-column prop="repositoryName" label="名称">
+        <template #default="scope">
+          <router-link :to="'/repository/' + scope.row.repositoryId">{{
+            scope.row.repositoryName
+          }}</router-link>
+        </template>
+      </el-table-column>
+      <el-table-column prop="hostType" label="平台" />
+      <el-table-column prop="repositoryOwner" label="所有者" />
+      <el-table-column prop="language" label="所用语言" />
+      <el-table-column prop="homepageUrl" label="地址">
+        <template #default="scope">
+          <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createT" label="创建时间" />
+      <el-table-column prop="updateT" label="更新时间" />
+      <el-table-column prop="canFork" label="能否fork" />
+      <el-table-column prop="forkCount" label="fork数量"/>
+      <el-table-column prop="watcherCount" label="watcher数量"/>
+      <el-table-column prop="starCount" label="star数量"/>
+      <el-table-column prop="contributorCount" label="贡献者数量"/>
+      <el-table-column prop="openIssueCount" label="issue数量"/>
+    </el-table>
+  </div>
   <div>
     <ul class="page">
       <li>
@@ -205,14 +179,10 @@
         <span v-if="page == pageAll">下一页</span>
       </li>
       <li>共{{ pageAll }}页 当前{{ page }}页</li>
-      <li>
-        到<input type="text" class="int02" v-model="jumpPage" /> 页<input
-          type="button"
-          class="bt03"
-          value="确定"
-          @click="goPage(jumpPage)"
-        />
-      </li>
+      <li>到</li>
+      <li><el-input type="text" value="1" v-model="jumpPage" /></li>
+      <li>页</li>
+      <el-button v-on:click="goPage(jumpPage)">确定</el-button>
     </ul>
   </div>
 </template>

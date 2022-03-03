@@ -112,48 +112,30 @@
     >
   </div>
   <div>
-    <table border="1" class="table">
-      <thead>
-        <tr>
-          <th>名称</th>
-          <th>平台</th>
-          <th>语言</th>
-          <th>地址</th>
-          <th>创建时间</th>
-          <th>更新时间</th>
-          <th>最新发布版本时间</th>
-          <th>最新版本号</th>
-          <th>仓库地址</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="project in project_data" v-bind:key="project">
-          <td class="project-name">
-            <router-link :to="'/project/' + project.projectId">{{
-              project.projectName
-            }}</router-link>
-          </td>
-          <td class="project-platform">{{ project.platform }}</td>
-          <td class="project-language">{{ project.language }}</td>
-          <td class="project-url">
-            <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
-          </td>
-          <td class="project-creation-time">
-            {{ project.createT }}
-          </td>
-          <td class="project-update-time">{{ project.updateT }}</td>
-          <td class="project-release-time">
-            {{ project.latestReleaseT }}
-          </td>
-          <td class="project-version">
-            {{ project.latestReleaseN }}
-          </td>
-          <td class="project-repo-url">
-            <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-table :data="project_data" border>
+      <el-table-column prop="projectName" label="名称">
+        <template #default="scope">
+          <router-link :to="'/project/' + scope.row.projectId">{{
+            scope.row.projectName
+          }}</router-link>
+        </template>
+      </el-table-column>
+      <el-table-column prop="platform" label="平台" />
+      <el-table-column prop="language" label="所用语言" />
+      <el-table-column prop="homepageUrl" label="地址">
+        <template #default="scope">
+          <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createT" label="创建时间" />
+      <el-table-column prop="updateT" label="更新时间" />
+      <el-table-column prop="latestReleaseN" label="版本" />
+      <el-table-column prop="repositoryUrl" label="仓库地址">
+        <template #default="scope">
+          <a :href="scope.row.repositoryUrl">{{ scope.row.repositoryUrl }}</a>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
   <div>
     <ul class="page">
@@ -190,14 +172,10 @@
         <span v-if="page == pageAll">下一页</span>
       </li>
       <li>共{{ pageAll }}页 当前{{ page }}页</li>
-      <li>
-        到<input type="text" class="int02" v-model="jumpPage" /> 页<input
-          type="button"
-          class="bt03"
-          value="确定"
-          @click="goPage(jumpPage)"
-        />
-      </li>
+      <li>到</li>
+      <li><el-input type="text" value="1" v-model="jumpPage" /></li>
+      <li>页</li>
+      <el-button v-on:click="goPage(jumpPage)">确定</el-button>
     </ul>
   </div>
 </template>
@@ -345,11 +323,6 @@ export default {
 </script>
 
 <style>
-.table {
-  text-align: center;
-  margin: auto;
-}
-
 .page li {
   display: inline-block;
   margin: 0 5px;
