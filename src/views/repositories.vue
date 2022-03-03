@@ -41,6 +41,7 @@
         id="language"
         v-model="language_select"
         placeholder="请选择语言"
+        clearable
       >
         <el-option
           v-for="language in language_list"

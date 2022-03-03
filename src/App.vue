@@ -27,4 +27,8 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.el-form-item{
+  width: 20%;
+}
 </style>

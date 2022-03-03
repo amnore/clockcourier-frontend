@@ -51,9 +51,9 @@
     </tr>
   </table>
   <div>{{ repository.description }}</div>
-  <div>
+  <el-form label-position="left" label-width="80px" :inline="true">
     <p>筛选依赖</p>
-    <label>名称:</label>
+    <el-form-item label="名称:">
     <el-input
       type="text"
       value=""
@@ -61,12 +61,14 @@
       id="dependency_name"
       v-model="dependency_name"
     />
-    <label>依赖类型:</label>
+    </el-form-item>
+    <el-form-item label="依赖类型:">
     <el-select
       name=""
       id="dependency_type"
       placeholder="请选择依赖类型"
       v-model="dependency_type"
+      clearable
     >
       <el-option
         v-for="type in dependency_type_list"
@@ -76,10 +78,11 @@
         {{ type }}
       </el-option>
     </el-select>
+    </el-form-item>
     <div>
       <el-button id="searchbutton" v-on:click="getDependency()" round>搜索</el-button>
     </div>
-  </div>
+  </el-form>
   <div>
     <el-radio name="sort_method" label="1" v-model="sort_method"
       ><label>正序</label></el-radio
