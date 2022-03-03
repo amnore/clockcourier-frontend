@@ -14,29 +14,29 @@
         <td>仓库地址</td>
       </tr>
       <tr>
-        <td width="80">
+        <td>
           <router-link :to="'/project/' + project.projectId">{{
             project.projectName
           }}</router-link>
         </td>
-        <td width="80">{{ project.platform }}</td>
-        <td width="80">{{ project.language }}</td>
-        <td width="80">
+        <td>{{ project.platform }}</td>
+        <td>{{ project.language }}</td>
+        <td>
           <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
         </td>
-        <td width="80">{{ project.createT }}</td>
-        <td width="80">{{ project.updateT }}</td>
-        <td width="80">{{ project.latestReleaseT }}</td>
-        <td width="80">{{ project.latestReleaseN }}</td>
-        <td width="80">{{ repo_name }}</td>
-        <td width="80">
+        <td>{{ project.createT }}</td>
+        <td>{{ project.updateT }}</td>
+        <td>{{ project.latestReleaseT }}</td>
+        <td>{{ project.latestReleaseN }}</td>
+        <td>{{ repo_name }}</td>
+        <td>
           <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
         </td>
       </tr>
     </table>
     <table border="1" class="table">
       <tr>
-        <td width="80">许可证</td>
+        <td>许可证</td>
         <td v-for="license in project.licenses" v-bind:key="license">
           {{ license }}
         </td>
@@ -84,6 +84,8 @@
         >搜索</el-button
       >
     </div>
+  </div>
+  <div>
     <el-radio name="sort_method" label="1" v-model="sort_method"
       ><label>正序</label></el-radio
     >
@@ -94,20 +96,20 @@
   <div>
     <table border="1" class="table">
       <tr>
-        <td width="80">依赖名称</td>
-        <td width="80">依赖的所属平台</td>
-        <td width="80">依赖的版本要求</td>
-        <td width="80">依赖类型</td>
+        <td>依赖名称</td>
+        <td>依赖的所属平台</td>
+        <td>依赖的版本要求</td>
+        <td>依赖类型</td>
       </tr>
       <tr v-for="dependency in dependencies" v-bind:key="dependency">
-        <td width="80">
+        <td>
           <router-link :to="'/project/' + dependency.dependencyProjectId">{{
             dependency.dependencyProjectName
           }}</router-link>
         </td>
-        <td width="80">{{ dependency.dependencyProjectPlatform }}</td>
-        <td width="80">{{ dependency.dependencyReqirements }}</td>
-        <td width="80">{{ dependency.dependencyType }}</td>
+        <td>{{ dependency.dependencyProjectPlatform }}</td>
+        <td>{{ dependency.dependencyReqirements }}</td>
+        <td>{{ dependency.dependencyType }}</td>
       </tr>
     </table>
   </div>
@@ -256,6 +258,9 @@ export default {
         .then((res) => {
           this.dependencies = res.data.data.projDeps;
           this.pageAll = res.data.data.pageAll;
+          if (this.pageAll < 1) {
+            this.pageAll = 1;
+          }
         })
         .catch(function (error) {
           console.log(error);

@@ -320,6 +320,9 @@ export default {
           console.log("连接成功");
           this.project_data = res.data.data.projects;
           this.pageAll = res.data.data.pageAll;
+          if (this.pageAll < 1) {
+            this.pageAll = 1;
+          }
         })
         .catch(function (error) {
           console.log("连接失败");

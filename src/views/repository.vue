@@ -18,33 +18,33 @@
       <td>默认分支</td>
     </tr>
     <tr>
-      <td width="80">
+      <td>
         <router-link :to="'/repository/' + repository.repositoryId">{{
           repository.repositoryName
         }}</router-link>
       </td>
-      <td width="80">{{ repository.hostType }}</td>
-      <td width="80">{{ repository.repositoryOwner }}</td>
-      <td width="80">{{ repository.language }}</td>
-      <td width="80">
+      <td>{{ repository.hostType }}</td>
+      <td>{{ repository.repositoryOwner }}</td>
+      <td>{{ repository.language }}</td>
+      <td>
         <a :href="repository.homepageUrl">{{ repository.homepageUrl }}</a>
       </td>
-      <td width="80">{{ repository.createT }}</td>
-      <td width="80">{{ repository.updateT }}</td>
-      <td width="80">{{ repository.latestPushT }}</td>
-      <td width="80">{{ repository.canFork }}</td>
-      <td width="80">{{ repository.forkCount }}</td>
-      <td width="80">{{ repository.watcherCount }}</td>
-      <td width="80">{{ repository.starCount }}</td>
-      <td width="80">{{ repository.contributorCount }}</td>
-      <td width="80">{{ repository.openIssueCount }}</td>
-      <td width="80">{{ repository.defaultBranch }}</td>
+      <td>{{ repository.createT }}</td>
+      <td>{{ repository.updateT }}</td>
+      <td>{{ repository.latestPushT }}</td>
+      <td>{{ repository.canFork }}</td>
+      <td>{{ repository.forkCount }}</td>
+      <td>{{ repository.watcherCount }}</td>
+      <td>{{ repository.starCount }}</td>
+      <td>{{ repository.contributorCount }}</td>
+      <td>{{ repository.openIssueCount }}</td>
+      <td>{{ repository.defaultBranch }}</td>
     </tr>
   </table>
 
   <table border="1" class="table">
     <tr>
-      <td width="80">许可证</td>
+      <td>许可证</td>
       <td v-for="license in repository.licenses" v-bind:key="license">
         {{ license }}
       </td>
@@ -79,6 +79,8 @@
     <div>
       <el-button id="searchbutton" v-on:click="getDependency()" round>搜索</el-button>
     </div>
+  </div>
+  <div>
     <el-radio name="sort_method" label="1" v-model="sort_method"
       ><label>正序</label></el-radio
     >
@@ -89,18 +91,18 @@
   <div>
     <table border="1" class="table">
       <tr>
-        <td width="80">依赖名称</td>
-        <td width="80">依赖的版本要求</td>
-        <td width="80">依赖类型</td>
+        <td>依赖名称</td>
+        <td>依赖的版本要求</td>
+        <td>依赖类型</td>
       </tr>
       <tr v-for="dependency in dependencies" v-bind:key="dependency">
-        <td width="80">
+        <td>
           <router-link :to="'/project/' + dependency.dependencyProjectId">{{
             dependency.dependencyProjectName
           }}</router-link>
         </td>
-        <td width="80">{{ dependency.dependencyReqirements }}</td>
-        <td width="80">{{ dependency.dependencyType }}</td>
+        <td>{{ dependency.dependencyReqirements }}</td>
+        <td>{{ dependency.dependencyType }}</td>
       </tr>
     </table>
   </div>
@@ -223,6 +225,9 @@ export default {
         .then((res) => {
           this.dependencies = res.data.data.repoDeps;
           this.pageAll = res.data.data.pageAll;
+          if (this.pageAll < 1) {
+            this.pageAll = 1;
+          }
         })
         .catch(function (error) {
           console.log(error);

@@ -351,6 +351,9 @@ export default {
           //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
           this.repository_data = res.data.data.repositories;
           this.pageAll = res.data.data.pageAll;
+          if (this.pageAll < 1) {
+            this.pageAll = 1;
+          }
         })
         .catch(function (error) {
           console.log("连接失败");
