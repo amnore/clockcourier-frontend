@@ -32,7 +32,7 @@ export default {
       }
     },
     changeRoute(){
-      if(this.$route.path=="/projects"){
+      if(this.$route.path=="/projects"||this.$route.path=="/"){
         this.activeIndex="1";
       }
       else if(this.$route.path=="/repositories"){
