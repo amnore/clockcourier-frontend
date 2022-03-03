@@ -1,45 +1,49 @@
 <template>
-  <div>
-    <label>名称:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="name"
-      id="project_name"
-      v-model="project_name"
-    />
-    <label>平台:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="platform"
-      id="platform"
-      v-model="platform"
-    />
-    <label>所用语言:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="language"
-      id="language_text"
-      v-model="language_text"
-    />
-    <el-select
-      name="language"
-      id="language"
-      v-model="language_select"
-      placeholder="请选择语言"
-    >
-      <el-option
-        v-for="language in language_list"
-        v-bind:key="language"
-        v-bind:value="language.name"
+  <el-form label-position="left" label-width="80px" :inline="true">
+    <el-form-item label="名称:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="name"
+        id="project_name"
+        v-model="project_name"
+      />
+    </el-form-item>
+    <el-form-item label="平台:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="platform"
+        id="platform"
+        v-model="platform"
+      />
+    </el-form-item>
+    <el-form-item label="所用语言:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="language"
+        id="language_text"
+        v-model="language_text"
+      />
+      <el-select
+        name="language"
+        id="language"
+        v-model="language_select"
+        placeholder="请选择语言"
       >
-        {{ language.name }}
-      </el-option>
-    </el-select>
-    <label>项目地址:</label>
-    <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
+        <el-option
+          v-for="language in language_list"
+          v-bind:key="language"
+          v-bind:value="language.value"
+        >
+          {{ language.name }}
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="项目地址:">
+      <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
+    </el-form-item>
     <!--
     <label>创建时间:</label>
     <el-input type="date" value="2022-02-22" id="create_date" />
@@ -48,36 +52,39 @@
     <label>最新发布时间:</label>
     <el-input type="date" value="2022-02-22" id="latest_pub_date" />
 	-->
-    <label>版本:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="version"
-      id="latestReleaseN"
-      v-model="version"
-    />
-    <label>依赖库:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="dependency"
-      id="dependency"
-      v-model="dependency"
-    />
-    <label>所属仓库:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="repository"
-      id="repository"
-      v-model="repository"
-    />
+    <el-form-item label="版本:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="version"
+        id="latestReleaseN"
+        v-model="version"
+      />
+    </el-form-item>
+    <el-form-item label="依赖库:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="dependency"
+        id="dependency"
+        v-model="dependency"
+      />
+    </el-form-item>
+    <el-form-item label="所属仓库:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="repository"
+        id="repository"
+        v-model="repository"
+      />
+    </el-form-item>
     <div>
       <el-button id="searchbutton" v-on:click="searchProject(1)" round
         >搜索</el-button
       >
     </div>
-  </div>
+  </el-form>
   <div>
     <p>排序方式</p>
     <el-radio name="sort_key" label="1" v-model="sort_key"
@@ -120,27 +127,27 @@
       </thead>
       <tbody>
         <tr v-for="project in project_data" v-bind:key="project">
-          <td class="project-name" width="80">
+          <td class="project-name">
             <router-link :to="'/project/' + project.projectId">{{
               project.projectName
             }}</router-link>
           </td>
-          <td class="project-platform" width="80">{{ project.platform }}</td>
-          <td class="project-language" width="80">{{ project.language }}</td>
-          <td class="project-url" width="80">
+          <td class="project-platform">{{ project.platform }}</td>
+          <td class="project-language">{{ project.language }}</td>
+          <td class="project-url">
             <a :href="project.homepageUrl">{{ project.homepageUrl }}</a>
           </td>
-          <td class="project-creation-time" width="80">
+          <td class="project-creation-time">
             {{ project.createT }}
           </td>
-          <td class="project-update-time" width="80">{{ project.updateT }}</td>
-          <td class="project-release-time" width="80">
+          <td class="project-update-time">{{ project.updateT }}</td>
+          <td class="project-release-time">
             {{ project.latestReleaseT }}
           </td>
-          <td class="project-version" width="80">
+          <td class="project-version">
             {{ project.latestReleaseN }}
           </td>
-          <td class="project-repo-url" width="80">
+          <td class="project-repo-url">
             <a :href="project.repositoryUrl">{{ project.repositoryUrl }}</a>
           </td>
         </tr>
@@ -213,34 +220,44 @@ export default {
       repository: "",
       language_list: [
         {
+          name: "请选择语言",
+          value: "",
+        },
+        {
           name: "C",
+          value: "C",
         },
         {
           name: "C++",
+          value: "C++",
         },
         {
           name: "Java",
+          value: "Java",
         },
         {
           name: "Python",
+          value: "Python",
         },
         {
           name: "PHP",
+          value: "PHP",
         },
         {
           name: "JavaScript",
+          value: "JavaScript",
         },
         {
           name: "Ruby",
+          value: "Ruby",
         },
         {
           name: "Groovy",
+          value: "Groovy",
         },
         {
           name: "Scala",
-        },
-        {
-          name: "",
+          value: "Scala",
         },
       ],
       sort_key: "1",

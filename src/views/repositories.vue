@@ -1,53 +1,59 @@
 <template>
-  <div>
-    <label>名称:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="name"
-      id="repo_name"
-      v-model="repo_name"
-    />
-    <label>平台:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="platform"
-      id="hostType"
-      v-model="platform"
-    />
-    <label>所有者:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="owner"
-      id="owner"
-      v-model="owner"
-    />
-    <label>所用语言:</label>
-    <el-input
-      type="text"
-      value=""
-      placeholder="language"
-      id="language_text"
-      v-model="language_text"
-    />
-    <el-select
-      name="language"
-      id="language"
-      v-model="language_select"
-      placeholder="请选择语言"
-    >
-      <el-option
-        v-for="language in language_list"
-        v-bind:key="language"
-        v-bind:value="language.name"
+  <el-form label-position="right" label-width="80px" :inline="true">
+    <el-form-item label="名称:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="name"
+        id="repo_name"
+        v-model="repo_name"
+      />
+    </el-form-item>
+
+    <el-form-item label="平台:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="platform"
+        id="hostType"
+        v-model="platform"
+      />
+    </el-form-item>
+    <el-form-item label="所有者:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="owner"
+        id="owner"
+        v-model="owner"
+      />
+    </el-form-item>
+    <el-form-item label="所用语言:">
+      <el-input
+        type="text"
+        value=""
+        placeholder="language"
+        id="language_text"
+        v-model="language_text"
+      />
+      <el-select
+        name="language"
+        id="language"
+        v-model="language_select"
+        placeholder="请选择语言"
       >
-        {{ language.name }}
-      </el-option>
-    </el-select>
-    <label>仓库地址:</label>
-    <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
+        <el-option
+          v-for="language in language_list"
+          v-bind:key="language"
+          v-bind:value="language.value"
+        >
+          {{ language.name }}
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="仓库地址:">
+      <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
+    </el-form-item>
     <!--
     <label>创建时间:</label>
     <el-input type="date" value="2022-02-22" id="create_date" />
@@ -56,8 +62,7 @@
     <label>最新push时间:</label>
     <el-input type="date" value="2022-02-22" id="latest_push_date" />
     -->
-    <div>
-      <label>能否fork</label>
+    <el-form-item label="能否fork:">
       <el-radio name="can_be_fork" label="0" v-model="canFork"
         ><label>不选择</label></el-radio
       >
@@ -67,13 +72,13 @@
       <el-radio name="can_be_fork" label="2" v-model="canFork"
         ><label>不能</label></el-radio
       >
-    </div>
+    </el-form-item>
     <div>
       <el-button id="searchbutton" v-on:click="searchRepo(1)" round
         >搜索</el-button
       >
     </div>
-  </div>
+  </el-form>
   <div>
     <p>排序方式</p>
     <el-radio name="sort_key" label="1" v-model="sort_key"
@@ -130,35 +135,35 @@
       <td>默认分支</td>
     </tr>
     <tr v-for="repository in repository_data" v-bind:key="repository">
-      <td class="repo-name" width="80">
+      <td class="repo-name">
         <router-link :to="'/repository/' + repository.repositoryId">{{
           repository.repositoryName
         }}</router-link>
       </td>
-      <td class="repo-host-type" width="80">{{ repository.hostType }}</td>
-      <td class="repo-owner" width="80">{{ repository.repositoryOwner }}</td>
-      <td class="repo-lang" width="80">{{ repository.language }}</td>
-      <td class="repo-url" width="80">
+      <td class="repo-host-type">{{ repository.hostType }}</td>
+      <td class="repo-owner">{{ repository.repositoryOwner }}</td>
+      <td class="repo-lang">{{ repository.language }}</td>
+      <td class="repo-url">
         <a :href="repository.homepageUrl">{{ repository.homepageUrl }}</a>
       </td>
-      <td class="repo-creation-time" width="80">{{ repository.createT }}</td>
-      <td class="repo-update-time" width="80">{{ repository.updateT }}</td>
-      <td class="repo-latest-push-time" width="80">
+      <td class="repo-creation-time">{{ repository.createT }}</td>
+      <td class="repo-update-time">{{ repository.updateT }}</td>
+      <td class="repo-latest-push-time">
         {{ repository.latestPushT }}
       </td>
-      <td class="repo-canfork" width="80">{{ repository.canFork }}</td>
-      <td class="repo-fork-count" width="80">{{ repository.forkCount }}</td>
-      <td class="repo-watcher-count" width="80">
+      <td class="repo-canfork">{{ repository.canFork }}</td>
+      <td class="repo-fork-count">{{ repository.forkCount }}</td>
+      <td class="repo-watcher-count">
         {{ repository.watcherCount }}
       </td>
-      <td class="repo-star-count" width="80">{{ repository.starCount }}</td>
-      <td class="repo-contributor-count" width="80">
+      <td class="repo-star-count">{{ repository.starCount }}</td>
+      <td class="repo-contributor-count">
         {{ repository.contributorCount }}
       </td>
-      <td class="repo-open-issue-count" width="80">
+      <td class="repo-open-issue-count">
         {{ repository.openIssueCount }}
       </td>
-      <td class="repo-default-branch" width="80">
+      <td class="repo-default-branch">
         {{ repository.defaultBranch }}
       </td>
     </tr>
@@ -167,7 +172,9 @@
   <div>
     <ul class="page">
       <li>
-        <span v-if="page > 1"><b @click="page--, searchRepo(page)">上一页</b></span>
+        <span v-if="page > 1"
+          ><b @click="page--, searchRepo(page)">上一页</b></span
+        >
         <span v-if="page == 1">上一页</span>
         <span v-if="Number(pageAll) <= 10">
           <span
@@ -228,34 +235,44 @@ export default {
       repository: "",
       language_list: [
         {
+          name: "请选择语言",
+          value: "",
+        },
+        {
           name: "C",
+          value: "C",
         },
         {
           name: "C++",
+          value: "C++",
         },
         {
           name: "Java",
+          value: "Java",
         },
         {
           name: "Python",
+          value: "Python",
         },
         {
           name: "PHP",
+          value: "PHP",
         },
         {
           name: "JavaScript",
+          value: "JavaScript",
         },
         {
           name: "Ruby",
+          value: "Ruby",
         },
         {
           name: "Groovy",
+          value: "Groovy",
         },
         {
           name: "Scala",
-        },
-        {
-          name: "",
+          value: "Scala",
         },
       ],
       sort_key: "1",
