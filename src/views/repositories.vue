@@ -29,28 +29,12 @@
       />
     </el-form-item>
     <el-form-item label="所用语言:">
-      <el-input
-        type="text"
-        value=""
+      <el-autocomplete
+        v-model="language_text"
+        :fetch-suggestions="getLanguages"
         placeholder="language"
         id="language_text"
-        v-model="language_text"
       />
-      <el-select
-        name="language"
-        id="language"
-        v-model="language_select"
-        placeholder="请选择语言"
-        clearable
-      >
-        <el-option
-          v-for="language in language_list"
-          v-bind:key="language"
-          v-bind:value="language.value"
-        >
-          {{ language.name }}
-        </el-option>
-      </el-select>
     </el-form-item>
     <el-form-item label="仓库地址:">
       <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
@@ -81,45 +65,13 @@
     </div>
   </el-form>
   <div>
-    <p>排序方式</p>
-    <el-radio name="sort_key" label="1" v-model="sort_key"
-      ><label>名称</label></el-radio
+    <el-table
+      :data="repository_data"
+      border
+      :default-sort="{ prop: 'repositoryName', order: 'ascending' }"
+      v-on:sort-change="changeSort"
     >
-    <el-radio name="sort_key" label="2" v-model="sort_key"
-      ><label>创建日期</label></el-radio
-    >
-    <el-radio name="sort_key" label="3" v-model="sort_key"
-      ><label>更新日期</label></el-radio
-    >
-    <el-radio name="sort_key" label="4" v-model="sort_key"
-      ><label>最新发布日期</label></el-radio
-    >
-    <el-radio name="sort_key" label="5" v-model="sort_key"
-      ><label>fork数量</label></el-radio
-    >
-    <el-radio name="sort_key" label="6" v-model="sort_key"
-      ><label>watcher数量</label></el-radio
-    >
-    <el-radio name="sort_key" label="7" v-model="sort_key"
-      ><label>star数量</label></el-radio
-    >
-    <el-radio name="sort_key" label="8" v-model="sort_key"
-      ><label>贡献者数量</label></el-radio
-    >
-    <el-radio name="sort_key" label="9" v-model="sort_key"
-      ><label>开放的issue数量</label></el-radio
-    >
-    <br />
-    <el-radio name="sort_method" label="0" v-model="sort_method"
-      ><label>正序</label></el-radio
-    >
-    <el-radio name="sort_method" label="1" v-model="sort_method"
-      ><label>倒序</label></el-radio
-    >
-  </div>
-  <div>
-    <el-table :data="repository_data" border>
-      <el-table-column prop="repositoryName" label="名称">
+      <el-table-column prop="repositoryName" label="名称" sortable='custom'>
         <template #default="scope">
           <router-link :to="'/repository/' + scope.row.repositoryId">{{
             scope.row.repositoryName
@@ -134,14 +86,14 @@
           <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="createT" label="创建时间" />
-      <el-table-column prop="updateT" label="更新时间" />
+      <el-table-column prop="createT" label="创建时间" sortable='custom'/>
+      <el-table-column prop="updateT" label="更新时间" sortable='custom'/>
       <el-table-column prop="canFork" label="能否fork" />
-      <el-table-column prop="forkCount" label="fork数量"/>
-      <el-table-column prop="watcherCount" label="watcher数量"/>
-      <el-table-column prop="starCount" label="star数量"/>
-      <el-table-column prop="contributorCount" label="贡献者数量"/>
-      <el-table-column prop="openIssueCount" label="issue数量"/>
+      <el-table-column prop="forkCount" label="fork数量" />
+      <el-table-column prop="watcherCount" label="watcher数量" sortable='custom'/>
+      <el-table-column prop="starCount" label="star数量" sortable='custom'/>
+      <el-table-column prop="contributorCount" label="贡献者数量" sortable='custom'/>
+      <el-table-column prop="openIssueCount" label="issue数量" sortable='custom'/>
     </el-table>
   </div>
   <div>
@@ -189,6 +141,20 @@
 
 <script>
 import { search_repo } from "../api/search_repo";
+import getLanguageList from '@/api/LanguageSelector.js'
+
+const sortKeys = {
+  repositoryName: "Name",
+  createT: "CreateT",
+  updateT: "UpdateT",
+  latestPushT: "LatestPushT",
+  // forkCount: "ForkCount",
+  watcherCount: "WatcherCount",
+  starCount: "StarCount",
+  contributorCount: "ContributorCount",
+  openIssueCount: "OpenIssueCount",
+}
+
 export default {
   name: "Repositories", //注册在路由（router.js）里的就是这个
   props: {},
@@ -199,112 +165,42 @@ export default {
       platform: "",
       owner: "",
       language_text: "",
-      language_select: "",
       url: "",
       version: "",
       dependency: "",
       repository: "",
-      language_list: [
-        {
-          name: "请选择语言",
-          value: "",
-        },
-        {
-          name: "C",
-          value: "C",
-        },
-        {
-          name: "C++",
-          value: "C++",
-        },
-        {
-          name: "Java",
-          value: "Java",
-        },
-        {
-          name: "Python",
-          value: "Python",
-        },
-        {
-          name: "PHP",
-          value: "PHP",
-        },
-        {
-          name: "JavaScript",
-          value: "JavaScript",
-        },
-        {
-          name: "Ruby",
-          value: "Ruby",
-        },
-        {
-          name: "Groovy",
-          value: "Groovy",
-        },
-        {
-          name: "Scala",
-          value: "Scala",
-        },
-      ],
-      sort_key: "1",
-      sort_method: "0",
       canFork: "0",
       page: 1,
       pageAll: 1,
       jumpPage: "",
+      sortKey: "Name",
+      sortReverse: false,
     };
   },
-  watch: {
-    sort_key: "changeSortKey",
-    sort_method: "changeSortMethod",
-  },
   methods: {
-    changeSortKey() {
-      this.searchRepo(1);
-    },
-    changeSortMethod() {
-      this.searchRepo(1);
+    changeSort(ev) {
+      if (ev.prop === null) {
+        this.sortKey = "Name"
+        this.sortReverse = false
+      } else {
+        this.sortKey = sortKeys[ev.prop]
+        this.sortReverse = ev.order === "descending"
+      }
+      this.searchRepo(1)
     },
     searchRepo(page) {
       let name = document.getElementById("repo_name").value;
       let hostType = document.getElementById("hostType").value;
       let owner = document.getElementById("owner").value;
-      let language = document.getElementById("language").value;
-      if (language == "") {
-        language = document.getElementById("language_text").value;
-      }
+      let language = this.language_text;
       let url = document.getElementById("url").value;
       this.page = page;
-      let sort = "";
-      if (this.sort_key == 1) {
-        sort = "Name";
-      } else if (this.sort_key == 2) {
-        sort = "CreateT";
-      } else if (this.sort_key == 3) {
-        sort = "UpdateT";
-      } else if (this.sort_key == 4) {
-        sort = "LatestPushT";
-      } else if (this.sort_key == 5) {
-        sort = "ForkCount";
-      } else if (this.sort_key == 6) {
-        sort = "WatcherCount";
-      } else if (this.sort_key == 7) {
-        sort = "StarCount";
-      } else if (this.sort_key == 8) {
-        sort = "ContributorCount";
-      } else if (this.sort_key == 9) {
-        sort = "OpenIssueCount";
-      }
       let can_be_fork = this.canFork;
       let canFork = null;
       if (can_be_fork == 1) {
         canFork = true;
       } else if (can_be_fork == 2) {
         canFork = false;
-      }
-      let isReverse = true;
-      if (this.sort_method == 1) {
-        isReverse = false;
       }
       search_repo(
         name,
@@ -314,12 +210,11 @@ export default {
         url,
         canFork,
         page,
-        sort,
-        isReverse
+        this.sortKey,
+        this.sortReverse
       )
         .then((res) => {
-          console.log("连接成功"); //这里打印出来是为了更直观的看到连接成功了
-          //console.log(res); //res是后端返回来的数据，如果连接成功，则把res打印出来
+          console.log(res.data.msg);
           this.repository_data = res.data.data.repositories;
           this.pageAll = res.data.data.pageAll;
           if (this.pageAll < 1) {
@@ -336,6 +231,9 @@ export default {
         this.page = Number(index);
         this.searchRepo(this.page);
       }
+    },
+    getLanguages(input, cb) {
+      getLanguageList(input, cb)
     },
   },
   mounted() {

@@ -19,28 +19,12 @@
       />
     </el-form-item>
     <el-form-item label="所用语言:">
-      <el-input
-        type="text"
-        value=""
+      <el-autocomplete
+        v-model="language_text"
+        :fetch-suggestions="getLanguages"
         placeholder="language"
         id="language_text"
-        v-model="language_text"
       />
-      <el-select
-        name="language"
-        id="language"
-        v-model="language_select"
-        placeholder="请选择语言"
-        clearable
-      >
-        <el-option
-          v-for="language in language_list"
-          v-bind:key="language"
-          v-bind:value="language.value"
-        >
-          {{ language.name }}
-        </el-option>
-      </el-select>
     </el-form-item>
     <el-form-item label="项目地址:">
       <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
@@ -86,7 +70,7 @@
       >
     </div>
   </el-form>
-  <div>
+  <!-- <div>
     <p>排序方式</p>
     <el-radio name="sort_key" label="1" v-model="sort_key"
       ><label>名称</label></el-radio
@@ -110,10 +94,14 @@
     <el-radio name="sort_method" label="2" v-model="sort_method"
       ><label>倒序</label></el-radio
     >
-  </div>
+  </div> -->
   <div>
-    <el-table :data="project_data" border>
-      <el-table-column prop="projectName" label="名称">
+    <el-table
+      :data="project_data"
+      :default-sort="{ prop: 'projectName', order: 'ascending' }"
+      v-on:sort-change="changeSort"
+      border>
+      <el-table-column prop="projectName" label="名称" sortable='custom'>
         <template #default="scope">
           <router-link :to="'/project/' + scope.row.projectId">{{
             scope.row.projectName
@@ -127,9 +115,9 @@
           <a :href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="createT" label="创建时间" />
-      <el-table-column prop="updateT" label="更新时间" />
-      <el-table-column prop="latestReleaseN" label="版本" />
+      <el-table-column prop="createT" label="创建时间" sortable='custom'/>
+      <el-table-column prop="updateT" label="更新时间" sortable='custom'/>
+      <el-table-column prop="latestReleaseN" label="版本" sortable='custom'/>
       <el-table-column prop="repositoryUrl" label="仓库地址">
         <template #default="scope">
           <a :href="scope.row.repositoryUrl">{{ scope.row.repositoryUrl }}</a>
@@ -182,6 +170,15 @@
 
 <script>
 import { search_project } from "../api/search_project";
+import getLanguageList from '@/api/LanguageSelector.js';
+
+const sortKeys = {
+  projectName: "Name",
+  createT: "CreateT",
+  updateT: "UpdateT",
+  latestReleaseT: "LatestReleaseT",
+  latestReleaseN: "LatestReleaseN"
+}
 
 export default {
   name: "Projects", //注册在路由（router.js）里的就是这个
@@ -192,98 +189,36 @@ export default {
       project_name: "",
       platform: "",
       language_text: "",
-      language_select: "",
       url: "",
       version: "",
       dependency: "",
       repository: "",
-      language_list: [
-        {
-          name: "请选择语言",
-          value: "",
-        },
-        {
-          name: "C",
-          value: "C",
-        },
-        {
-          name: "C++",
-          value: "C++",
-        },
-        {
-          name: "Java",
-          value: "Java",
-        },
-        {
-          name: "Python",
-          value: "Python",
-        },
-        {
-          name: "PHP",
-          value: "PHP",
-        },
-        {
-          name: "JavaScript",
-          value: "JavaScript",
-        },
-        {
-          name: "Ruby",
-          value: "Ruby",
-        },
-        {
-          name: "Groovy",
-          value: "Groovy",
-        },
-        {
-          name: "Scala",
-          value: "Scala",
-        },
-      ],
-      sort_key: "1",
-      sort_method: "1",
       page: 1,
       pageAll: 1,
       jumpPage: "",
+      sortKey: "Name",
+      sortReverse: false,
     };
   },
-  watch: {
-    sort_key: "changeSortKey",
-    sort_method: "changeSortMethod",
-  },
   methods: {
-    changeSortKey() {
-      this.searchProject(1);
-    },
-    changeSortMethod() {
-      this.searchProject(1);
+    changeSort(ev) {
+      if (ev.prop === null) {
+        this.sortKey = "Name"
+        this.sortReverse = false
+      } else {
+        this.sortKey = sortKeys[ev.prop]
+        this.sortReverse = ev.order === "descending"
+      }
+      this.searchProject(1)
     },
     searchProject(page) {
       let name = document.getElementById("project_name").value;
       let platform = document.getElementById("platform").value;
-      let language = document.getElementById("language").value;
-      if (language == "") {
-        language = document.getElementById("language_text").value;
-      }
+      let language = this.language_text;
       let url = document.getElementById("url").value;
       let latestReleaseN = document.getElementById("latestReleaseN").value;
       let dependency = document.getElementById("dependency").value;
       this.page = page;
-      let sort = "";
-      if (this.sort_key == 1) {
-        sort = "Name";
-      } else if (this.sort_key == 2) {
-        sort = "CreateT";
-      } else if (this.sort_key == 3) {
-        sort = "UpdateT";
-      } else if (this.sort_key == 4) {
-        sort = "LatestReleaseT";
-      } else if (this.sort_key == 5) {
-        sort = "LatestReleaseN";
-      }
-      let isReverse = true;
-      if (this.sort_method == 1) {
-        isReverse = false;
-      }
       search_project(
         name,
         platform,
@@ -292,11 +227,11 @@ export default {
         latestReleaseN,
         dependency,
         page,
-        sort,
-        isReverse
+        this.sortKey,
+        this.sortReverse
       )
         .then((res) => {
-          console.log("连接成功");
+          console.log(res.data.msg)
           this.project_data = res.data.data.projects;
           this.pageAll = res.data.data.pageAll;
           if (this.pageAll < 1) {
@@ -314,6 +249,9 @@ export default {
         this.searchProject(this.page);
       }
     },
+    getLanguages(input, cb) {
+      getLanguageList(input, cb)
+    }
   },
   mounted() {
     this.searchProject(1);

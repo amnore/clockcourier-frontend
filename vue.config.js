@@ -22,6 +22,9 @@ module.exports = {
       }
     },
     port: 3002
+  },
+  configureWebpack: {
+    devtool: 'source-map'
   }
 }
 
