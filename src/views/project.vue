@@ -113,7 +113,7 @@
           >
             <el-table-column prop="dependencyProjectName" label="依赖名称">
               <template #default="scope">
-                <el-link type="primary" @click="$router.push('/project/' + scope.row.dependencyProjectID)">{{ scope.row.dependencyProjectName }}</el-link>
+                <el-link type="primary" @click="$router.push('/project/' + scope.row.dependencyProjectId)">{{ scope.row.dependencyProjectName }}</el-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -260,7 +260,6 @@ export default {
         });
     },
     getDependency(page) {
-      console.log(this.project.licenses);
       let id = this.id;
       let version = this.project.latestReleaseN;
       let name = document.getElementById("dependency_name").value;
