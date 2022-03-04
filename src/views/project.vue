@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header height="150px">
-      <el-descriptions :title="project.projectName" :column="3">
+      <el-descriptions :title="project.projectName" :column="3" border>
         <el-descriptions-item label="平台">{{
           project.platform
         }}</el-descriptions-item>
@@ -113,7 +113,13 @@
           >
             <el-table-column prop="dependencyProjectName" label="依赖名称">
               <template #default="scope">
-                <el-link type="primary" @click="$router.push('/project/' + scope.row.dependencyProjectId)">{{ scope.row.dependencyProjectName }}</el-link>
+                <el-link
+                  type="primary"
+                  @click="
+                    $router.push('/project/' + scope.row.dependencyProjectId)
+                  "
+                  >{{ scope.row.dependencyProjectName }}</el-link
+                >
               </template>
             </el-table-column>
             <el-table-column
@@ -301,9 +307,13 @@ export default {
 </script>
 
 <style>
-.table {
-  text-align: center;
-  margin: auto;
+.el-header {
+  margin: 2%;
+}
+
+.el-aside {
+  margin-left: 3%;
+  margin-top: 3%;
 }
 
 .page li {
