@@ -1,5 +1,10 @@
 <template>
-  <el-form id="search-form" label-position="right" label-width="80px" :inline="true">
+  <el-form
+    id="search-form"
+    label-position="right"
+    label-width="80px"
+    :inline="true"
+  >
     <el-form-item label="名称:">
       <el-input
         type="text"
@@ -71,9 +76,12 @@
       :default-sort="{ prop: 'repositoryName', order: 'ascending' }"
       v-on:sort-change="changeSort"
     >
-      <el-table-column prop="repositoryName" label="名称" sortable='custom'>
+      <el-table-column prop="repositoryName" label="名称" sortable="custom">
         <template #default="scope">
-          <el-link v-on:click="$router.push('/repository/' + scope.row.repositoryId)">
+          <el-link
+            type="primary"
+            v-on:click="$router.push('/repository/' + scope.row.repositoryId)"
+          >
             {{ scope.row.repositoryName }}
           </el-link>
         </template>
@@ -83,17 +91,39 @@
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <el-link href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</el-link>
+          <el-link type="primary" href="scope.row.homepageUrl">{{
+            scope.row.homepageUrl
+          }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="createT" label="创建时间" sortable='custom'/>
-      <el-table-column prop="updateT" label="更新时间" sortable='custom'/>
+      <el-table-column prop="createT" label="创建时间" sortable="custom">
+        <template #default="scope">
+          <p>{{ dateFormat(scope.row.createT) }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="updateT" label="更新时间" sortable="custom">
+        <template #default="scope">
+          <p>{{ dateFormat(scope.row.updateT) }}</p>
+        </template>
+      </el-table-column>
       <el-table-column prop="canFork" label="能否fork" />
-      <el-table-column prop="forkCount" label="fork数量" sortable='custom'/>
-      <el-table-column prop="watcherCount" label="watcher数量" sortable='custom'/>
-      <el-table-column prop="starCount" label="star数量" sortable='custom'/>
-      <el-table-column prop="contributorCount" label="贡献者数量" sortable='custom'/>
-      <el-table-column prop="openIssueCount" label="issue数量" sortable='custom'/>
+      <el-table-column prop="forkCount" label="fork数量" sortable="custom" />
+      <el-table-column
+        prop="watcherCount"
+        label="watcher数量"
+        sortable="custom"
+      />
+      <el-table-column prop="starCount" label="star数量" sortable="custom" />
+      <el-table-column
+        prop="contributorCount"
+        label="贡献者数量"
+        sortable="custom"
+      />
+      <el-table-column
+        prop="openIssueCount"
+        label="issue数量"
+        sortable="custom"
+      />
     </el-table>
   </div>
   <div>
@@ -141,7 +171,8 @@
 
 <script>
 import { search_repo } from "../api/search_repo";
-import getLanguageList from '@/api/LanguageSelector.js'
+import getLanguageList from "@/scripts/LanguageSelector.js";
+import { dateFormatter } from "@/scripts/DateFormatter.js";
 
 const sortKeys = {
   repositoryName: "Name",
@@ -153,7 +184,7 @@ const sortKeys = {
   starCount: "StarCount",
   contributorCount: "ContributorCount",
   openIssueCount: "OpenIssueCount",
-}
+};
 
 export default {
   name: "Repositories", //注册在路由（router.js）里的就是这个
@@ -180,13 +211,13 @@ export default {
   methods: {
     changeSort(ev) {
       if (ev.prop === null) {
-        this.sortKey = "Name"
-        this.sortReverse = false
+        this.sortKey = "Name";
+        this.sortReverse = false;
       } else {
-        this.sortKey = sortKeys[ev.prop]
-        this.sortReverse = ev.order === "descending"
+        this.sortKey = sortKeys[ev.prop];
+        this.sortReverse = ev.order === "descending";
       }
-      this.searchRepo(1)
+      this.searchRepo(1);
     },
     searchRepo(page) {
       let name = document.getElementById("repo_name").value;
@@ -233,7 +264,10 @@ export default {
       }
     },
     getLanguages(input, cb) {
-      getLanguageList(input, cb)
+      getLanguageList(input, cb);
+    },
+    dateFormat(date) {
+      return dateFormatter(date);
     },
   },
   mounted() {
@@ -263,6 +297,6 @@ export default {
 }
 
 #search-form {
-  margin: 2% 0;
+  margin: 2% auto;
 }
 </style>

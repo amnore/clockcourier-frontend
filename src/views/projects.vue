@@ -1,5 +1,10 @@
 <template>
-  <el-form label-position="left" label-width="80px" :inline="true">
+  <el-form
+    id="search-form"
+    label-position="left"
+    label-width="80px"
+    :inline="true"
+  >
     <el-form-item label="名称:">
       <el-input
         type="text"
@@ -100,11 +105,15 @@
       :data="project_data"
       :default-sort="{ prop: 'projectName', order: 'ascending' }"
       v-on:sort-change="changeSort"
-      border>
-      <el-table-column prop="projectName" label="名称" sortable='custom'>
+      border
+    >
+      <el-table-column prop="projectName" label="名称" sortable="custom">
         <template #default="scope">
-          <el-link v-on:click="$router.push('/project/' + scope.row.projectId)">
-              {{ scope.row.projectName }}
+          <el-link
+            type="primary"
+            v-on:click="$router.push('/project/' + scope.row.projectId)"
+          >
+            {{ scope.row.projectName }}
           </el-link>
         </template>
       </el-table-column>
@@ -112,15 +121,27 @@
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <el-link href="scope.row.homepageUrl">{{ scope.row.homepageUrl }}</el-link>
+          <el-link type="primary" href="scope.row.homepageUrl">{{
+            scope.row.homepageUrl
+          }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="createT" label="创建时间" sortable='custom'/>
-      <el-table-column prop="updateT" label="更新时间" sortable='custom'/>
-      <el-table-column prop="latestReleaseN" label="版本" sortable='custom'/>
+      <el-table-column prop="createT" label="创建时间" sortable="custom">
+        <template #default="scope">
+          <p>{{ dateFormat(scope.row.createT) }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="updateT" label="更新时间" sortable="custom">
+        <template #default="scope">
+          <p>{{ dateFormat(scope.row.updateT) }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="latestReleaseN" label="版本" sortable="custom" />
       <el-table-column prop="repositoryUrl" label="仓库地址">
         <template #default="scope">
-          <el-link href="scope.row.repositoryUrl">{{ scope.row.repositoryUrl }}</el-link>
+          <el-link type="primary" href="scope.row.repositoryUrl">{{
+            scope.row.repositoryUrl
+          }}</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -170,15 +191,16 @@
 
 <script>
 import { search_project } from "../api/search_project";
-import getLanguageList from '@/api/LanguageSelector.js';
+import getLanguageList from "@/scripts/LanguageSelector.js";
+import { dateFormatter } from "@/scripts/DateFormatter.js";
 
 const sortKeys = {
   projectName: "Name",
   createT: "CreateT",
   updateT: "UpdateT",
   latestReleaseT: "LatestReleaseT",
-  latestReleaseN: "LatestReleaseN"
-}
+  latestReleaseN: "LatestReleaseN",
+};
 
 export default {
   name: "Projects", //注册在路由（router.js）里的就是这个
@@ -203,13 +225,13 @@ export default {
   methods: {
     changeSort(ev) {
       if (ev.prop === null) {
-        this.sortKey = "Name"
-        this.sortReverse = false
+        this.sortKey = "Name";
+        this.sortReverse = false;
       } else {
-        this.sortKey = sortKeys[ev.prop]
-        this.sortReverse = ev.order === "descending"
+        this.sortKey = sortKeys[ev.prop];
+        this.sortReverse = ev.order === "descending";
       }
-      this.searchProject(1)
+      this.searchProject(1);
     },
     searchProject(page) {
       let name = document.getElementById("project_name").value;
@@ -231,7 +253,7 @@ export default {
         this.sortReverse
       )
         .then((res) => {
-          console.log(res.data.msg)
+          console.log(res.data.msg);
           this.project_data = res.data.data.projects;
           this.pageAll = res.data.data.pageAll;
           if (this.pageAll < 1) {
@@ -250,8 +272,11 @@ export default {
       }
     },
     getLanguages(input, cb) {
-      getLanguageList(input, cb)
-    }
+      getLanguageList(input, cb);
+    },
+    dateFormat(date) {
+      return dateFormatter(date);
+    },
   },
   mounted() {
     this.searchProject(1);
@@ -272,5 +297,9 @@ export default {
   margin: 0 5px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#search-form {
+  margin: 2% auto;
 }
 </style>
