@@ -91,7 +91,7 @@
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <el-link type="primary" href="scope.row.homepageUrl">{{
+          <el-link type="primary" :href="scope.row.homepageUrl">{{
             scope.row.homepageUrl
           }}</el-link>
         </template>

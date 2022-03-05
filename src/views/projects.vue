@@ -121,7 +121,7 @@
       <el-table-column prop="language" label="所用语言" />
       <el-table-column prop="homepageUrl" label="地址">
         <template #default="scope">
-          <el-link type="primary" href="scope.row.homepageUrl">{{
+          <el-link type="primary" :href="scope.row.homepageUrl">{{
             scope.row.homepageUrl
           }}</el-link>
         </template>
@@ -139,7 +139,7 @@
       <el-table-column prop="latestReleaseN" label="版本" sortable="custom" />
       <el-table-column prop="repositoryUrl" label="仓库地址">
         <template #default="scope">
-          <el-link type="primary" href="scope.row.repositoryUrl">{{
+          <el-link type="primary" :href="scope.row.repositoryUrl">{{
             scope.row.repositoryUrl
           }}</el-link>
         </template>
