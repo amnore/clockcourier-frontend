@@ -1,9 +1,9 @@
 import axios from "axios";
 
-var baseurl = "114.116.230.11:8082/api/it1"
+var baseurl = "https://clockcourier.xyz:8082/api/it1/"
 export function search_repo(name, hostType, owner, language, url, can_be_fork, page, sort, isReverse) {
   return axios({
-    url: `http://` + baseurl + `/repository/query`, //后端的接口地址
+    url: baseurl + `/repository/query`, //后端的接口地址
     method: "post",
     params: {},
     data: {
