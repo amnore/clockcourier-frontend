@@ -22,14 +22,14 @@ export function search_repo(name, hostType, owner, language, url, can_be_fork, p
 
 export function get_repo_by_id(id) {
   return axios({
-    url: `http://` + baseurl + `/repository/` + id + `/get`, //后端的接口地址
+    url: baseurl + `/repository/` + id + `/get`, //后端的接口地址
     method: "get",
   })
 }
 
 export function get_repo_dependency(repo_id, dependency_name, dependency_type, page, isReverse) {
   return axios({
-    url: `http://` + baseurl + `/repository/` + repo_id + `/dependency/query`, //后端的接口地址
+    url: baseurl + `/repository/` + repo_id + `/dependency/query`, //后端的接口地址
     method: "post",
     params: {},
     data: {
