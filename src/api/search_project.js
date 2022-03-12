@@ -1,6 +1,6 @@
 import axios from "axios";
 
-var baseurl = "https://clockcourier.xyz:8081/api/it1/"
+var baseurl = "https://clockcourier.xyz:8081/api/it1"
 export function search_project(name, platform, language, url, latestReleaseN, dependency, page, sort, isReverse) {
   return axios({
     url: baseurl + `/project/query`, //后端的接口地址
