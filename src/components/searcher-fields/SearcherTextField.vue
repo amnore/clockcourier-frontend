@@ -1,6 +1,9 @@
 <template>
   <el-form-item :label="label">
-    <el-input type="text" :model-value="modelValue" @update:modelValue="$emit('update:modelValue', $event)"/>
+    <el-input
+      type="text"
+      :model-value="modelValue"
+      @update:modelValue="$emit('update:modelValue', $event)"/>
   </el-form-item>
 </template>
 

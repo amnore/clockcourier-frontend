@@ -1,21 +1,27 @@
 <template>
-  <el-form>
-    <el-input
-      class="searcher-main-input"
-      type="text"
-      :placeholder="paramNames[defaultParam]"
-      v-model="paramValues[defaultParam]">
-      <template #append>
-        <el-button :icon="searchIcon" @click="doSearch" circle/>
-      </template>
-    </el-input>
-    <component
-      class="searcher-additional-fields"
-      v-for="(item, name) in formItems"
-      :is="item"
-      :key="name" 
-      :label="paramNames[name]"
-      v-model="paramValues[name]"/>
+  <el-form id="searcher">
+    <div id="searcher-main-input">
+      <el-input
+        type="text"
+        :placeholder="paramNames[defaultParam]"
+        v-model="paramValues[defaultParam]">
+        <template #suffix>
+          <el-button :icon="searchIcon" @click="doSearch"/>
+          <el-button :icon="moreIcon" @click="showAdvancedFields"/>
+        </template>
+      </el-input>
+    </div>
+    <div
+      id="searcher-additional-fields"
+      ref="searcherAdditionalFields"
+      hidden>
+      <component
+        v-for="(item, name) in formItems"
+        :is="item"
+        :key="name"
+        :label="paramNames[name]"
+        v-model="paramValues[name]"/>
+    </div>
   </el-form>
 </template>
 
@@ -23,7 +29,7 @@
 import { searchParams } from '@/scripts/DataSchema.js'
 import SearcherCheckBox from '@/components/searcher-fields/SearcherCheckBox.vue'
 import SearcherTextField from '@/components/searcher-fields/SearcherTextField.vue'
-import { Search } from '@element-plus/icons-vue'
+import { Search, More } from '@element-plus/icons-vue'
 
 const paramNameMapping = {
   projectInfo: {
@@ -71,13 +77,12 @@ export default {
     category: String
   },
   data() {
-    const d = {
+    return {
       paramValues: Object.fromEntries(
         Object.entries(searchParams[this.category])
           .map(e => [e[0], e[1]()])
       )
     }
-    return d
   },
   methods: {
     doSearch() {
@@ -85,11 +90,19 @@ export default {
         name: searchPaths[this.category],
         params: this.paramValues,
       })
+    },
+    showAdvancedFields() {
+      console.log(Object.fromEntries(Object.keys(this.params).map(k => [k, this.paramValues[k]])))
+      const elem = this.$refs.searcherAdditionalFields
+      elem.hidden = !elem.hidden
     }
   },
   computed: {
     searchIcon() {
       return Search
+    },
+    moreIcon() {
+      return More
     },
     params() {
       return searchParams[this.category]
@@ -117,12 +130,27 @@ export default {
 </script>
 
 <style>
-.searcher-main-input.el-input {
-  height: var(--searcher-main-input-height);
-  width: var(--searcher-main-input-width);
+#searcher-main-input .el-button {
+  align-self: center;
 }
 
-.searcher-main-input.el-input input {
-  height: var(--searcher-main-input-height);
+#searcher-main-input .el-input {
+  height: 100%;
+}
+
+#searcher-main-input input {
+  height: 100%;
+  font-size: 1.5em;
+}
+
+#searcher-additional-fields {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#searcher-additional-fields > * {
+  float: left;
+  margin: 1em 5%;
+  max-width: min(90%, max(10ch, 30%));
 }
 </style>

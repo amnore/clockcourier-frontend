@@ -296,11 +296,15 @@ export default {
   margin: 2% auto;
 }
 
-::v-deep .el-input.searcher-main-input {
-  --searcher-main-input-height: var(--el-header-height);
-  --searcher-main-input-width: calc(100% - var(--header-logo-width));
-  /* height: var(--el-header-height); */
-  float: left;
+::v-deep #searcher-main-input {
+  width: calc(0.6 * (100% - var(--header-logo-width)));
+  height: calc(0.75 * var(--el-header-height));
+  margin: calc(0.1 * var(--el-header-height)) 5%;
+  float: right;
   border-bottom: none;
+}
+
+::v-deep #searcher-additional-fields {
+  padding-top: var(--el-header-height);
 }
 </style>

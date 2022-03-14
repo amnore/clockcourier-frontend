@@ -24,13 +24,13 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .searcher-main-input {
-  --searcher-main-input-height: 64px;
-  /* --height: 64px; */
-  /* height: var(--height); */
+::v-deep #searcher-main-input {
+  width: 60%;
+  height: 3em;
+  margin: 1em auto;
 }
-::v-deep .searcher-main-input input {
-  font-size: 2em;
-  /* height: var(--height); */
+
+#searcher::v-deep {
+  margin-top: 30vh;
 }
 </style>
