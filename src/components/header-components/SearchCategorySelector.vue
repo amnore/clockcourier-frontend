@@ -1,0 +1,28 @@
+<template>
+  <el-menu
+    id='header-menu'
+    :collapse-transition="false"
+    default-active="projectInfo"
+    mode="horizontal"
+    @select="$emit('select', $event)"
+  >
+    <el-menu-item index="projectInfo">项目</el-menu-item>
+    <el-menu-item index="repositoryInfo">仓库</el-menu-item>
+    <el-menu-item index="mavenRepositoryInfo">Maven 仓库</el-menu-item>
+  </el-menu>
+</template>
+
+<script>
+export default {
+  emits: [ 'select' ],
+}
+</script>
+
+<style scoped>
+#header-menu {
+  width: calc(100% - var(--header-logo-width));
+  float: left;
+  width: 80%;
+  border-bottom: none;
+}
+</style>

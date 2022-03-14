@@ -1,5 +1,8 @@
 <template>
-  <el-form
+  <page-header>
+    <searcher category="projectInfo" />
+  </page-header>
+  <!-- <el-form
     id="search-form"
     label-position="left"
     label-width="80px"
@@ -34,14 +37,12 @@
     <el-form-item label="项目地址:">
       <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
     </el-form-item>
-    <!--
     <label>创建时间:</label>
     <el-input type="date" value="2022-02-22" id="create_date" />
     <label>更新时间:</label>
     <el-input type="date" value="2022-02-22" id="update_date" />
     <label>最新发布时间:</label>
     <el-input type="date" value="2022-02-22" id="latest_pub_date" />
-	-->
     <el-form-item label="版本:">
       <el-input
         type="text"
@@ -74,7 +75,7 @@
         >搜索</el-button
       >
     </div>
-  </el-form>
+  </el-form> -->
   <!-- <div>
     <p>排序方式</p>
     <el-radio name="sort_key" label="1" v-model="sort_key"
@@ -193,6 +194,9 @@
 import { search_project } from "../api/search_project";
 import getLanguageList from "@/scripts/LanguageSelector.js";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
+import Searcher from '../components/Searcher.vue';
+import { searchParams } from '@/scripts/DataSchema.js'
+import PageHeader from '@/components/PageHeader.vue'
 
 const sortKeys = {
   projectName: "Name",
@@ -203,24 +207,25 @@ const sortKeys = {
 };
 
 export default {
+  components: { Searcher, PageHeader },
   name: "Projects", //注册在路由（router.js）里的就是这个
-  props: {},
+  props: searchParams.projectInfo,
   data() {
     return {
       project_data: [],
-      project_name: "",
-      platform: "",
-      language_text: "",
-      url: "",
-      version: "",
-      dependency: "",
-      repository: "",
       page: 1,
       pageAll: 1,
       jumpPage: "",
       sortKey: "Name",
       sortReverse: false,
     };
+  },
+  watch: {
+    '$route.params': function(newParams, oldParams) {
+      newParams, oldParams
+      console.log('route changed')
+      this.searchProject(newParams, 1)
+    }
   },
   methods: {
     changeSort(ev) {
@@ -231,44 +236,32 @@ export default {
         this.sortKey = sortKeys[ev.prop];
         this.sortReverse = ev.order === "descending";
       }
-      this.searchProject(1);
+      this.searchProject(this.$props, 1);
     },
-    searchProject(page) {
-      let name = document.getElementById("project_name").value;
-      let platform = document.getElementById("platform").value;
-      let language = this.language_text;
-      let url = document.getElementById("url").value;
-      let latestReleaseN = document.getElementById("latestReleaseN").value;
-      let dependency = document.getElementById("dependency").value;
+    searchProject(params, page) {
+      // console.log(Object.fromEntries(Object.keys(searchParams.projectInfo).map(k => [k, this[k]])))
       this.page = page;
-      search_project(
-        name,
-        platform,
-        language,
-        url,
-        latestReleaseN,
-        dependency,
+      search_project({
         page,
-        this.sortKey,
-        this.sortReverse
-      )
-        .then((res) => {
-          console.log(res.data.msg);
-          this.project_data = res.data.data.projects;
-          this.pageAll = res.data.data.pageAll;
-          if (this.pageAll < 1) {
-            this.pageAll = 1;
-          }
-        })
-        .catch(function (error) {
-          console.log("连接失败");
-          console.log(error);
-        });
+        sort: this.sortKey,
+        isReverse: this.sortReverse,
+        ...params
+      }).then((res) => {
+        console.log(res.data.msg);
+        this.project_data = res.data.data.projects;
+        this.pageAll = res.data.data.pageAll;
+        if (this.pageAll < 1) {
+          this.pageAll = 1;
+        }
+      }).catch(function (error) {
+        console.log("连接失败");
+        console.log(error);
+      });
     },
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
-        this.searchProject(this.page);
+        this.searchProject(this.$props, this.page);
       }
     },
     getLanguages(input, cb) {
@@ -279,13 +272,13 @@ export default {
     },
   },
   mounted() {
-    this.searchProject(1);
+    this.searchProject(this.$props, 1);
   },
   created() {},
 };
 </script>
 
-<style>
+<style scoped>
 .page li {
   display: inline-block;
   margin: 0 5px;
@@ -301,5 +294,13 @@ export default {
 
 #search-form {
   margin: 2% auto;
+}
+
+::v-deep .el-input.searcher-main-input {
+  --searcher-main-input-height: var(--el-header-height);
+  --searcher-main-input-width: calc(100% - var(--header-logo-width));
+  /* height: var(--el-header-height); */
+  float: left;
+  border-bottom: none;
 }
 </style>

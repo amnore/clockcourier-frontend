@@ -1,21 +1,11 @@
 import axios from "axios";
 
 var baseurl = "https://clockcourier.xyz:8081/api/it1"
-export function search_project(name, platform, language, url, latestReleaseN, dependency, page, sort, isReverse) {
+export function search_project(data) {
   return axios({
     url: baseurl + `/project/query`, //后端的接口地址
     method: "post",
-    data: {
-      "name": name,
-      "platform": platform,
-      "language": language,
-      "homepageUrl": url,
-      "latestReleaseN": latestReleaseN,
-      "dependency": dependency,
-      "page": page,
-      "sort": sort,
-      "isReverse": isReverse
-    },
+    data,
   })
 }
 
