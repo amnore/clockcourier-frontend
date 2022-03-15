@@ -2,32 +2,34 @@
   <div>
     <ul class="page">
       <li>
-        <span v-if="page > 1"><b @click="page--, search(page)">上一页</b></span>
+        <span v-if="page > 1"><b @click="page--, goPage(page)">上一页</b></span>
         <span v-if="page == 1">上一页</span>
         <span v-if="Number(pageAll) <= 10">
           <span
             v-for="index in pageAll"
             :key="index"
             :class="{ active: page == index }"
-            @click="goPage(index)"
+            @click="(page = index), goPage(index)"
             >{{ index }}</span
           ></span
         >
         <span v-if="Number(pageAll) > 10">
-          <span @click="goPage(1)">1</span>
+          <span @click="(page = 1), goPage(1)">1</span>
           <span v-if="page > 3">...</span>
-          <span v-if="page > 2" @click="goPage(page - 1)">{{ page - 1 }}</span>
+          <span v-if="page > 2" @click="page--, goPage(page)">{{
+            page - 1
+          }}</span>
           <span v-if="page > 1 && page < pageAll" @click="goPage(page)">{{
             page
           }}</span>
-          <span v-if="page < pageAll - 1" @click="goPage(page + 1)">{{
+          <span v-if="page < pageAll - 1" @click="page++, goPage(page)">{{
             page + 1
           }}</span>
           <span v-if="page < pageAll - 2">...</span>
-          <span @click="goPage(pageAll)">{{ pageAll }}</span>
+          <span @click="(page = pageAll), goPage(pageAll)">{{ pageAll }}</span>
         </span>
         <span v-if="page != pageAll"
-          ><b @click="page++, search(page)">下一页</b></span
+          ><b @click="page++, goPage(page)">下一页</b></span
         >
         <span v-if="page == pageAll">下一页</span>
       </li>
@@ -35,7 +37,9 @@
       <li>到</li>
       <li><el-input type="text" value="1" v-model="jumpPage" /></li>
       <li>页</li>
-      <el-button v-on:click="goPage(jumpPage)">确定</el-button>
+      <el-button v-on:click="(page = Number(jumpPage)), goPage(jumpPage)"
+        >确定</el-button
+      >
     </ul>
   </div>
 </template>
@@ -44,19 +48,18 @@
 export default {
   name: "Page",
   props: {
-    pageAll: 1,
-    search: new Function(),
+    pageAll: Number,
+    goPage: new Function(),
   },
-  data: {
-    jumpPage: "",
-    page: 1,
+  data() {
+    return {
+      jumpPage: "",
+      page: 1,
+    };
   },
   methods: {
-    goPage(index) {
-      if (Number(index) > 0 && Number(index) <= this.pageAll) {
-        this.page = Number(index);
-        this.search(this.page);
-      }
+    changePage(index) {
+      this.page = index;
     },
   },
 };
