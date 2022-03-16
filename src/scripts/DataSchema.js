@@ -91,3 +91,80 @@ export const searchParams = {
     artifactId: String,
   }
 }
+
+export const columnInfos = {
+  projectsColumnInfo: [{
+    columnName: "名称",
+    sortable: true,
+    isURL: false,
+    keyword: "projectName",
+    isRouter: true,
+    isDate: false,
+    targetURL: "/project/",
+    paramKeyword: "projectId"
+  }, {
+    columnName: "平台",
+    sortable: false,
+    isURL: false,
+    keyword: "platform",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "所用语言",
+    sortable: false,
+    isURL: false,
+    keyword: "language",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "地址",
+    sortable: false,
+    isURL: true,
+    keyword: "homepageUrl",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "创建时间",
+    sortable: true,
+    isURL: false,
+    keyword: "createT",
+    isRouter: false,
+    isDate: true,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "更新时间",
+    sortable: true,
+    isURL: false,
+    keyword: "updateT",
+    isRouter: false,
+    isDate: true,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "版本",
+    sortable: true,
+    isURL: false,
+    keyword: "latestReleaseN",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "仓库地址",
+    sortable: false,
+    isURL: true,
+    keyword: "repositoryUrl",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }
+  ]
+}

@@ -101,7 +101,7 @@
       ><label>倒序</label></el-radio
     >
   </div> -->
-  <div>
+  <!-- <div>
     <el-table
       :data="project_data"
       :default-sort="{ prop: 'projectName', order: 'ascending' }"
@@ -146,7 +146,12 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </div> -->
+  <my-table
+    :changeSort="changeSort"
+    :columnInfo="columnInfo"
+    :contentData="project_data"
+  ></my-table>
   <page :goPage="goPage" :pageAll="pageAll"></page>
 </template>
 
@@ -155,9 +160,10 @@ import { search_project } from "../api/search_project";
 import getLanguageList from "@/scripts/LanguageSelector.js";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Searcher from "../components/Searcher.vue";
-import { searchParams } from "@/scripts/DataSchema.js";
+import { searchParams, columnInfos } from "@/scripts/DataSchema.js";
 import PageHeader from "@/components/PageHeader.vue";
 import Page from "../components/Page.vue";
+import MyTable from "../components/Table.vue";
 
 const sortKeys = {
   projectName: "Name",
@@ -168,7 +174,7 @@ const sortKeys = {
 };
 
 export default {
-  components: { Searcher, PageHeader, Page },
+  components: { Searcher, PageHeader, Page, MyTable },
   name: "Projects", //注册在路由（router.js）里的就是这个
   props: searchParams.projectInfo,
   data() {
@@ -177,6 +183,7 @@ export default {
       pageAll: 1,
       sortKey: "Name",
       sortReverse: false,
+      columnInfo: columnInfos.projectsColumnInfo,
     };
   },
   watch: {
