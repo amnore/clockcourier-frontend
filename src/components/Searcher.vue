@@ -6,7 +6,7 @@
         :placeholder="paramNames[defaultParam]"
         v-model="paramValues[defaultParam]">
         <template #suffix>
-          <el-button :icon="searchIcon" @click="doSearch"/>
+          <el-button :icon="searchIcon" @click="$emit('search', paramValues)"/>
           <el-button :icon="moreIcon" @click="showAdvancedFields"/>
         </template>
       </el-input>
@@ -66,13 +66,9 @@ const defaultFormItem = {
   Boolean: SearcherCheckBox,
 }
 
-const searchPaths = {
-  projectInfo: 'Projects',
-  repositoryInfo: 'Repositories',
-}
-
 export default {
   name: 'Searcher',
+  emits: ['search'],
   props: {
     category: String
   },
@@ -85,12 +81,6 @@ export default {
     }
   },
   methods: {
-    doSearch() {
-      this.$router.push({
-        name: searchPaths[this.category],
-        params: this.paramValues,
-      })
-    },
     showAdvancedFields() {
       console.log(Object.fromEntries(Object.keys(this.params).map(k => [k, this.paramValues[k]])))
       const elem = this.$refs.searcherAdditionalFields
