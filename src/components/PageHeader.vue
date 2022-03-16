@@ -15,7 +15,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .el-header {
   --header-logo-width: 200px;
   border-bottom: solid 1px var(--el-border-color-base);

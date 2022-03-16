@@ -119,16 +119,16 @@ export default {
 }
 </script>
 
-<style>
-#searcher-main-input .el-button {
+<style scoped>
+#searcher-main-input::v-deep .el-button {
   align-self: center;
 }
 
-#searcher-main-input .el-input {
+#searcher-main-input::v-deep .el-input {
   height: 100%;
 }
 
-#searcher-main-input input {
+#searcher-main-input::v-deep input {
   height: 100%;
   font-size: 1.5em;
 }

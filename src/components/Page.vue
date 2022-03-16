@@ -66,7 +66,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .page li {
   display: inline-block;
   margin: 0 5px;

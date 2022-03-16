@@ -250,7 +250,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
 .page li {
   display: inline-block;
   margin: 0 5px;

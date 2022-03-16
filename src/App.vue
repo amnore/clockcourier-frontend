@@ -17,7 +17,7 @@ export default {
   color: #2c3e50;
 }
 
-.el-form-item{
+/* .el-form-item{
   width: 20%;
-}
+} */
 </style>
