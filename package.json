@@ -30,7 +30,9 @@
         "babel-jest": "^27.0.6",
         "eslint": "^6.7.2",
         "eslint-plugin-vue": "^7.0.0",
-        "jest": "^27.5.1"
+        "jest": "^27.5.1",
+        "sass": "^1.49.9",
+        "sass-loader": "^10.2.1"
     },
     "eslintConfig": {
         "root": true,

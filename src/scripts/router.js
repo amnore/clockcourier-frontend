@@ -4,6 +4,7 @@ import Projects from '../views/projects.vue'
 import Project from '../views/project.vue'
 import Repository from '../views/repository.vue'
 import SearchView from '@/views/SearchView.vue'
+import DependencyGraphView from '@/views/DependencyGraphView.vue'
 
 
 const routes = [
@@ -35,6 +36,11 @@ const routes = [
     name: 'Repository',
     component: Repository
   },
+  {
+    path: '/dependency-graph',
+    name: 'DependencyGraph',
+    component: DependencyGraphView,
+  }
 ]
 
 export const router = new createRouter({
