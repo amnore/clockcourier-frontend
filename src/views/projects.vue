@@ -1,6 +1,6 @@
 <template>
   <page-header>
-    <searcher category="projectInfo" />
+    <searcher category="projectInfo" @search="doSearch"/>
   </page-header>
   <!-- <el-form
     id="search-form"
@@ -236,6 +236,12 @@ export default {
     dateFormat(date) {
       return dateFormatter(date);
     },
+    doSearch(paramValues) {
+      this.$router.push({
+        name: 'Projects',
+        params: paramValues,
+      })
+    }
   },
   mounted() {
     this.searchProject(this.$props, 1);

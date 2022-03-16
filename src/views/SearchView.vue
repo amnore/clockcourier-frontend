@@ -2,13 +2,18 @@
   <page-header>
     <search-category-selector @select="category = $event"/>
   </page-header>
-  <searcher :category="category" />
+  <searcher :category="category" @search="doSearch"/>
 </template>
 
 <script>
 import Searcher from '@/components/Searcher.vue'
 import PageHeader from '@/components/PageHeader.vue'
 import SearchCategorySelector from '@/components/header-components/SearchCategorySelector.vue'
+
+const searchPaths = {
+  projectInfo: 'Projects',
+  repositoryInfo: 'Repositories',
+}
 
 export default {
   name:"Search",
@@ -18,7 +23,13 @@ export default {
       category: "projectInfo"
     }
   },
-  methods() {
+  methods: {
+    doSearch(paramValues) {
+      this.$router.push({
+        name: searchPaths[this.category],
+        params: paramValues,
+      })
+    }
   }
 }
 </script>
