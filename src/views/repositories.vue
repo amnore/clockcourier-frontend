@@ -69,7 +69,7 @@
       >
     </div>
   </el-form>
-  <div>
+  <!-- <div>
     <el-table
       :data="repository_data"
       border
@@ -125,7 +125,8 @@
         sortable="custom"
       />
     </el-table>
-  </div>
+  </div> -->
+  <my-table :changeSort="changeSort" :columnInfo="columnInfo" :contentData="repository_data"></my-table>
   <page :goPage="goPage" :pageAll="pageAll"></page>
 </template>
 
@@ -134,6 +135,8 @@ import { search_repo } from "../api/search_repo";
 import getLanguageList from "@/scripts/LanguageSelector.js";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "@/components/Page.vue";
+import MyTable from "../components/Table.vue";
+import { columnInfos } from "../scripts/DataSchema.js";
 
 const sortKeys = {
   repositoryName: "Name",
@@ -149,7 +152,7 @@ const sortKeys = {
 
 export default {
   name: "Repositories",
-  components: { Page },
+  components: { Page, MyTable },
   props: {},
   data() {
     return {
@@ -166,6 +169,7 @@ export default {
       pageAll: 1,
       sortKey: "Name",
       sortReverse: false,
+      columnInfo: columnInfos.repositoriesColumnInfo,
     };
   },
   methods: {
