@@ -1,8 +1,8 @@
 <template>
   <page-header>
-    <search-category-selector @select="category = $event"/>
+    <search-category-selector @select="type = $event"/>
   </page-header>
-  <searcher :category="category" @search="doSearch"/>
+  <searcher :category="searchCategory" @search="doSearch"/>
 </template>
 
 <script>
@@ -13,6 +13,13 @@ import SearchCategorySelector from '@/components/header-components/SearchCategor
 const searchPaths = {
   projectInfo: 'Projects',
   repositoryInfo: 'Repositories',
+  dependencyGraphInfo: 'DependencyGraph',
+}
+
+const searchCategories = {
+  projectInfo: 'projectInfo',
+  repositoryInfo: 'repositoryInfo',
+  dependencyGraphInfo: 'mavenRepositoryInfo',
 }
 
 export default {
@@ -20,13 +27,18 @@ export default {
   components: { Searcher, PageHeader, SearchCategorySelector },
   data() {
     return {
-      category: "projectInfo"
+      type: "projectInfo"
+    }
+  },
+  computed: {
+    searchCategory() {
+      return searchCategories[this.type]
     }
   },
   methods: {
     doSearch(paramValues) {
       this.$router.push({
-        name: searchPaths[this.category],
+        name: searchPaths[this.type],
         params: paramValues,
       })
     }

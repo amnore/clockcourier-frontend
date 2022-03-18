@@ -40,6 +40,7 @@ const routes = [
     path: '/dependency-graph',
     name: 'DependencyGraph',
     component: DependencyGraphView,
+    props: true,
   }
 ]
 
