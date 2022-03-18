@@ -253,19 +253,6 @@ export default {
 <style lang='scss' scoped>
 @import '@/styles/searcher-in-header.scss';
 
-.page li {
-  display: inline-block;
-  margin: 0 5px;
-}
-.page li span {
-  display: inline-block;
-  padding: 5px 10px;
-  border: 1px solid #dfdfdf;
-  margin: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 #search-form {
   margin: 2% auto;
 }

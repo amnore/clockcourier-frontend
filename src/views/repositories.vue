@@ -1,5 +1,8 @@
 <template>
-  <el-form
+  <page-header>
+    <searcher category="repositoryInfo" @search="doSearch" />
+  </page-header>
+  <!-- <el-form
     id="search-form"
     label-position="right"
     label-width="80px"
@@ -44,14 +47,6 @@
     <el-form-item label="仓库地址:">
       <el-input type="text" value="" placeholder="url" id="url" v-model="url" />
     </el-form-item>
-    <!--
-    <label>创建时间:</label>
-    <el-input type="date" value="2022-02-22" id="create_date" />
-    <label>更新时间:</label>
-    <el-input type="date" value="2022-02-22" id="update_date" />
-    <label>最新push时间:</label>
-    <el-input type="date" value="2022-02-22" id="latest_push_date" />
-    -->
     <el-form-item label="能否fork:">
       <el-radio name="can_be_fork" label="0" v-model="canFork"
         ><label>不选择</label></el-radio
@@ -68,7 +63,7 @@
         >搜索</el-button
       >
     </div>
-  </el-form>
+  </el-form> -->
   <!-- <div>
     <el-table
       :data="repository_data"
@@ -126,7 +121,11 @@
       />
     </el-table>
   </div> -->
-  <my-table :changeSort="changeSort" :columnInfo="columnInfo" :contentData="repository_data"></my-table>
+  <my-table
+    :changeSort="changeSort"
+    :columnInfo="columnInfo"
+    :contentData="repository_data"
+  ></my-table>
   <page :goPage="goPage" :pageAll="pageAll"></page>
 </template>
 
@@ -136,7 +135,9 @@ import getLanguageList from "@/scripts/LanguageSelector.js";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "@/components/Page.vue";
 import MyTable from "../components/Table.vue";
-import { columnInfos } from "../scripts/DataSchema.js";
+import Searcher from "../components/Searcher.vue";
+import { searchParams, columnInfos } from "@/scripts/DataSchema.js";
+import PageHeader from "@/components/PageHeader.vue";
 
 const sortKeys = {
   repositoryName: "Name",
@@ -152,25 +153,23 @@ const sortKeys = {
 
 export default {
   name: "Repositories",
-  components: { Page, MyTable },
-  props: {},
+  components: { Page, MyTable, PageHeader, Searcher },
+  props: searchParams.repositoryInfo,
   data() {
     return {
       repository_data: [],
-      repo_name: "",
-      platform: "",
-      owner: "",
-      language_text: "",
-      url: "",
-      version: "",
-      dependency: "",
-      repository: "",
-      canFork: "0",
       pageAll: 1,
       sortKey: "Name",
       sortReverse: false,
       columnInfo: columnInfos.repositoriesColumnInfo,
     };
+  },
+  watch: {
+    "$route.params": function (newParams, oldParams) {
+      newParams, oldParams;
+      console.log("route changed");
+      this.searchRepo(newParams, 1);
+    },
   },
   methods: {
     changeSort(ev) {
@@ -183,30 +182,13 @@ export default {
       }
       this.searchRepo(1);
     },
-    searchRepo(page) {
-      let name = document.getElementById("repo_name").value;
-      let hostType = document.getElementById("hostType").value;
-      let owner = document.getElementById("owner").value;
-      let language = this.language_text;
-      let url = document.getElementById("url").value;
-      let can_be_fork = this.canFork;
-      let canFork = null;
-      if (can_be_fork == 1) {
-        canFork = true;
-      } else if (can_be_fork == 2) {
-        canFork = false;
-      }
-      search_repo(
-        name,
-        hostType,
-        owner,
-        language,
-        url,
-        canFork,
+    searchRepo(params, page) {
+      search_repo({
         page,
-        this.sortKey,
-        this.sortReverse
-      )
+        sort: this.sortKey,
+        isReverse: this.sortReverse,
+        ...params,
+      })
         .then((res) => {
           console.log(res.data.msg);
           this.repository_data = res.data.data.repositories;
@@ -222,7 +204,7 @@ export default {
     },
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
-        this.searchRepo(Number(index));
+        this.searchRepo(this.$props, Number(index));
       }
     },
     getLanguages(input, cb) {
@@ -231,31 +213,25 @@ export default {
     dateFormat(date) {
       return dateFormatter(date);
     },
+    doSearch(paramValues) {
+      this.$router.push({
+        name: "Repositories",
+        params: paramValues,
+      });
+    },
   },
   mounted() {
-    this.searchRepo(1);
+    this.searchRepo(this.$props, 1);
   },
   created() {},
 };
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+@import "@/styles/searcher-in-header.scss";
 .table {
   text-align: center;
   margin: auto;
-}
-
-.page li {
-  display: inline-block;
-  margin: 0 5px;
-}
-.page li span {
-  display: inline-block;
-  padding: 5px 10px;
-  border: 1px solid #dfdfdf;
-  margin: 0 5px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 #search-form {
