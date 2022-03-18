@@ -132,49 +132,7 @@
           <el-table-column prop="dependencyType" label="依赖类型" />
         </el-table>
 
-        <div>
-          <ul class="page">
-            <li>
-              <span v-if="page > 1"
-                ><b @click="page--, getDependency(page)">上一页</b></span
-              >
-              <span v-if="page == 1">上一页</span>
-              <span v-if="Number(pageAll) <= 10">
-                <span
-                  v-for="index in pageAll"
-                  :key="index"
-                  :class="{ active: page == index }"
-                  @click="goPage(index)"
-                  >{{ index }}</span
-                ></span
-              >
-              <span v-if="Number(pageAll) > 10">
-                <span @click="goPage(1)">1</span>
-                <span v-if="page > 3">...</span>
-                <span v-if="page > 2" @click="goPage(page - 1)">{{
-                  page - 1
-                }}</span>
-                <span v-if="page > 1 && page < pageAll" @click="goPage(page)">{{
-                  page
-                }}</span>
-                <span v-if="page < pageAll - 1" @click="goPage(page + 1)">{{
-                  page + 1
-                }}</span>
-                <span v-if="page < pageAll - 2">...</span>
-                <span @click="goPage(pageAll)">{{ pageAll }}</span>
-              </span>
-              <span v-if="page != pageAll"
-                ><b @click="page++, getDependency(page)">下一页</b></span
-              >
-              <span v-if="page == pageAll">下一页</span>
-            </li>
-            <li>共{{ pageAll }}页 当前{{ page }}页</li>
-            <li>到</li>
-            <li><el-input type="text" value="1" v-model="jumpPage" /></li>
-            <li>页</li>
-            <el-button v-on:click="goPage(jumpPage)">确定</el-button>
-          </ul>
-        </div>
+        <page :goPage="goPage" :pageAll="pageAll"></page>
       </el-main>
     </el-container>
   </el-container>
@@ -182,8 +140,10 @@
 <script>
 import { get_repo_by_id, get_repo_dependency } from "../api/search_repo";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
+import Page from "../components/Page.vue";
 export default {
   name: "Repository",
+  components: { Page },
   props: {},
   data() {
     return {
@@ -290,5 +250,4 @@ export default {
   margin-left: 3%;
   margin-top: 3%;
 }
-
 </style>
