@@ -1,6 +1,6 @@
 <template>
   <page-header>
-    <searcher category="projectInfo" @search="doSearch"/>
+    <searcher category="projectInfo" @search="doSearch" />
   </page-header>
   <!-- <el-form
     id="search-form"
@@ -160,7 +160,8 @@ import { search_project } from "../api/search_project";
 import getLanguageList from "@/scripts/LanguageSelector.js";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Searcher from "../components/Searcher.vue";
-import { searchParams, columnInfos } from "@/scripts/DataSchema.js";
+import { searchParams } from "@/scripts/DataSchema.js";
+import { columnInfos } from "@/scripts/Constant.js";
 import PageHeader from "@/components/PageHeader.vue";
 import Page from "../components/Page.vue";
 import MyTable from "../components/Table.vue";
@@ -238,10 +239,10 @@ export default {
     },
     doSearch(paramValues) {
       this.$router.push({
-        name: 'Projects',
+        name: "Projects",
         params: paramValues,
-      })
-    }
+      });
+    },
   },
   mounted() {
     this.searchProject(this.$props, 1);
@@ -251,7 +252,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import '@/styles/searcher-in-header.scss';
+@import "@/styles/searcher-in-header.scss";
 
 #search-form {
   margin: 2% auto;
