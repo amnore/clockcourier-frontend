@@ -5,6 +5,7 @@ import Project from '../views/project.vue'
 import Repository from '../views/repository.vue'
 import SearchView from '@/views/SearchView.vue'
 import DependencyGraphView from '@/views/DependencyGraphView.vue'
+import MavenProject from "../views/MavenProject.vue"
 
 
 const routes = [
@@ -40,10 +41,15 @@ const routes = [
     path: '/dependency-graph',
     name: 'DependencyGraph',
     component: DependencyGraphView,
+  },
+  {
+    path: '/maven-project',
+    name: 'MavenProject',
+    component: MavenProject,
   }
 ]
 
 export const router = new createRouter({
-    history: createWebHashHistory(),
-    routes: routes
+  history: createWebHashHistory(),
+  routes: routes
 })
