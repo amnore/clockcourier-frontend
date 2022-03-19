@@ -14,9 +14,13 @@
 <script>
 import PageHeader from '@/components/PageHeader.vue'
 import Searcher from '@/components/Searcher.vue'
+import { searchParams } from '@/scripts/DataSchema.js'
 
 export default {
   components: { PageHeader, Searcher },
+  props: {
+    paramValues: Object.assign({}, searchParams.mavenRepositoryInfo),
+  },
   data() {
     return {
       repos: []

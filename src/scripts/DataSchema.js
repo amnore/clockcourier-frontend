@@ -32,7 +32,7 @@ export const schema = {
     contributorCount: Number,
     openIssueCount: Number,
     defaultBranch: String,
-    licenses: Array,
+    licenses: Array, // Array of Strings
   },
   mavenRepositoryInfo: {
     projectId: Number,
@@ -42,6 +42,15 @@ export const schema = {
     versions: Array,
     description: String,
     url: String,
+  },
+  dependencyGraphInfo: {
+    projectId: Number,
+    name: String,
+    outEdges: Array, // Array of dependencyGraphEdge
+  },
+  dependencyGraphEdge: {
+    projectId: Number,
+    weight: Number,
   },
 };
 
@@ -89,5 +98,5 @@ export const searchParams = {
     name: String,
     groupId: String,
     artifactId: String,
-  }
+  },
 }

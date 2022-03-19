@@ -4,124 +4,120 @@
       <el-input
         type="text"
         :placeholder="paramNames[defaultParam]"
-        v-model="paramValues[defaultParam]">
+        v-model="paramValues[defaultParam]"
+      >
         <template #suffix>
-          <el-button :icon="searchIcon" @click="$emit('search', paramValues)"/>
-          <el-button :icon="moreIcon" @click="showAdvancedFields"/>
+          <el-button :icon="searchIcon" @click="$emit('search', paramValues)" />
+          <el-dropdown trigger="click">
+            <el-button :icon="moreIcon"/>
+            <template #dropdown>
+              <el-dropdown-menu id="searcher-additional-items">
+                <component
+                  v-for="(item, name) in formItems"
+                  :is="item"
+                  :key="name"
+                  :label="paramNames[name]"
+                  v-model="paramValues[name]"
+                />
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-input>
-    </div>
-    <div
-      id="searcher-additional-fields"
-      ref="searcherAdditionalFields"
-      hidden>
-      <component
-        v-for="(item, name) in formItems"
-        :is="item"
-        :key="name"
-        :label="paramNames[name]"
-        v-model="paramValues[name]"/>
     </div>
   </el-form>
 </template>
 
 <script>
-import { searchParams } from '@/scripts/DataSchema.js'
-import SearcherCheckBox from '@/components/searcher-fields/SearcherCheckBox.vue'
-import SearcherTextField from '@/components/searcher-fields/SearcherTextField.vue'
-import { Search, More } from '@element-plus/icons-vue'
+import { searchParams } from "@/scripts/DataSchema.js";
+import SearcherBooleanField from "@/components/searcher-fields/SearcherBooleanField.vue";
+import SearcherTextField from "@/components/searcher-fields/SearcherTextField.vue";
+import { Search, More } from "@element-plus/icons-vue";
 
 const paramNameMapping = {
   projectInfo: {
-    name: '名称',
-    platform: '平台',
-    language: '所用语言',
-    homepageUrl: '项目地址',
-    latestReleaseN: '版本',
-    dependency: '依赖库',
+    name: "名称",
+    platform: "平台",
+    language: "所用语言",
+    homepageUrl: "项目地址",
+    latestReleaseN: "版本",
+    dependency: "依赖库",
   },
   repositoryInfo: {
-    hostType: '平台',
-    repositoryName: '名称',
-    repositoryOwner: '所有者',
-    language: '所用语言',
-    homepageUrl: '仓库地址',
-    canFork: '能否 fork',
+    hostType: "平台",
+    repositoryName: "名称",
+    repositoryOwner: "所有者",
+    language: "所用语言",
+    homepageUrl: "仓库地址",
+    canFork: "能否 fork",
   },
   mavenRepositoryInfo: {
-    name: '名称',
-    groupId: '组织名',
-    artifactId: '组件名',
-  }
-}
+    name: "名称",
+    groupId: "组织名",
+    artifactId: "组件名",
+  },
+};
 
 const defaultParams = {
-  projectInfo: 'name',
-  repositoryInfo: 'repositoryName',
-  mavenRepositoryInfo: 'name',
-}
+  projectInfo: "name",
+  repositoryInfo: "repositoryName",
+  mavenRepositoryInfo: "name",
+};
 
 const defaultFormItem = {
   String: SearcherTextField,
-  Boolean: SearcherCheckBox,
-}
+  Boolean: SearcherBooleanField,
+};
 
 export default {
-  name: 'Searcher',
-  emits: ['search'],
+  name: "Searcher",
+  emits: ["search"],
   props: {
-    category: String
+    category: String,
   },
   data() {
     return {
       paramValues: Object.fromEntries(
-        Object.entries(searchParams[this.category])
-          .map(e => [e[0], e[1]()])
-      )
-    }
-  },
-  methods: {
-    showAdvancedFields() {
-      console.log(Object.fromEntries(Object.keys(this.params).map(k => [k, this.paramValues[k]])))
-      const elem = this.$refs.searcherAdditionalFields
-      elem.hidden = !elem.hidden
-    }
+        Object.entries(searchParams[this.category]).map((e) => [e[0], e[1]()])
+      ),
+    };
   },
   computed: {
     searchIcon() {
-      return Search
+      return Search;
     },
     moreIcon() {
-      return More
+      return More;
     },
     params() {
-      return searchParams[this.category]
+      return searchParams[this.category];
     },
     paramNames() {
-      return paramNameMapping[this.category]
+      return paramNameMapping[this.category];
     },
     defaultParam() {
-      return defaultParams[this.category]
+      return defaultParams[this.category];
     },
     formItems() {
       return Object.fromEntries(
         Object.entries(this.params)
-          .filter(e => e[0] !== this.defaultParam)
-          .map(e => {
-            const name = e[0]
-            const item = defaultFormItem[e[1].name]
+          .filter((e) => e[0] !== this.defaultParam)
+          .map((e) => {
+            const name = e[0];
+            const item = defaultFormItem[e[1].name];
             // item.$on('change', value => this.paramValues[name] = value)
-            return [name, item]
+            return [name, item];
           })
-      )
-    }
-  }
-}
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
-#searcher-main-input::v-deep .el-button {
+#searcher-main-input::v-deep .el-input__suffix-inner > * {
   align-self: center;
+  margin: 0 5px;
 }
 
 #searcher-main-input::v-deep .el-input {
@@ -133,14 +129,7 @@ export default {
   font-size: 1.5em;
 }
 
-#searcher-additional-fields {
-  width: 90%;
-  margin: 0 auto;
-}
-
-#searcher-additional-fields > * {
-  float: left;
-  margin: 1em 5%;
-  max-width: min(90%, max(10ch, 30%));
+#searcher-additional-items {
+  padding: 10px;
 }
 </style>
