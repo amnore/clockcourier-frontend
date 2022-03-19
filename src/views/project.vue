@@ -1,7 +1,13 @@
 <template>
   <el-container>
     <el-header height="150px">
-      <el-descriptions :title="project.projectName" :column="3" border>
+      <my-description
+        :title="project.projectName"
+        :columnCountInline="4"
+        :columnInfo="columnInfo"
+        :contentData="{ repoName, ...project }"
+      ></my-description>
+      <!-- <el-descriptions :title="project.projectName" :column="3" border>
         <el-descriptions-item label="平台">{{
           project.platform
         }}</el-descriptions-item>
@@ -29,7 +35,7 @@
           <el-link
             type="primary"
             @click="$router.push('/repository/' + project.repositoryId)"
-            >{{ repo_name }}</el-link
+            >{{ repoName }}</el-link
           >
         </el-descriptions-item>
         <el-descriptions-item label="仓库地址">
@@ -37,7 +43,7 @@
             project.repositoryUrl
           }}</el-link>
         </el-descriptions-item>
-      </el-descriptions>
+      </el-descriptions> -->
     </el-header>
     <el-container>
       <el-aside width="200px">
@@ -147,11 +153,13 @@ import {
 import { get_repo_by_id } from "../api/search_repo";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "../components/Page.vue";
+import MyDescription from "../components/Description.vue";
+import { columnInfos } from "../scripts/Constant.js";
 
 export default {
   name: "Project", //注册在路由（router.js）里的就是这个
   props: {},
-  components: { Page },
+  components: { Page, MyDescription },
   data() {
     return {
       project: {
@@ -184,7 +192,7 @@ export default {
         },
       ],
       dependency_type_list: ["runtime", "test", "development", "build"],
-      repo_name: "",
+      repoName: "",
       dependency_name: "",
       dependency_platform: "",
       dependency_type: "",
@@ -194,6 +202,7 @@ export default {
       sort_method: "1",
       id: 0,
       latestReleaseN: "",
+      columnInfo: columnInfos.projectColumnInfo,
     };
   },
   watch: {
@@ -215,7 +224,7 @@ export default {
           this.getDependency(1);
           get_repo_by_id(this.project.repositoryId)
             .then((res) => {
-              this.repo_name = res.data.data.repositoryName;
+              this.repoName = res.data.data.repositoryName;
             })
             .catch(function (error) {
               console.log(error);
@@ -227,16 +236,26 @@ export default {
     },
     getDependency(page) {
       let id = this.id;
-      let version = this.project.latestReleaseN;
-      let name = document.getElementById("dependency_name").value;
-      let platform = document.getElementById("dependency_platform").value;
-      let type = document.getElementById("dependency_type").value;
+      let projectVersion = this.project.latestReleaseN;
+      let dependencyProjectName =
+        document.getElementById("dependency_name").value;
+      let dependencyProjectPlatform = document.getElementById(
+        "dependency_platform"
+      ).value;
+      let dependencyType = document.getElementById("dependency_type").value;
       this.page = page;
       let isReverse = true;
       if (this.sort_method == 1) {
         isReverse = false;
       }
-      get_project_dependency(id, version, name, platform, type, page, isReverse)
+      get_project_dependency(id, {
+        projectVersion,
+        dependencyProjectName,
+        dependencyProjectPlatform,
+        dependencyType,
+        page,
+        isReverse,
+      })
         .then((res) => {
           this.dependencies = res.data.data.projDeps;
           this.pageAll = res.data.data.pageAll;

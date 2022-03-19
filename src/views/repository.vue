@@ -1,7 +1,13 @@
 <template>
   <el-container>
-    <el-header height="150px">
-      <el-descriptions :title="repository.repositoryName" :column="5" border>
+    <el-header height="200px">
+      <my-description
+        :columnInfo="columnInfo"
+        :contentData="repository"
+        :title="repository.repositoryName"
+        :columnCountInline="5"
+      ></my-description>
+      <!-- <el-descriptions :title="repository.repositoryName" :column="5" border>
         <el-descriptions-item label="平台">{{
           repository.hostType
         }}</el-descriptions-item>
@@ -46,7 +52,7 @@
         <el-descriptions-item label="默认分支">{{
           repository.defaultBranch
         }}</el-descriptions-item>
-      </el-descriptions>
+      </el-descriptions> -->
     </el-header>
     <el-container>
       <el-aside>
@@ -141,9 +147,11 @@
 import { get_repo_by_id, get_repo_dependency } from "../api/search_repo";
 import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "../components/Page.vue";
+import MyDescription from "../components/Description.vue";
+import { columnInfos } from "../scripts/Constant.js";
 export default {
   name: "Repository",
-  components: { Page },
+  components: { Page, MyDescription },
   props: {},
   data() {
     return {
@@ -177,6 +185,7 @@ export default {
       jumpPage: "",
       sort_method: "1",
       id: 0,
+      columnInfo: columnInfos.repositoryColumnInfo,
     };
   },
   watch: {
@@ -204,14 +213,20 @@ export default {
     },
     getDependency(page) {
       let id = this.repository.repositoryId;
-      let name = document.getElementById("dependency_name").value;
-      let type = document.getElementById("dependency_type").value;
+      let dependencyProjectName =
+        document.getElementById("dependency_name").value;
+      let dependencyType = document.getElementById("dependency_type").value;
       this.page = page;
       let isReverse = true;
       if (this.sort_method == 1) {
         isReverse = false;
       }
-      get_repo_dependency(id, name, type, page, isReverse)
+      get_repo_dependency(id, {
+        dependencyProjectName,
+        dependencyType,
+        page,
+        isReverse,
+      })
         .then((res) => {
           this.dependencies = res.data.data.repoDeps;
           this.pageAll = res.data.data.pageAll;
