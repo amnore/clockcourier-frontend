@@ -71,9 +71,9 @@ export const sortableKeys = {
     'openIssueCount',
   ],
   mavenRepositoryInfo: [
-    'name',
-    'groupId',
-    'artifactId',
+    'Name',
+    'GroupId',
+    'ArtifactId',
   ]
 }
 
