@@ -18,9 +18,7 @@ import { searchParams } from '@/scripts/DataSchema.js'
 
 export default {
   components: { PageHeader, Searcher },
-  props: {
-    paramValues: Object.assign({}, searchParams.mavenRepositoryInfo),
-  },
+  props: searchParams.mavenRepositoryInfo,
   data() {
     return {
       repos: []

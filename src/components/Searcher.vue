@@ -11,7 +11,7 @@
           <el-dropdown trigger="click">
             <el-button :icon="moreIcon"/>
             <template #dropdown>
-              <el-dropdown-menu id="searcher-additional-items">
+              <div id="searcher-additional-items">
                 <component
                   v-for="(item, name) in formItems"
                   :is="item"
@@ -19,7 +19,7 @@
                   :label="paramNames[name]"
                   v-model="paramValues[name]"
                 />
-              </el-dropdown-menu>
+              </div>
             </template>
           </el-dropdown>
         </template>
@@ -77,10 +77,13 @@ export default {
   },
   data() {
     return {
-      paramValues: Object.fromEntries(
-        Object.entries(searchParams[this.category]).map((e) => [e[0], e[1]()])
-      ),
+      paramValues: {},
     };
+  },
+  watch: {
+    category() {
+      this.paramValues = {}
+    }
   },
   computed: {
     searchIcon() {
