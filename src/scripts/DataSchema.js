@@ -34,7 +34,7 @@ export const schema = {
     defaultBranch: String,
     licenses: Array, // Array of Strings
   },
-  mavenRepositoryInfo: {
+  mavenProjectInfo: {
     projectId: Number,
     name: String,
     groupId: String,
@@ -70,7 +70,7 @@ export const sortableKeys = {
     'contributorCount',
     'openIssueCount',
   ],
-  mavenRepositoryInfo: [
+  mavenProjectInfo: [
     'name',
     'groupId',
     'artifactId',
@@ -94,7 +94,7 @@ export const searchParams = {
     homepageUrl: String,
     canFork: Boolean,
   },
-  mavenRepositoryInfo: {
+  mavenProjectInfo: {
     name: String,
     groupId: String,
     artifactId: String,

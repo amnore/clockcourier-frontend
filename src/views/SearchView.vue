@@ -13,13 +13,15 @@ import SearchCategorySelector from '@/components/header-components/SearchCategor
 const searchPaths = {
   projectInfo: 'Projects',
   repositoryInfo: 'Repositories',
+  mavenProjectInfo:'MavenProjects',
   dependencyGraphInfo: 'DependencyGraph',
 }
 
 const searchCategories = {
   projectInfo: 'projectInfo',
   repositoryInfo: 'repositoryInfo',
-  dependencyGraphInfo: 'mavenRepositoryInfo',
+  mavenProjectInfo:'mavenProjectInfo',
+  dependencyGraphInfo: 'mavenProjectInfo',
 }
 
 export default {

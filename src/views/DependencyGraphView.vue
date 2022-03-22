@@ -1,6 +1,6 @@
 <template>
   <page-header>
-    <searcher category="mavenRepositoryInfo"/>
+    <searcher category="mavenProjectInfo"/>
   </page-header>
   <el-menu id="maven-repo-list" v-infinite-scroll="loadMoreRepos">
     <el-menu-item v-for="repo in repos" :key="repo.projectId">
@@ -18,7 +18,7 @@ import { searchParams } from '@/scripts/DataSchema.js'
 
 export default {
   components: { PageHeader, Searcher },
-  props: searchParams.mavenRepositoryInfo,
+  props: searchParams.mavenProjectInfo,
   data() {
     return {
       repos: []

@@ -51,7 +51,7 @@ const paramNameMapping = {
     homepageUrl: "仓库地址",
     canFork: "能否 fork",
   },
-  mavenRepositoryInfo: {
+  mavenProjectInfo: {
     name: "名称",
     groupId: "组织名",
     artifactId: "组件名",
@@ -61,7 +61,7 @@ const paramNameMapping = {
 const defaultParams = {
   projectInfo: "name",
   repositoryInfo: "repositoryName",
-  mavenRepositoryInfo: "name",
+  mavenProjectInfo: "name",
 };
 
 const defaultFormItem = {
