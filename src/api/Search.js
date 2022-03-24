@@ -2,11 +2,11 @@ import { sortableKeys } from '@/scripts/DataSchema.js'
 import { backendUrl } from './Url'
 
 const queryPath = {
-  mavenRepositoryInfo: '/project/mvn/mock/query'
+  mavenProjectInfo: '/project/mvn/mock/query'
 }
 
 export default function search(type, params, range, sort, reverse) {
-  if (type !== 'mavenRepositoryInfo') {
+  if (queryPath[type] === undefined) {
     throw new Error('unimplemented')
   }
 
