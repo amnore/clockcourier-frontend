@@ -5,6 +5,7 @@ import Project from '../views/project.vue'
 import Repository from '../views/repository.vue'
 import SearchView from '@/views/SearchView.vue'
 import DependencyGraphView from '@/views/DependencyGraphView.vue'
+import MavenProjects from "../views/MavenProjects.vue"
 import MavenProject from "../views/MavenProject.vue"
 
 
@@ -44,7 +45,12 @@ const routes = [
     props: true,
   },
   {
-    path: '/maven-project',
+    path: '/maven-projects',
+    name: 'MavenProjects',
+    component: MavenProjects,
+  },
+  {
+    path: '/maven-project/:id',
     name: 'MavenProject',
     component: MavenProject,
   }
