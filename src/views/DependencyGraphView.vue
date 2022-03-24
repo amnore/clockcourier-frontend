@@ -45,7 +45,7 @@ export default {
   methods: {
     loadMoreRepos() {
       search(
-        'mavenRepositoryInfo',
+        'mavenProjectInfo',
         this.$props,
         [this.repos.length, this.repos.length + 20],
         'Name',
