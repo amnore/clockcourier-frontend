@@ -21,7 +21,27 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main id="dependency-graph" ref="dependencyGraph"/>
+      <el-main id="dependency-graph" ref="dependencyGraph">
+        <el-popover
+          id="node-info"
+          ref="nodeInfo"
+          :visible="nodeInfoVisible"
+          placement="top"
+        >
+          <el-descriptions title="项目信息" :column="1">
+            <el-descriptions-item
+              v-for="(value, key) in projectInfo"
+              :key="key"
+              :label="projectInfoLabels[key]"
+            >
+              {{value}}
+            </el-descriptions-item>
+          </el-descriptions>
+          <template #reference>
+            <div id="node-info-anchor" ref="nodeInfoAnchor"/>
+          </template>
+        </el-popover>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -34,12 +54,20 @@ import search from '@/api/Search.js'
 import getGraph from '@/api/DependencyGraph.js'
 import G6 from '@antv/g6'
 
+const projectInfoLabels = {
+  name: '名称',
+  groupId: 'GroupId',
+  artifactId: 'ArtifactId',
+}
+
 export default {
   components: { PageHeader, Searcher },
   props: searchParams.mavenProjectInfo,
   data() {
     return {
       repos: [],
+      nodeInfoVisible: false,
+      projectInfo: {},
     }
   },
   methods: {
@@ -71,12 +99,12 @@ export default {
           {
             projectId: id,
             name: 'dummy',
-            outEdges: [ { projectId: id + 1, weight: 0.5, } ],
+            outEdges: [ { projectId: id + 1, weight: 1, } ],
           },
           {
             projectId: id + 1,
             name: 'dummy',
-            outEdges: [ { projectId: id, weight: 0.3 } ],
+            outEdges: [ { projectId: id, weight: 0.1 } ],
           }
         ]
 
@@ -88,10 +116,23 @@ export default {
           edges: nodes.flatMap(n => n.outEdges.map(e => Object.assign({
             source: n.projectId.toString(),
             target: e.projectId.toString(),
+            style: {
+              lineWidth: 10 * e.weight,
+              endArrow: {
+                path: G6.Arrow.vee(Math.max(15 * e.weight, 7), Math.max(20 * e.weight, 10), 0),
+                d: 0,
+                fill: '#e0e0e0'
+              },
+            }
           })))
         })
       })
     },
+  },
+  computed: {
+    projectInfoLabels() {
+      return projectInfoLabels
+    }
   },
   mounted() {
     const container = this.$refs.dependencyGraph.$el
@@ -100,7 +141,44 @@ export default {
       container: container,
       height: container.clientHeight,
       width: container.clientWidth,
-      layout: { type: 'force' },
+      modes: { default: [ 'drag-canvas', 'zoom-canvas' ] },
+      layout: {
+        type: 'force',
+        preventOverlap: true,
+        nodeSpacing: 100,
+      },
+      defaultNode: {
+        type: 'circle',
+        size: 50,
+      },
+      defaultEdge: {
+        type: 'quadratic',
+        style: {
+          endArrow: true,
+        }
+      }
+    })
+
+    const _this = this
+    this.graph.on('node:mouseover', ev => {
+      const anchor = _this.$refs.nodeInfoAnchor
+      const xdiff = ev.clientX - ev.canvasX
+      const ydiff = ev.clientY - ev.canvasY
+      const nodePos = ev.item._cfg.keyShape.cfg.cacheCanvasBBox
+
+      anchor.style.top = `${nodePos.y + ydiff}px`
+      anchor.style.left = `${nodePos.x + xdiff + nodePos.width / 2}px`
+      _this.nodeInfoVisible = true
+      Promise.resolve({
+        name: 'dummy',
+        groupId: 'hahaha',
+        artifactId: 'xxxyyy',
+      }).then(data => {
+        _this.projectInfo = data
+      })
+    })
+    this.graph.on('node:mouseout', () => {
+      _this.nodeInfoVisible = false
     })
 
     new ResizeObserver(entries => {
@@ -137,5 +215,9 @@ export default {
 #dependency-graph {
   height: calc(100vh - 60px);
   width: calc(100vw - 300px);
+}
+
+#node-info-anchor {
+  position: absolute;
 }
 </style>

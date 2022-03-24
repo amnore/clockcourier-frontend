@@ -6,7 +6,7 @@ const queryPath = {
 }
 
 export default function search(type, params, range, sort, reverse) {
-  if (type !== 'mavenProjectInfo') {
+  if (queryPath[type] === undefined) {
     throw new Error('unimplemented')
   }
 
