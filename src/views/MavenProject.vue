@@ -71,8 +71,6 @@ import PageHeader from "../components/PageHeader.vue";
 
 function dependencyDiff(dependency1, dependency2) {
   let diffArray = [];
-  console.log(dependency1);
-  console.log(dependency2);
   if (dependency1 == null || dependency2 == null) {
     if (dependency2 != null) {
       for (let index = 0; index < dependency2.length; index++) {
@@ -92,7 +90,9 @@ function dependencyDiff(dependency1, dependency2) {
     const element = dependency1[index];
     if (
       dependency2.findIndex(
-        (dependency) => dependency.libId == element.libId
+        (dependency) =>
+          dependency.libId == element.libId &&
+          dependency.version == element.version
       ) == -1
     ) {
       diffArray.push({ diff: "-", ...element });
@@ -102,7 +102,9 @@ function dependencyDiff(dependency1, dependency2) {
     const element = dependency2[index];
     if (
       dependency1.findIndex(
-        (dependency) => dependency.libId == element.libId
+        (dependency) =>
+          dependency.libId == element.libId &&
+          dependency.version == element.version
       ) == -1
     ) {
       diffArray.push({ diff: "+", ...element });
@@ -165,7 +167,7 @@ export default {
       let version = this.$route.query.version;
       searchMavenProjectById(this.id)
         .then((res) => {
-          console.log(res);
+          //console.log(res);
           this.versions = res.data.data.versions;
           if (!version) {
             if (this.version == "") {
@@ -192,7 +194,7 @@ export default {
             url: this.mavenProject.url,
             description: this.mavenProject.description,
           });
-          console.log(this.mavenProject);
+          //console.log(this.mavenProject);
           this.setDependencies(1);
           if (this.mavenProject.dependencies == null) {
             this.mavenProject.dependencies = [];
