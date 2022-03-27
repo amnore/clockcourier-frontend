@@ -408,10 +408,10 @@ export const columnInfos = {
   ],
 
   mavenProjectsColumnInfo: [{
-    columnName: "名称",
+    columnName: "artifactId",
     sortable: true,
     isURL: false,
-    keyword: "name",
+    keyword: "artifactId",
     isRouter: true,
     isDate: false,
     targetURL: "/maven-project/",
@@ -426,10 +426,10 @@ export const columnInfos = {
     targetURL: "",
     paramKeyword: ""
   }, {
-    columnName: "artifactId",
-    sortable: true,
+    columnName: "名称",
+    sortable: false,
     isURL: false,
-    keyword: "artifactId",
+    keyword: "name",
     isRouter: false,
     isDate: false,
     targetURL: "",
@@ -454,15 +454,6 @@ export const columnInfos = {
     paramKeyword: ""
   },],
   mavenProjectColumnInfo: [{
-    columnName: "名称",
-    sortable: true,
-    isURL: false,
-    keyword: "name",
-    isRouter: true,
-    isDate: false,
-    targetURL: "/maven-project/",
-    paramKeyword: "projectId"
-  }, {
     columnName: "groupId",
     sortable: true,
     isURL: false,
@@ -472,17 +463,17 @@ export const columnInfos = {
     targetURL: "",
     paramKeyword: ""
   }, {
-    columnName: "artifactId",
-    sortable: true,
+    columnName: "名称",
+    sortable: false,
     isURL: false,
-    keyword: "artifactId",
+    keyword: "name",
     isRouter: false,
     isDate: false,
     targetURL: "",
     paramKeyword: ""
   }, {
     columnName: "版本",
-    sortable: true,
+    sortable: false,
     isURL: false,
     keyword: "version",
     isRouter: false,

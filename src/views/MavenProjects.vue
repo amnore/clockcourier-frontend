@@ -20,7 +20,6 @@ import MyTable from "../components/Table.vue";
 import search from "../api/Search.js";
 
 const sortKeys = {
-  name: "Name",
   groupId: "GroupId",
   artifactId: "ArtifactId",
 };
@@ -34,14 +33,15 @@ export default {
       mavenProjects: [],
       columnInfo: columnInfos.mavenProjectsColumnInfo,
       pageAll: 1,
-      sortKey: "Name",
+      sortKey: "GroupId",
       sortReverse: false,
+      pageSize: 15,
     };
   },
   methods: {
     changeSort(ev) {
       if (ev.prop === null) {
-        this.sortKey = "Name";
+        this.sortKey = "GroupId";
         this.sortReverse = false;
       } else {
         this.sortKey = sortKeys[ev.prop];
@@ -58,12 +58,13 @@ export default {
       search(
         "mavenProjectInfo",
         this.$props,
-        [15 * (page - 1), 15 * page],
+        [this.pageSize * (page - 1), this.pageSize * page],
         this.sortKey,
         false
       ).then((resp) => {
         console.log(resp);
         this.mavenProjects = resp.data.projects;
+        this.pageAll = Math.ceil(resp.data.count / this.pageSize);
       });
       this.goPage({ page, sort: this.sortKey, ...params });
     },

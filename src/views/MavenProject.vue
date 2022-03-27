@@ -5,7 +5,7 @@
         :columnCountInline="4"
         :columnInfo="columnInfo"
         :contentData="mavenProject"
-        :title="mavenProject.artificialId"
+        :title="mavenProject.artifictId"
       >
       </my-description>
     </el-header>
@@ -72,6 +72,21 @@ import MyTable from "../components/Table.vue";
 
 function dependencyDiff(dependency1, dependency2) {
   let diffArray = [];
+  if (dependency1 == null || dependency2 == null) {
+    if (dependency2 != null) {
+      for (let index = 0; index < dependency2.length; index++) {
+        const element = dependency2[index];
+        diffArray.push({ diff: "+", ...element });
+      }
+    }
+    if (dependency1 != null) {
+      for (let index = 0; index < dependency1.length; index++) {
+        const element = dependency1[index];
+        diffArray.push({ diff: "-", ...element });
+      }
+    }
+    return diffArray;
+  }
   for (let index = 0; index < dependency1.length; index++) {
     const element = dependency1[index];
     if (
@@ -137,8 +152,8 @@ export default {
       let version = this.$route.query.version;
       searchMavenProjectById(this.id)
         .then((res) => {
-          //TODO: set versions
           console.log(res);
+          this.versions = res.data.versions;
           if (!version) {
             version = this.versions[0];
           }
@@ -154,10 +169,13 @@ export default {
           this.version = version;
           this.mavenProject.version = version;
           this.dependencyColumnInfo = columnInfos.mavenDependencyColumnInfo;
-          //TODO: set pageAll
           this.mavenProject = res.data.data;
           this.setDependencies(1);
-          this.pageAll = Math.ceil(101 / this.pageSize);
+          if (this.mavenProject.dependencies != null) {
+            this.pageAll = Math.ceil(
+              this.mavenProject.dependencies.length / this.pageSize
+            );
+          }
         })
         .catch(function (e) {
           console.log(e);
@@ -166,15 +184,7 @@ export default {
     setDependencies(page) {
       this.dependencies = [];
       if (this.mavenProject.dependencies == null) {
-        this.mavenProject.dependencies = [];
-        for (let index = 0; index < 101; index++) {
-          this.mavenProject.dependencies.push({
-            name: index,
-            artifictId: "test",
-            groupId: "nju.se",
-            projectId: index,
-          });
-        }
+        return;
       }
       for (
         let i = (page - 1) * this.pageSize;
@@ -186,6 +196,9 @@ export default {
     },
     setDependencyDiff(page) {
       this.dependencies = [];
+      if (this.dependencyDiff == null) {
+        return;
+      }
       for (
         let i = (page - 1) * this.pageSize;
         i < this.dependencyDiff.length && i < page * this.pageSize;
