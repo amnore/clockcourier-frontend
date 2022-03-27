@@ -14,14 +14,7 @@
         <el-table :data="versions" empty-text="无版本信息" border>
           <el-table-column label="版本">
             <template #default="scope">
-              <el-link
-                type="primary"
-                v-on:click="
-                  $router.push(
-                    '/maven-project/' + this.id + '?version=' + scope.row
-                  )
-                "
-              >
+              <el-link type="primary" v-on:click="changeVersion(scope.row)">
                 {{ scope.row }}
               </el-link>
             </template>
@@ -72,6 +65,8 @@ import MyTable from "../components/Table.vue";
 
 function dependencyDiff(dependency1, dependency2) {
   let diffArray = [];
+  console.log(dependency1);
+  console.log(dependency2);
   if (dependency1 == null || dependency2 == null) {
     if (dependency2 != null) {
       for (let index = 0; index < dependency2.length; index++) {
@@ -91,9 +86,7 @@ function dependencyDiff(dependency1, dependency2) {
     const element = dependency1[index];
     if (
       dependency2.findIndex(
-        (dependency) =>
-          dependency.projectId == element.projectId &&
-          dependency.version == element.version
+        (dependency) => dependency.libId == element.libId
       ) == -1
     ) {
       diffArray.push({ diff: "-", ...element });
@@ -103,9 +96,7 @@ function dependencyDiff(dependency1, dependency2) {
     const element = dependency2[index];
     if (
       dependency1.findIndex(
-        (dependency) =>
-          dependency.projectId == element.projectId &&
-          dependency.version == element.version
+        (dependency) => dependency.libId == element.libId
       ) == -1
     ) {
       diffArray.push({ diff: "+", ...element });
@@ -128,8 +119,8 @@ export default {
         version: "",
         dependencies: [],
       },
-      versions: ["1.0.0"],
-      version: "1.0.0",
+      versions: [""],
+      version: "",
       firstVersion: "",
       secondVersion: "",
       dependencies: [],
@@ -145,17 +136,35 @@ export default {
   },
   methods: {
     refresh() {
+      this.version="";
       this.getMavenProject();
+    },
+    changeVersion(version) {
+      let v = this.$route.query.version;
+      if (version == v) {
+        this.$router.push("/maven-project/" + this.mavenProject.projectId);
+      } else {
+        this.$router.push(
+          "/maven-project/" +
+            this.mavenProject.projectId +
+            "?version=" +
+            version
+        );
+      }
     },
     getMavenProject() {
       this.id = this.$route.params.id;
       let version = this.$route.query.version;
       searchMavenProjectById(this.id)
         .then((res) => {
-          console.log(res);
-          this.versions = res.data.versions;
+          //console.log(res);
+          this.versions = res.data.data.versions;
           if (!version) {
-            version = this.versions[0];
+            if (this.version == "") {
+              version = this.versions[0];
+            } else {
+              version = this.version;
+            }
           }
           this.getDependencyByVersion(version);
         })
@@ -171,11 +180,10 @@ export default {
           this.dependencyColumnInfo = columnInfos.mavenDependencyColumnInfo;
           this.mavenProject = res.data.data;
           this.setDependencies(1);
-          if (this.mavenProject.dependencies != null) {
-            this.pageAll = Math.ceil(
-              this.mavenProject.dependencies.length / this.pageSize
-            );
+          if (this.mavenProject.dependencies == null) {
+            this.mavenProject.dependencies = [];
           }
+          this.setPageAll(this.mavenProject.dependencies.length, this.pageSize);
         })
         .catch(function (e) {
           console.log(e);
@@ -242,9 +250,7 @@ export default {
               this.setDependencyDiff(1);
               this.dependencyColumnInfo =
                 columnInfos.mavenDependencyDiffColumnInfo;
-              this.pageAll = Math.ceil(
-                this.dependencies.length / this.pageSize
-              );
+              this.setPageAll(this.dependencies.length, this.pageSize);
             })
             .catch(function (e) {
               console.log(e);
@@ -254,8 +260,13 @@ export default {
           console.log(e);
         });
     },
+    setPageAll(count, pageSize) {
+      this.pageAll = Math.ceil(count / pageSize);
+      if (this.pageAll < 1) {
+        this.pageAll = 1;
+      }
+    },
     goPage(index) {
-      //TODO: pageChange
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
         if (
