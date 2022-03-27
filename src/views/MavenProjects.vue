@@ -38,6 +38,11 @@ export default {
       pageSize: 15,
     };
   },
+  watch: {
+    "$route.params": function (value) {
+      this.searchMavenProject(value, 1);
+    },
+  },
   methods: {
     changeSort(ev) {
       if (ev.prop === null) {
@@ -47,32 +52,37 @@ export default {
         this.sortKey = sortKeys[ev.prop];
         this.sortReverse = ev.order === "descending";
       }
-      this.searchMavenProject(this.$props, 1);
+      this.searchMavenProject(this.$route.params, 1);
     },
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
-        this.searchMavenProject(this.$props, Number(index));
+        this.searchMavenProject(this.$route.params, Number(index));
       }
     },
     searchMavenProject(params, page) {
       search(
         "mavenProjectInfo",
-        this.$props,
+        params,
         [this.pageSize * (page - 1), this.pageSize * page],
         this.sortKey,
-        false
+        this.sortReverse
       ).then((resp) => {
         //console.log(resp);
         this.mavenProjects = resp.data.projects;
         this.setPageAll(resp.data.count, this.pageSize);
       });
-      this.goPage({ page, sort: this.sortKey, ...params });
     },
     setPageAll(count, pageSize) {
       this.pageAll = Math.ceil(count / pageSize);
       if (this.pageAll < 1) {
         this.pageAll = 1;
       }
+    },
+    doSearch(paramValues) {
+      this.$router.push({
+        name: "MavenProjects",
+        params: paramValues,
+      });
     },
   },
   mounted() {
