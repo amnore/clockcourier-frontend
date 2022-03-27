@@ -480,7 +480,16 @@ export const columnInfos = {
     isDate: false,
     targetURL: "",
     paramKeyword: ""
-  },
+  }, {
+    columnName: "url",
+    sortable: false,
+    isURL: true,
+    keyword: "url",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, 
   ],
   //TODO:dependencyInfo
   mavenDependencyColumnInfo: [{

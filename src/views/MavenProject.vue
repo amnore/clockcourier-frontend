@@ -12,6 +12,10 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
+        <div v-if="mavenProject.description">
+          <p><strong>项目描述</strong></p>
+          <p>{{ mavenProject.description }}</p>
+        </div>
         <el-table :data="versions" empty-text="无版本信息" border>
           <el-table-column label="版本">
             <template #default="scope">
@@ -63,7 +67,7 @@ import {
   searchMavenProjectByVersion,
 } from "../api/SearchMavenProject.js";
 import MyTable from "../components/Table.vue";
-import PageHeader from "../components/PageHeader.vue"
+import PageHeader from "../components/PageHeader.vue";
 
 function dependencyDiff(dependency1, dependency2) {
   let diffArray = [];
@@ -120,6 +124,8 @@ export default {
         groupId: "test",
         version: "",
         dependencies: [],
+        url: "",
+        description: "",
       },
       versions: [""],
       version: "",
@@ -138,7 +144,7 @@ export default {
   },
   methods: {
     refresh() {
-      this.version="";
+      this.version = "";
       this.getMavenProject();
     },
     changeVersion(version) {
@@ -159,7 +165,7 @@ export default {
       let version = this.$route.query.version;
       searchMavenProjectById(this.id)
         .then((res) => {
-          //console.log(res);
+          console.log(res);
           this.versions = res.data.data.versions;
           if (!version) {
             if (this.version == "") {
@@ -168,6 +174,8 @@ export default {
               version = this.version;
             }
           }
+          this.mavenProject.url = res.data.data.url;
+          this.mavenProject.description = res.data.data.description;
           this.getDependencyByVersion(version);
         })
         .catch(function (e) {
@@ -180,7 +188,11 @@ export default {
           this.version = version;
           this.mavenProject.version = version;
           this.dependencyColumnInfo = columnInfos.mavenDependencyColumnInfo;
-          this.mavenProject = res.data.data;
+          this.mavenProject = Object.assign(res.data.data, {
+            url: this.mavenProject.url,
+            description: this.mavenProject.description,
+          });
+          console.log(this.mavenProject);
           this.setDependencies(1);
           if (this.mavenProject.dependencies == null) {
             this.mavenProject.dependencies = [];
