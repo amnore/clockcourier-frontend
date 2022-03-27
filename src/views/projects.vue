@@ -188,10 +188,9 @@ export default {
     };
   },
   watch: {
-    "$route.params": function (newParams, oldParams) {
-      newParams, oldParams;
+    "$route.params": function (value) {
       console.log("route changed");
-      this.searchProject(newParams, 1);
+      this.searchProject(value, 1);
     },
   },
   methods: {

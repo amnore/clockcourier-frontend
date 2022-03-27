@@ -1,7 +1,7 @@
 <template>
   <el-container direction="vertical">
     <page-header>
-      <searcher category="mavenProjectInfo"/>
+      <searcher category="mavenProjectInfo" @search="doSearch"/>
     </page-header>
     <el-container>
       <el-aside>
@@ -12,10 +12,10 @@
         >
           <el-menu-item
             v-for="repo in repos"
-            :key="repo.projectId"
-            :index="repo.projectId.toString()"
+            :key="repo.libId"
+            :index="repo.libId.toString()"
           >
-            <span class="maven-repo-name">{{repo.name}}</span>
+            <span class="maven-repo-name">{{repo.artifactId}}</span>
             <span class="maven-repo-id">{{repo.groupId + ':' + repo.artifactId}}</span>
             <span class="maven-repo-description">{{repo.description}}</span>
           </el-menu-item>
@@ -62,7 +62,7 @@ const projectInfoLabels = {
 
 export default {
   components: { PageHeader, Searcher },
-  props: searchParams.mavenProjectInfo,
+  props: searchParams.dependencyInfo,
   data() {
     return {
       repos: [],
@@ -71,24 +71,23 @@ export default {
     }
   },
   methods: {
+    doSearch(params) {
+      console.log('doSearch', params)
+      this.$router.push({
+        name: 'DependencyGraph',
+        params,
+      })
+    },
     loadMoreRepos() {
       search(
-        'mavenProjectInfo',
+        'dependencyInfo',
         this.$props,
-        [this.repos.length, this.repos.length + 20],
-        'Name',
+        [this.repos.length + 1, this.repos.length + 21],
+        'GroupId',
         false
       ).then(resp => {
         console.log(resp)
-        this.repos.push(/*...resp.data*/{
-          projectId: this.repos.length,
-          name: 'dummy',
-          groupId: 'dummy',
-          artifactId: 'dummy',
-          versions: ['0.0.1'],
-          description: 'dummy',
-          url: 'http://example.com',
-        })
+        this.repos.push(...resp.data.libs)
       })
     },
     handleSelect(id) {
@@ -133,6 +132,16 @@ export default {
     projectInfoLabels() {
       return projectInfoLabels
     }
+  },
+  watch: {
+    '$props': {
+      deep: true,
+      handler() {
+        console.log('route changed')
+        this.repos = []
+        this.loadMoreRepos()
+      },
+    },
   },
   mounted() {
     const container = this.$refs.dependencyGraph.$el
