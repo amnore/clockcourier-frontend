@@ -2,7 +2,7 @@ import { sortableKeys } from '@/scripts/DataSchema.js'
 import { backendUrl } from './Url'
 
 const queryPath = {
-  mavenProjectInfo: '/project/mvn/mock/query'
+  dependencyInfo: '/project/mvn/lib/query'
 }
 
 export default function search(type, params, range, sort, reverse) {

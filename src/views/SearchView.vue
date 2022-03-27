@@ -21,7 +21,7 @@ const searchCategories = {
   projectInfo: 'projectInfo',
   repositoryInfo: 'repositoryInfo',
   mavenProjectInfo:'mavenProjectInfo',
-  dependencyGraphInfo: 'mavenProjectInfo',
+  dependencyGraphInfo: 'dependencyInfo',
 }
 
 export default {

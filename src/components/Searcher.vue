@@ -56,12 +56,17 @@ const paramNameMapping = {
     groupId: "组织名",
     artifactId: "组件名",
   },
+  dependencyInfo: {
+    groupId: '组织名',
+    artifactId: '组件名',
+  },
 };
 
 const defaultParams = {
   projectInfo: "name",
   repositoryInfo: "repositoryName",
-  mavenProjectInfo: "name",
+  mavenProjectInfo: "artifactId",
+  dependencyInfo: 'artifactId',
 };
 
 const defaultFormItem = {
@@ -83,7 +88,7 @@ export default {
   watch: {
     category() {
       this.paramValues = {}
-    }
+    },
   },
   computed: {
     searchIcon() {

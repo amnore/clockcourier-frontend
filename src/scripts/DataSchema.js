@@ -43,6 +43,11 @@ export const schema = {
     description: String,
     url: String,
   },
+  dependencyInfo: {
+    libId: Number,
+    groupId: String,
+    artifactId: String,
+  },
   dependencyGraphInfo: {
     projectId: Number,
     name: String,
@@ -71,7 +76,10 @@ export const sortableKeys = {
     'openIssueCount',
   ],
   mavenProjectInfo: [
-    'Name',
+    'GroupId',
+    'ArtifactId',
+  ],
+  dependencyInfo: [
     'GroupId',
     'ArtifactId',
   ]
@@ -95,7 +103,10 @@ export const searchParams = {
     canFork: Boolean,
   },
   mavenProjectInfo: {
-    name: String,
+    groupId: String,
+    artifactId: String,
+  },
+  dependencyInfo: {
     groupId: String,
     artifactId: String,
   },
