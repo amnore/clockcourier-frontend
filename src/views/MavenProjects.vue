@@ -62,11 +62,17 @@ export default {
         this.sortKey,
         false
       ).then((resp) => {
-        console.log(resp);
+        //console.log(resp);
         this.mavenProjects = resp.data.projects;
-        this.pageAll = Math.ceil(resp.data.count / this.pageSize);
+        this.setPageAll(resp.data.count, this.pageSize);
       });
       this.goPage({ page, sort: this.sortKey, ...params });
+    },
+    setPageAll(count, pageSize) {
+      this.pageAll = Math.ceil(count / pageSize);
+      if (this.pageAll < 1) {
+        this.pageAll = 1;
+      }
     },
   },
   mounted() {
