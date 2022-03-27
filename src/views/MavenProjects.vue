@@ -52,11 +52,11 @@ export default {
         this.sortKey = sortKeys[ev.prop];
         this.sortReverse = ev.order === "descending";
       }
-      this.searchMavenProject(this.$route.params, 1);
+      this.searchMavenProject(this.$props, 1);
     },
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
-        this.searchMavenProject(this.$route.params, Number(index));
+        this.searchMavenProject(this.$props, Number(index));
       }
     },
     searchMavenProject(params, page) {
@@ -86,6 +86,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.$props);
     this.searchMavenProject(this.$props, 1);
   },
 };

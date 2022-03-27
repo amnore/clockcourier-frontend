@@ -36,7 +36,8 @@ const routes = [
   {
     path: '/repository/:id',
     name: 'Repository',
-    component: Repository
+    component: Repository,
+    props: true,
   },
   {
     path: '/dependency-graph',
@@ -48,6 +49,7 @@ const routes = [
     path: '/maven-projects',
     name: 'MavenProjects',
     component: MavenProjects,
+    props: true,
   },
   {
     path: '/maven-project/:id',

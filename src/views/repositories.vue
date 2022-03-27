@@ -166,10 +166,9 @@ export default {
     };
   },
   watch: {
-    "$route.params": function (newParams, oldParams) {
-      newParams, oldParams;
+    "$route.params": function (value) {
       console.log("route changed");
-      this.searchRepo(newParams, 1);
+      this.searchRepo(value, 1);
     },
   },
   methods: {
@@ -181,7 +180,7 @@ export default {
         this.sortKey = sortKeys[ev.prop];
         this.sortReverse = ev.order === "descending";
       }
-      this.searchRepo(1);
+      this.searchRepo(this.$props, 1);
     },
     searchRepo(params, page) {
       search_repo({

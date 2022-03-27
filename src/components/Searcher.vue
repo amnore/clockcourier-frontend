@@ -52,7 +52,6 @@ const paramNameMapping = {
     canFork: "能否 fork",
   },
   mavenProjectInfo: {
-    name: "名称",
     groupId: "组织名",
     artifactId: "组件名",
   },
