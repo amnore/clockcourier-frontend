@@ -483,17 +483,7 @@ export const columnInfos = {
   },
   ],
   //TODO:dependencyInfo
-  mavenDependencyColumnInfo: [
-    {
-      columnName: "名称",
-      sortable: false,
-      isURL: false,
-      keyword: "name",
-      isRouter: true,
-      isDate: false,
-      targetURL: "/maven-project/",
-      paramKeyword: "projectId"
-    }, {
+  mavenDependencyColumnInfo: [{
       columnName: "groupId",
       sortable: false,
       isURL: false,
@@ -524,15 +514,6 @@ export const columnInfos = {
   ],
 
   mavenDependencyDiffColumnInfo: [{
-    columnName: "名称",
-    sortable: false,
-    isURL: false,
-    keyword: "name",
-    isRouter: true,
-    isDate: false,
-    targetURL: "/maven-project/",
-    paramKeyword: "projectId"
-  }, {
     columnName: "groupId",
     sortable: false,
     isURL: false,
