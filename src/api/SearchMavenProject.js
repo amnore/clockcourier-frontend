@@ -1,10 +1,10 @@
 import { backendUrl } from './Url';
 import axios from "axios";
 
-const basePath = `/project/mvn/mock/`
+const basePath = `/project/mvn/`
 export function searchMavenProjectByVersion(projectId, version) {
     return axios({
-        url: backendUrl + basePath + projectId + `/get` + version,
+        url: backendUrl + basePath + projectId + `/get/` + version,
         method: "get",
     })
 }
