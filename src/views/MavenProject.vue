@@ -1,4 +1,5 @@
 <template>
+  <page-header></page-header>
   <el-container>
     <el-header height="100px">
       <my-description
@@ -62,6 +63,7 @@ import {
   searchMavenProjectByVersion,
 } from "../api/SearchMavenProject.js";
 import MyTable from "../components/Table.vue";
+import PageHeader from "../components/PageHeader.vue"
 
 function dependencyDiff(dependency1, dependency2) {
   let diffArray = [];
@@ -107,7 +109,7 @@ function dependencyDiff(dependency1, dependency2) {
 
 export default {
   name: "MavenProject",
-  components: { Page, MyDescription, MyTable },
+  components: { Page, MyDescription, MyTable, PageHeader },
   data() {
     return {
       id: 0,
