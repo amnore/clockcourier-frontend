@@ -1,1 +1,1 @@
-export const backendUrl = 'https://clockcourier.xyz:8081/api/it1'
+export const backendUrl = 'https://clockcourier.xyz:8081/api/it2'

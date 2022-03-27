@@ -4,13 +4,12 @@ import axios from "axios";
 const basePath = `/project/mvn/mock/`
 export function searchMavenProjectByVersion(projectId, version) {
     return axios({
-        url: backendUrl + basePath + projectId + `/get`,
+        url: backendUrl + basePath + projectId + `/get` + version,
         method: "get",
-        params: { version },
     })
 }
 
-export function searchMavenProjectById(projectId){
+export function searchMavenProjectById(projectId) {
     return axios({
         url: backendUrl + basePath + projectId + `/get`,
         method: "get",
