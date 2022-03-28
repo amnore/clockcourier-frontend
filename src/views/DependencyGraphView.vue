@@ -60,6 +60,24 @@
             <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
           </template>
         </el-popover>
+        <el-card
+          id="recommendation-list"
+          v-if="selectedDependency !== null"
+        >
+          <template #header>
+            <div>推荐迁移列表</div>
+          </template>
+          <el-menu @select="focusNode">
+            <el-menu-item
+              v-for="(node, libId) in otherNodes"
+              :key="libId"
+              :index="libId.toString()"
+            >
+              <span class="dependency-name">{{node.artifactId}}</span>
+              <span class="dependency-id">{{node.groupId + ':' + node.artifactId}}</span>
+            </el-menu-item>
+          </el-menu>
+        </el-card>
       </el-main>
     </el-container>
   </el-container>
@@ -86,7 +104,8 @@ const graphOptions = {
   },
   defaultEdge: {
     type: 'quadratic',
-  }
+  },
+  animate: true,
 }
 
 const dependencyInfoLabels = {
@@ -110,6 +129,7 @@ export default {
       dependencyInfo: {},
       migrationInfoVisible: false,
       migrationInfo: {},
+      selectedDependency: null,
       edges: {},
       nodes: {},
     }
@@ -136,6 +156,7 @@ export default {
         id = Number.parseInt(id)
         const nodes = resp.data
 
+        this.selectedDependency = id
         this.nodes = Object.fromEntries(nodes.map(n => [
           n.fromLibInfo.libId,
           {
@@ -217,6 +238,9 @@ export default {
         _this.migrationInfoVisible = false
       }
     },
+    focusNode(id) {
+      this.graph.focusItem(id)
+    }
   },
   computed: {
     dependencyInfoLabels() {
@@ -224,6 +248,11 @@ export default {
     },
     migrationInfoLabels() {
       return migrationInfoLabels
+    },
+    otherNodes() {
+      return Object.fromEntries(
+        Object.entries(this.nodes).filter(n => n[0] !== this.selectedDependency.toString())
+      )
     }
   },
   watch: {
@@ -289,5 +318,15 @@ export default {
 
 #dependency-info-anchor, #migration-info-anchor {
   position: absolute;
+}
+
+#recommendation-list {
+  position: absolute;
+  top: 100px;
+  right: 10px;
+}
+
+#recommendation-list .el-menu {
+  border: 0;
 }
 </style>
