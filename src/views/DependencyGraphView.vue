@@ -1,46 +1,83 @@
 <template>
   <el-container direction="vertical">
     <page-header>
-      <searcher category="mavenProjectInfo" @search="doSearch"/>
+      <searcher category="dependencyInfo" @search="doSearch"/>
     </page-header>
     <el-container>
       <el-aside>
         <el-menu
-          id="maven-repo-list"
-          v-infinite-scroll="loadMoreRepos"
-          @select="handleSelect"
+          id="dependency-list"
+          v-infinite-scroll="loadMoreDependencies"
+          @select="loadGraph"
         >
           <el-menu-item
-            v-for="repo in repos"
-            :key="repo.libId"
-            :index="repo.libId.toString()"
+            v-for="dependency in dependencies"
+            :key="dependency.libId"
+            :index="dependency.libId.toString()"
           >
-            <span class="maven-repo-name">{{repo.artifactId}}</span>
-            <span class="maven-repo-id">{{repo.groupId + ':' + repo.artifactId}}</span>
-            <span class="maven-repo-description">{{repo.description}}</span>
+            <span class="dependency-name">{{dependency.artifactId}}</span>
+            <span class="dependency-id">{{dependency.groupId + ':' + dependency.artifactId}}</span>
+            <span class="dependency-description">{{dependency.description}}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main id="dependency-graph" ref="dependencyGraph">
         <el-popover
-          id="node-info"
-          ref="nodeInfo"
-          :visible="nodeInfoVisible"
+          id="dependency-info"
+          ref="dependencyInfo"
+          :visible="dependencyInfoVisible"
           placement="top"
         >
           <el-descriptions title="项目信息" :column="1">
             <el-descriptions-item
-              v-for="(value, key) in projectInfo"
+              v-for="(value, key) in dependencyInfo"
               :key="key"
-              :label="projectInfoLabels[key]"
+              :label="dependencyInfoLabels[key]"
             >
               {{value}}
             </el-descriptions-item>
           </el-descriptions>
           <template #reference>
-            <div id="node-info-anchor" ref="nodeInfoAnchor"/>
+            <div id="dependency-info-anchor" ref="dependencyInfoAnchor"/>
           </template>
         </el-popover>
+        <el-popover
+          id="migration-info"
+          ref="migrationInfo"
+          :visible="migrationInfoVisible"
+          placement="top"
+        >
+          <el-descriptions title="迁移规则信息" :column="1">
+            <el-descriptions-item
+              v-for="(value, key) in migrationInfo"
+              :key="key"
+              :label="migrationInfoLabels[key]"
+            >
+              {{value}}
+            </el-descriptions-item>
+          </el-descriptions>
+          <template #reference>
+            <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
+          </template>
+        </el-popover>
+        <el-card
+          id="recommendation-list"
+          v-if="selectedDependency !== null"
+        >
+          <template #header>
+            <div>推荐迁移列表</div>
+          </template>
+          <el-menu @select="focusNode">
+            <el-menu-item
+              v-for="(node, libId) in otherNodes"
+              :key="libId"
+              :index="libId.toString()"
+            >
+              <span class="dependency-name">{{node.artifactId}}</span>
+              <span class="dependency-id">{{node.groupId + ':' + node.artifactId}}</span>
+            </el-menu-item>
+          </el-menu>
+        </el-card>
       </el-main>
     </el-container>
   </el-container>
@@ -51,13 +88,35 @@ import PageHeader from '@/components/PageHeader.vue'
 import Searcher from '@/components/Searcher.vue'
 import { searchParams } from '@/scripts/DataSchema.js'
 import search from '@/api/Search.js'
-import getGraph from '@/api/DependencyGraph.js'
+import { getGraph } from '@/api/DependencyGraph.js'
 import G6 from '@antv/g6'
 
-const projectInfoLabels = {
-  name: '名称',
+const graphOptions = {
+  modes: { default: [ 'drag-canvas', 'zoom-canvas' ] },
+  layout: {
+    type: 'force',
+    preventOverlap: true,
+    nodeSpacing: 100,
+  },
+  defaultNode: {
+    type: 'circle',
+    size: 50,
+  },
+  defaultEdge: {
+    type: 'quadratic',
+  },
+  animate: true,
+}
+
+const dependencyInfoLabels = {
   groupId: 'GroupId',
   artifactId: 'ArtifactId',
+  transitiveConfidence: '推荐度',
+}
+
+const migrationInfoLabels = {
+  confidence: '置信度',
+  num: '迁移次数'
 }
 
 export default {
@@ -65,60 +124,71 @@ export default {
   props: searchParams.dependencyInfo,
   data() {
     return {
-      repos: [],
-      nodeInfoVisible: false,
-      projectInfo: {},
+      dependencies: [],
+      dependencyInfoVisible: false,
+      dependencyInfo: {},
+      migrationInfoVisible: false,
+      migrationInfo: {},
+      selectedDependency: null,
+      edges: {},
+      nodes: {},
     }
   },
   methods: {
     doSearch(params) {
-      console.log('doSearch', params)
       this.$router.push({
         name: 'DependencyGraph',
         params,
       })
     },
-    loadMoreRepos() {
+    loadMoreDependencies() {
       search(
         'dependencyInfo',
         this.$props,
-        [this.repos.length + 1, this.repos.length + 21],
+        [this.dependencies.length, this.dependencies.length + 20],
         'GroupId',
         false
-      ).then(resp => {
-        console.log(resp)
-        this.repos.push(...resp.data.libs)
-      })
+      ).then(resp => this.dependencies.push(...resp.data.libs))
     },
-    handleSelect(id) {
+    loadGraph(id) {
       getGraph(id).then(resp => {
         console.log(resp)
         id = Number.parseInt(id)
-        const nodes = /*resp.data*/[
+        const nodes = resp.data
+
+        this.selectedDependency = id
+        this.nodes = Object.fromEntries(nodes.map(n => [
+          n.fromLibInfo.libId,
           {
-            projectId: id,
-            name: 'dummy',
-            outEdges: [ { projectId: id + 1, weight: 1, } ],
-          },
-          {
-            projectId: id + 1,
-            name: 'dummy',
-            outEdges: [ { projectId: id, weight: 0.1 } ],
+            transitiveConfidence: n.transitiveConfidence,
+            groupId: n.fromLibInfo.groupId,
+            artifactId: n.fromLibInfo.artifactId,
           }
-        ]
+        ]))
+
+        this.edges = Object.fromEntries(nodes.map(n => [
+          n.fromLibInfo.libId,
+          Object.fromEntries(n.edges.map(e => [
+            e.libId,
+            {
+              confidence: e.confidence,
+              num: e.num
+            }
+          ]))
+        ]))
 
         this.graph.changeData({
           nodes: nodes.map(n => Object.assign({
-            id: n.projectId.toString(),
-            label: `${n.name}${n.projectId}`,
+            id: n.fromLibInfo.libId.toString(),
+            label: `${n.fromLibInfo.artifactId}`,
           })),
-          edges: nodes.flatMap(n => n.outEdges.map(e => Object.assign({
-            source: n.projectId.toString(),
-            target: e.projectId.toString(),
+          edges: nodes.flatMap(n => n.edges.map(e => Object.assign({
+            source: n.fromLibInfo.libId.toString(),
+            target: e.libId.toString(),
             style: {
-              lineWidth: 10 * e.weight,
+              lineWidth: 10 * e.confidence,
               endArrow: {
-                path: G6.Arrow.vee(Math.max(15 * e.weight, 7), Math.max(20 * e.weight, 10), 0),
+                path: G6.Arrow.vee(Math.max(15 * e.confidence, 7), Math.max(20 * e.confidence, 10), 0),
                 d: 0,
                 fill: '#e0e0e0'
               },
@@ -127,10 +197,62 @@ export default {
         })
       })
     },
+    moveAnchor(ev, anchor, x, y) {
+      const xdiff = ev.clientX - ev.canvasX
+      const ydiff = ev.clientY - ev.canvasY
+
+      anchor.style.top = `${y + ydiff}px`
+      anchor.style.left = `${x + xdiff}px`
+    },
+    showDependencyInfo() {
+      const _this = this
+      return ev => {
+        const anchor = _this.$refs.dependencyInfoAnchor
+        const pos = ev.item._cfg.keyShape.cfg.cacheCanvasBBox
+
+        this.moveAnchor(ev, anchor, pos.x + pos.width / 2, pos.y)
+        _this.dependencyInfoVisible = true
+        _this.dependencyInfo = _this.nodes[parseInt(ev.item._cfg.model.id)]
+      }
+    },
+    hideDependencyInfo() {
+      const _this = this
+      return () => {
+        _this.dependencyInfoVisible = false
+      }
+    },
+    showMigrationInfo() {
+      const _this = this
+      return ev => {
+        const anchor = _this.$refs.migrationInfoAnchor
+        const model = ev.item._cfg.model
+
+        this.moveAnchor(ev, anchor, ev.canvasX, ev.canvasY)
+        _this.migrationInfoVisible = true
+        _this.migrationInfo = _this.edges[parseInt(model.source)][parseInt(model.target)]
+      }
+    },
+    hideMigrationInfo() {
+      const _this = this
+      return () => {
+        _this.migrationInfoVisible = false
+      }
+    },
+    focusNode(id) {
+      this.graph.focusItem(id)
+    }
   },
   computed: {
-    projectInfoLabels() {
-      return projectInfoLabels
+    dependencyInfoLabels() {
+      return dependencyInfoLabels
+    },
+    migrationInfoLabels() {
+      return migrationInfoLabels
+    },
+    otherNodes() {
+      return Object.fromEntries(
+        Object.entries(this.nodes).filter(n => n[0] !== this.selectedDependency.toString())
+      )
     }
   },
   watch: {
@@ -138,8 +260,8 @@ export default {
       deep: true,
       handler() {
         console.log('route changed')
-        this.repos = []
-        this.loadMoreRepos()
+        this.dependencies = []
+        this.loadMoreDependencies()
       },
     },
   },
@@ -150,45 +272,13 @@ export default {
       container: container,
       height: container.clientHeight,
       width: container.clientWidth,
-      modes: { default: [ 'drag-canvas', 'zoom-canvas' ] },
-      layout: {
-        type: 'force',
-        preventOverlap: true,
-        nodeSpacing: 100,
-      },
-      defaultNode: {
-        type: 'circle',
-        size: 50,
-      },
-      defaultEdge: {
-        type: 'quadratic',
-        style: {
-          endArrow: true,
-        }
-      }
+      ...graphOptions,
     })
 
-    const _this = this
-    this.graph.on('node:mouseover', ev => {
-      const anchor = _this.$refs.nodeInfoAnchor
-      const xdiff = ev.clientX - ev.canvasX
-      const ydiff = ev.clientY - ev.canvasY
-      const nodePos = ev.item._cfg.keyShape.cfg.cacheCanvasBBox
-
-      anchor.style.top = `${nodePos.y + ydiff}px`
-      anchor.style.left = `${nodePos.x + xdiff + nodePos.width / 2}px`
-      _this.nodeInfoVisible = true
-      Promise.resolve({
-        name: 'dummy',
-        groupId: 'hahaha',
-        artifactId: 'xxxyyy',
-      }).then(data => {
-        _this.projectInfo = data
-      })
-    })
-    this.graph.on('node:mouseout', () => {
-      _this.nodeInfoVisible = false
-    })
+    this.graph.on('node:mouseover', this.showDependencyInfo())
+    this.graph.on('node:mouseout', this.hideDependencyInfo())
+    this.graph.on('edge:mouseover', this.showMigrationInfo())
+    this.graph.on('edge:mouseout', this.hideMigrationInfo())
 
     new ResizeObserver(entries => {
       const size = entries[0].contentRect
@@ -209,13 +299,13 @@ export default {
 <style lang='scss' scoped>
 @import '@/styles/searcher-in-header.scss';
 
-#maven-repo-list {
+#dependency-list {
   overflow: auto;
   height: calc(100vh - 60px);
   width: var(--el-aside-width);
 }
 
-.maven-repo-id, .maven-repo-description {
+.dependency-id, .dependency-description {
   margin-inline-start: 4px;
   color: var(--el-color-info);
   font-size: 80%;
@@ -226,7 +316,17 @@ export default {
   width: calc(100vw - 300px);
 }
 
-#node-info-anchor {
+#dependency-info-anchor, #migration-info-anchor {
   position: absolute;
+}
+
+#recommendation-list {
+  position: absolute;
+  top: 100px;
+  right: 10px;
+}
+
+#recommendation-list .el-menu {
+  border: 0;
 }
 </style>
