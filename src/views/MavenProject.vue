@@ -1,22 +1,20 @@
 <template>
   <page-header></page-header>
   <el-container>
-    <el-header height="100px">
-      <my-description
-        :columnCountInline="4"
-        :columnInfo="columnInfo"
-        :contentData="mavenProject"
-        :title="mavenProject.artifactId"
-      >
-      </my-description>
-    </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="400px">
+        <my-description
+          columnCountInline="1"
+          :columnInfo="columnInfo"
+          :contentData="mavenProject"
+          :title="mavenProject.artifactId"
+        >
+        </my-description>
         <div v-if="mavenProject.description">
           <p><strong>项目描述</strong></p>
           <p>{{ mavenProject.description }}</p>
         </div>
-        <el-table :data="versions" empty-text="无版本信息" border>
+        <el-table :data="versions" empty-text="无版本信息" border max-height="300px">
           <el-table-column label="版本">
             <template #default="scope">
               <el-link type="primary" v-on:click="changeVersion(scope.row)">
@@ -51,6 +49,8 @@
         <my-table
           :columnInfo="dependencyColumnInfo"
           :contentData="dependencies"
+          :cellStyle="cellStyle"
+          maxHeight="500"
         ></my-table>
         <page :pageAll="pageAll" :goPage="goPage"></page>
       </el-main>
@@ -294,6 +294,20 @@ export default {
           this.setDependencyDiff(this.page);
         }
       }
+    },
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      rowIndex;
+      column;
+      if (row.diff != null) {
+        if (columnIndex == 3) {
+          if (row.diff == "+") {
+            return { background: "#90EE90", color: "black" };
+          } else {
+            return { background: "#FA8072", color: "black" };
+          }
+        }
+      }
+      return "";
     },
   },
   mounted() {

@@ -1,5 +1,12 @@
 <template>
-  <el-table :data="contentData" v-on:sort-change="changeSort" border>
+  <el-table
+    :data="contentData"
+    v-on:sort-change="changeSort"
+    border
+    :max-height="maxHeight"
+    :row-style="rowStyle"
+    :cell-style="cellStyle"
+  >
     <el-table-column
       v-for="item in columnInfo"
       :key="item"
@@ -42,6 +49,9 @@ export default {
     contentData: Array,
     columnInfo: Array,
     changeSort: Function,
+    maxHeight: Number,
+    rowStyle: Function,
+    cellStyle: Function,
   },
   data() {
     return {};
