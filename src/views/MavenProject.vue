@@ -14,7 +14,12 @@
           <p><strong>项目描述</strong></p>
           <p>{{ mavenProject.description }}</p>
         </div>
-        <el-table :data="versions" empty-text="无版本信息" border max-height="300px">
+        <el-table
+          :data="versions"
+          empty-text="无版本信息"
+          border
+          max-height="300px"
+        >
           <el-table-column label="版本">
             <template #default="scope">
               <el-link type="primary" v-on:click="changeVersion(scope.row)">
@@ -61,7 +66,7 @@
 <script>
 import Page from "../components/Page.vue";
 import MyDescription from "../components/Description.vue";
-import { columnInfos } from "../scripts/Constant.js";
+import { columnInfos, colors } from "../scripts/Constant.js";
 import {
   searchMavenProjectById,
   searchMavenProjectByVersion,
@@ -297,13 +302,13 @@ export default {
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       rowIndex;
-      column;
+      columnIndex;
       if (row.diff != null) {
-        if (columnIndex == 3) {
+        if (column.property == "diff") {
           if (row.diff == "+") {
-            return { background: "#90EE90", color: "black" };
+            return { background: colors.additionBackgroundColor };
           } else {
-            return { background: "#FA8072", color: "black" };
+            return { background: colors.decreaseBackgroundColor };
           }
         }
       }

@@ -489,37 +489,37 @@ export const columnInfos = {
     isDate: false,
     targetURL: "",
     paramKeyword: ""
-  }, 
+  },
   ],
   //TODO:dependencyInfo
   mavenDependencyColumnInfo: [{
-      columnName: "groupId",
-      sortable: false,
-      isURL: false,
-      keyword: "groupId",
-      isRouter: false,
-      isDate: false,
-      targetURL: "",
-      paramKeyword: ""
-    }, {
-      columnName: "artifactId",
-      sortable: false,
-      isURL: false,
-      keyword: "artifactId",
-      isRouter: false,
-      isDate: false,
-      targetURL: "",
-      paramKeyword: ""
-    }, {
-      columnName: "版本",
-      sortable: false,
-      isURL: false,
-      keyword: "version",
-      isRouter: false,
-      isDate: false,
-      targetURL: "",
-      paramKeyword: ""
-    },
+    columnName: "groupId",
+    sortable: false,
+    isURL: false,
+    keyword: "groupId",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "artifactId",
+    sortable: false,
+    isURL: false,
+    keyword: "artifactId",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  }, {
+    columnName: "版本",
+    sortable: false,
+    isURL: false,
+    keyword: "version",
+    isRouter: false,
+    isDate: false,
+    targetURL: "",
+    paramKeyword: ""
+  },
   ],
 
   mavenDependencyDiffColumnInfo: [{
@@ -559,4 +559,9 @@ export const columnInfos = {
     targetURL: "",
     paramKeyword: ""
   },]
+}
+
+export const colors = {
+  additionBackgroundColor: "#9EFF9E",
+  decreaseBackgroundColor: "#FF9090",
 }
