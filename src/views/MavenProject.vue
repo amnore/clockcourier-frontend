@@ -6,7 +6,7 @@
         :columnCountInline="4"
         :columnInfo="columnInfo"
         :contentData="mavenProject"
-        :title="mavenProject.artifictId"
+        :title="mavenProject.artifactId"
       >
       </my-description>
     </el-header>
