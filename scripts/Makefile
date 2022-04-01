@@ -21,7 +21,7 @@ ifneq ($(shell docker ps -a | grep $(PROJ_NAME)),)
 	docker rm $(PROJ_NAME)
 endif
 ifeq ($(shell docker images | grep $(PROJ_NAME) | wc -l),10)
-	docker rmi `docker images | grep $(PROJ_NAME) | awk '{print $$3}'`
+	docker rmi -f `docker images | grep $(PROJ_NAME) | awk '{print $$3}'`
 endif
 
 build:
