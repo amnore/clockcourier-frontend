@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('start') {
+            steps {
+                echo "== Start CICD =="
+            }
+        }
+        
+        stage('pull') {
+            steps {
+                git credentialsId: 'e81c1ce7-3228-413f-b702-02d111f54a17', url: 'git@git.nju.edu.cn:191250045/lmcc-frontend-mirror.git'
+                sh "ls -al"
+                sh "pwd"
+            }
+        }
+        
+        stage('all') {
+            steps {
+                gitlabCommitStatus( name: 'all', connection:gitLabConnection('lmcc'), builds: [
+                    [projectId: '191250045/lmcc-frontend-mirror', revisionHash: 'master']
+                ]){
+                    sh "make -f srcipts/Makefile"
+                }
+            }
+        }
+        
+        stage('end') {
+            steps {
+                echo "== The End =="
+            }
+        }
+    }
+}
