@@ -156,11 +156,12 @@ import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "../components/Page.vue";
 import MyDescription from "../components/Description.vue";
 import { columnInfos } from "../scripts/Constant.js";
+import PageHeader from "@/components/PageHeader.vue";
 
 export default {
   name: "Project", //注册在路由（router.js）里的就是这个
   props: {},
-  components: { Page, MyDescription },
+  components: { Page, MyDescription, PageHeader },
   data() {
     return {
       project: {
@@ -288,7 +289,7 @@ export default {
 
 <style scoped>
 .el-header {
-  margin: 2%;
+  margin-bottom: 2%;
 }
 
 .el-aside {

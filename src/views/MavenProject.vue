@@ -328,7 +328,7 @@ export default {
 }
 
 .el-header {
-  margin: 2%;
+  margin-bottom: 2%;
 }
 
 .el-aside {

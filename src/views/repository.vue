@@ -150,9 +150,10 @@ import { dateFormatter } from "@/scripts/DateFormatter.js";
 import Page from "../components/Page.vue";
 import MyDescription from "../components/Description.vue";
 import { columnInfos } from "../scripts/Constant.js";
+import PageHeader from "@/components/PageHeader.vue";
 export default {
   name: "Repository",
-  components: { Page, MyDescription },
+  components: { Page, MyDescription, PageHeader },
   props: {},
   data() {
     return {
@@ -259,7 +260,7 @@ export default {
 
 <style scoped>
 .el-header {
-  margin: 2%;
+  margin-bottom: 2%;
 }
 
 .el-aside {
