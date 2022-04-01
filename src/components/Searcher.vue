@@ -53,11 +53,11 @@ const paramNameMapping = {
   },
   mavenProjectInfo: {
     groupId: "组织名",
-    artifactId: "组件名",
+    artifactId: "名称",
   },
   dependencyInfo: {
     groupId: '组织名',
-    artifactId: '组件名',
+    artifactId: '名称',
   },
 };
 

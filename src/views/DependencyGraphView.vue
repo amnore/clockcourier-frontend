@@ -287,9 +287,7 @@ export default {
     }).observe(container)
 
     this.graph.read({
-      nodes: [
-        { id: '1', label: 'dummy1', },
-      ],
+      nodes: [],
       edges: [],
     })
   }
