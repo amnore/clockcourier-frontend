@@ -21,7 +21,7 @@ pipeline {
                 gitlabCommitStatus( name: 'all', connection:gitLabConnection('lmcc'), builds: [
                     [projectId: '191250045/lmcc-frontend-mirror', revisionHash: 'master']
                 ]){
-                    sh "make -f srcipts/Makefile"
+                    sh "make -f scripts/Makefile"
                 }
             }
         }
