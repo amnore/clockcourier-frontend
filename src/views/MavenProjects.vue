@@ -40,7 +40,9 @@ export default {
   },
   watch: {
     "$route.params": function (value) {
-      this.searchMavenProject(value, 1);
+      if (this.$route.path == "/maven-projects") {
+        this.searchMavenProject(value, 1);
+      }
     },
   },
   methods: {
