@@ -109,5 +109,6 @@ export const searchParams = {
   dependencyInfo: {
     groupId: String,
     artifactId: String,
+    pomUrl: String,
   },
 }

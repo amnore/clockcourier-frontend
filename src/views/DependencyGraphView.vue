@@ -90,6 +90,7 @@ import { searchParams } from '@/scripts/DataSchema.js'
 import search from '@/api/Search.js'
 import { getGraph } from '@/api/DependencyGraph.js'
 import G6 from '@antv/g6'
+import uploadPom from '@/api/UploadPom.js'
 
 const graphOptions = {
   modes: { default: [ 'drag-canvas', 'zoom-canvas' ] },
@@ -142,13 +143,28 @@ export default {
       })
     },
     loadMoreDependencies() {
-      search(
-        'dependencyInfo',
-        this.$props,
-        [this.dependencies.length, this.dependencies.length + 20],
-        'GroupId',
-        false
-      ).then(resp => this.dependencies.push(...resp.data.libs))
+      console.log(this.$props)
+
+      let request
+      if (this.$props.pomUrl) {
+        if (this.dependencies.length !== 0) {
+          return
+        }
+
+        request = fetch(this.$props.pomUrl)
+          .then(resp => resp.blob())
+          .then(uploadPom)
+      } else {
+        request = search(
+          'dependencyInfo',
+          this.$props,
+          [this.dependencies.length, this.dependencies.length + 20],
+          'GroupId',
+          false
+        )
+      }
+
+      request.then(resp => this.dependencies.push(...resp.data.libs))
     },
     loadGraph(id) {
       getGraph(id).then(resp => {
@@ -238,6 +254,14 @@ export default {
         _this.migrationInfoVisible = false
       }
     },
+    gotoMigrationRulePage() {
+      const _this = this
+      return ev => {
+        console.log(_this, ev)
+        // eslint-disable-next-line
+        debugger
+      }
+    },
     focusNode(id) {
       this.graph.focusItem(id)
     }
@@ -259,7 +283,7 @@ export default {
     '$props': {
       deep: true,
       handler() {
-        console.log('route changed')
+        console.log('route changed', this.$props)
         this.dependencies = []
         this.loadMoreDependencies()
       },
@@ -279,6 +303,7 @@ export default {
     this.graph.on('node:mouseout', this.hideDependencyInfo())
     this.graph.on('edge:mouseover', this.showMigrationInfo())
     this.graph.on('edge:mouseout', this.hideMigrationInfo())
+    this.graph.on('edge:click', this.gotoMigrationRulePage())
 
     new ResizeObserver(entries => {
       const size = entries[0].contentRect
