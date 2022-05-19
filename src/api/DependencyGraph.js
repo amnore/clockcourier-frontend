@@ -1,7 +1,7 @@
 import { backendUrl } from './Url'
 
 export function getGraph(libId) {
-  return fetch(`${backendUrl}/migration/mvn/lib/${libId}/get`, {
+  return fetch(`${backendUrl}/migration/mvn/graph/${libId}/get`, {
     headers: { 'Content-Type': 'application/json' },
   }).then(resp => resp.json())
 }
