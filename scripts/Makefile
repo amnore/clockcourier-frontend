@@ -3,13 +3,9 @@ DOCKER_FILE  := scripts/Dockerfile
 NODE_VERSION := 12
 PROJ_NAME    := lmcc-frontend
 
-.PHONY: all clean build test deploy
+.PHONY: all clean build deploy
 
-all: prepare clean build test deploy
-
-prepare:
-	@echo "== Prepare =="
-	node -v
+all: clean build deploy
 
 # clean docker container
 clean:
@@ -28,10 +24,6 @@ build:
 	@echo "== Build =="
 	npm install
 	npm run build
-
-test:
-	@echo "== Test =="
-	# npm run test:unit -- --coverage
 
 deploy:
 	@echo "== Deploy =="
