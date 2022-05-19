@@ -7,6 +7,8 @@ import SearchView from '@/views/SearchView.vue'
 import DependencyGraphView from '@/views/DependencyGraphView.vue'
 import MavenProjects from "../views/MavenProjects.vue"
 import MavenProject from "../views/MavenProject.vue"
+import RuleInfo from "../views/RuleInfo.vue"
+import JumpToOut from "../views/JumpToOut.vue"
 
 
 const routes = [
@@ -55,6 +57,16 @@ const routes = [
     path: '/maven-project/:id',
     name: 'MavenProject',
     component: MavenProject,
+  },
+  {
+    path: '/rule-info/:id',
+    name: 'RuleInfo',
+    component: RuleInfo,
+  },
+  {
+    path: '/jump-to-out',
+    name: 'JumpToOut',
+    component: JumpToOut,
   }
 ]
 

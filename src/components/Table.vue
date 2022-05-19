@@ -8,7 +8,7 @@
     :cell-style="cellStyle"
   >
     <el-table-column
-      v-for="item in columnInfo"
+      v-for="item in unexpandInfo"
       :key="item"
       :sortable="item.sortable"
       :label="item.columnName"
@@ -38,13 +38,24 @@
         <p v-else>{{ scope.row[item.keyword] }}</p>
       </template>
     </el-table-column>
+    <el-table-column v-if="expandIndex != -1" type="expand">
+      <template #default="scope">
+        <my-description
+          :columnInfo="expandInfo"
+          :contentData="scope.row"
+          :columnCountInline="expandColumnCountInline"
+        ></my-description>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
 <script>
 import { dateFormatter } from "@/scripts/DateFormatter.js";
+import MyDescription from "./Description.vue";
 export default {
   name: "MyTable",
+  components: { MyDescription },
   props: {
     contentData: Array,
     columnInfo: Array,
@@ -52,6 +63,14 @@ export default {
     maxHeight: Number,
     rowStyle: Function,
     cellStyle: Function,
+    expandIndex: {
+      type: Number,
+      default: -1,
+    },
+    expandColumnCountInline: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {};
@@ -59,6 +78,34 @@ export default {
   methods: {
     dateFormat(date) {
       return dateFormatter(date);
+    },
+  },
+  computed: {
+    unexpandInfo() {
+      if (this.expandIndex == -1) {
+        return this.columnInfo;
+      } else {
+        var unexpandColumnInfo = [];
+        for (let index = 0; index < this.expandIndex; index++) {
+          unexpandColumnInfo.push(this.columnInfo[index]);
+        }
+        return unexpandColumnInfo;
+      }
+    },
+    expandInfo() {
+      var expandColumnInfo = [];
+
+      if (this.expandIndex != -1) {
+        for (
+          let index = this.expandIndex;
+          index < this.columnInfo.length;
+          index++
+        ) {
+          const element = this.columnInfo[index];
+          expandColumnInfo.push(element);
+        }
+      }
+      return expandColumnInfo;
     },
   },
 };

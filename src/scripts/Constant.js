@@ -491,7 +491,7 @@ export const columnInfos = {
     paramKeyword: ""
   },
   ],
-  //TODO:dependencyInfo
+
   mavenDependencyColumnInfo: [{
     columnName: "groupId",
     sortable: false,
@@ -558,7 +558,50 @@ export const columnInfos = {
     isDate: false,
     targetURL: "",
     paramKeyword: ""
-  },]
+  },],
+
+  rulesColumnInfo:[
+    {
+      columnName: "相关迁移项目名称",
+      sortable: false,
+      isURL: false,
+      keyword: "projectName",
+      isRouter: true ,
+      isDate: false,
+      targetURL: "/jump-to-out?url=",
+      paramKeyword: "projectUrl"
+    },
+    {
+      columnName: "起始commit",
+      sortable: false,
+      isURL: false,
+      keyword: "startCommit",
+      isRouter: true,
+      isDate: false,
+      targetURL: "/jump-to-out?url=",
+      paramKeyword: "startCommit"
+    },
+    {
+      columnName: "结束commit",
+      sortable: false,
+      isURL: false,
+      keyword: "endCommit",
+      isRouter: true,
+      isDate: false,
+      targetURL: "/jump-to-out?url=",
+      paramKeyword: "endCommit"
+    },
+    {
+      columnName: "修改文件",
+      sortable: false,
+      isURL: false,
+      keyword: "fileName",
+      isRouter: false,
+      isDate: false,
+      targetURL: "",
+      paramKeyword: ""
+    },
+  ]
 }
 
 export const colors = {
