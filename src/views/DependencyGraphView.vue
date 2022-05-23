@@ -29,13 +29,15 @@
           placement="top"
         >
           <el-descriptions title="项目信息" :column="1">
-            <el-descriptions-item
-              v-for="(value, key) in dependencyInfo"
-              :key="key"
-              :label="dependencyInfoLabels[key]"
-            >
-              {{value}}
-            </el-descriptions-item>
+            <template v-for="(value, key) in dependencyInfo">
+              <el-descriptions-item
+                v-if="dependencyInfoLabels[key]"
+                :key="key"
+                :label="dependencyInfoLabels[key]"
+              >
+                {{value}}
+              </el-descriptions-item>
+            </template>
           </el-descriptions>
           <template #reference>
             <div id="dependency-info-anchor" ref="dependencyInfoAnchor"/>
@@ -48,13 +50,15 @@
           placement="top"
         >
           <el-descriptions title="迁移规则信息" :column="1">
-            <el-descriptions-item
-              v-for="(value, key) in migrationInfo"
-              :key="key"
-              :label="migrationInfoLabels[key]"
-            >
-              {{value}}
-            </el-descriptions-item>
+            <template v-for="(value, key) in migrationInfo">
+              <el-descriptions-item
+                v-if="migrationInfoLabels[key]"
+                :key="key"
+                :label="migrationInfoLabels[key]"
+              >
+                {{value}}
+              </el-descriptions-item>
+            </template>
           </el-descriptions>
           <template #reference>
             <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
@@ -113,11 +117,18 @@ const dependencyInfoLabels = {
   groupId: 'GroupId',
   artifactId: 'ArtifactId',
   transitiveConfidence: '推荐度',
+  mvnCtrUrl: 'Maven Central 地址',
+  repoUrl: '项目地址',
+  description: '描述',
 }
 
 const migrationInfoLabels = {
   confidence: '置信度',
-  num: '迁移次数'
+  num: '迁移次数',
+  rs: 'Rule Support',
+  ms: 'Message Support',
+  ds: 'Distance Support',
+  as: 'API Support',
 }
 
 export default {
@@ -175,21 +186,14 @@ export default {
         this.selectedDependency = id
         this.nodes = Object.fromEntries(nodes.map(n => [
           n.fromLibInfo.libId,
-          {
-            transitiveConfidence: n.transitiveConfidence,
-            groupId: n.fromLibInfo.groupId,
-            artifactId: n.fromLibInfo.artifactId,
-          }
+          n.fromLibInfo
         ]))
 
         this.edges = Object.fromEntries(nodes.map(n => [
           n.fromLibInfo.libId,
           Object.fromEntries(n.edges.map(e => [
-            e.libId,
-            {
-              confidence: e.confidence,
-              num: e.num
-            }
+            e.toId,
+            e
           ]))
         ]))
 
