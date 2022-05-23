@@ -35,7 +35,7 @@ pipeline {
                 gitlabCommitStatus(name: 'prepare', builds: [
                     [projectId: "${env.project}", revisionHash: "${env.branch}"]
                 ]){
-                    git credentialsId: 'e81c1ce7-3228-413f-b702-02d111f54a17', url: 'git@git.nju.edu.cn:191250045/lmcc-backend-mirror.git'
+                    git credentialsId: 'e81c1ce7-3228-413f-b702-02d111f54a17', url: 'git@git.nju.edu.cn:191250045/lmcc-frontend-mirror.git'
                     echo "project ls:"
                     sh 'ls -al'
                     sh "make -f scripts/Makefile clean"
