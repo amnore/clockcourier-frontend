@@ -109,6 +109,9 @@ const graphOptions = {
   },
   defaultEdge: {
     type: 'quadratic',
+    style: {
+      cursor: 'pointer'
+    },
   },
   animate: true,
 }
@@ -261,9 +264,12 @@ export default {
     gotoMigrationRulePage() {
       const _this = this
       return ev => {
-        console.log(_this, ev)
-        // eslint-disable-next-line
-        debugger
+        const model = ev.item._cfg.model
+        const edge = _this.edges[parseInt(model.source)][parseInt(model.target)]
+        _this.$router.push({
+          name: 'RuleInfo',
+          params: { id: edge.ruleId }
+        })
       }
     },
     focusNode(id) {
