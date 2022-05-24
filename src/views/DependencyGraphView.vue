@@ -204,7 +204,7 @@ export default {
           })),
           edges: nodes.flatMap(n => n.edges.map(e => Object.assign({
             source: n.fromLibInfo.libId.toString(),
-            target: e.libId.toString(),
+            target: e.toId.toString(),
             style: {
               lineWidth: 10 * e.confidence,
               endArrow: {
