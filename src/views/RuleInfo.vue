@@ -52,7 +52,7 @@ export default {
       searchRule(this.id, page)
         .then((res) => {
           this.rules = res.data.data.instances;
-          this.setPageAll(res.data.data.count, this.pageSize);
+          this.pageAll = res.data.data.pageAll
         })
         .catch(function (e) {
           console.log(e);
