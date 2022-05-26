@@ -5,6 +5,7 @@
         type="text"
         :placeholder="paramNames[defaultParam]"
         v-model="paramValues[defaultParam]"
+        @keyup.enter="$emit('search', paramValues)"
       >
         <template #suffix>
           <el-button :icon="searchIcon" @click="$emit('search', paramValues)" />
@@ -32,6 +33,7 @@
 import { searchParams } from "@/scripts/DataSchema.js";
 import SearcherBooleanField from "@/components/searcher-fields/SearcherBooleanField.vue";
 import SearcherTextField from "@/components/searcher-fields/SearcherTextField.vue";
+import SearcherPomField from "@/components/searcher-fields/SearcherPomField.vue";
 import { Search, More } from "@element-plus/icons-vue";
 
 const paramNameMapping = {
@@ -73,15 +75,21 @@ const defaultFormItem = {
   Boolean: SearcherBooleanField,
 };
 
+const overrideFormItem = {
+  pomUrl: SearcherPomField,
+};
+
 export default {
   name: "Searcher",
   emits: ["search"],
   props: {
     category: String,
+    initParamValues: Object,
   },
   data() {
+    console.log('initParamValues', this.initParamValues)
     return {
-      paramValues: {},
+      paramValues: this.initParamValues || {},
     };
   },
   watch: {
@@ -111,7 +119,7 @@ export default {
           .filter((e) => e[0] !== this.defaultParam)
           .map((e) => {
             const name = e[0];
-            const item = defaultFormItem[e[1].name];
+            const item = overrideFormItem[e[0]] || defaultFormItem[e[1].name];
             // item.$on('change', value => this.paramValues[name] = value)
             return [name, item];
           })

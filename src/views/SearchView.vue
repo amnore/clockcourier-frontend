@@ -3,16 +3,6 @@
     <search-category-selector @select="type = $event"/>
   </page-header>
   <searcher :category="searchCategory" @search="doSearch"/>
-  <el-upload accept=".xml" :auto-upload="false" :on-change="doUploadPom">
-    <el-button>上传 pom 文件</el-button>
-  </el-upload>
-    <!-- <div id="searcher-pom-uploader">
-         <el-input type="file" v-model="pomFile" accept=".xml">
-         <template #prepend>
-         上传 pom 文件
-         </template>
-         </el-input>
-         </div> -->
 </template>
 
 <script>
@@ -40,7 +30,6 @@ export default {
   data() {
     return {
       type: "dependencyGraphInfo",
-      pomFile: null,
     }
   },
   computed: {
@@ -55,20 +44,7 @@ export default {
         params: paramValues,
       })
     },
-    doUploadPom(file) {
-      const fileUrl = URL.createObjectURL(file.raw)
-      console.log('doUploadPom', file, fileUrl)
-      this.$router.push({
-        name: 'DependencyGraph',
-        params: {
-          pomUrl: fileUrl
-        }
-      })
-    }
   },
-  watch: {
-    pomFile: function(file) { this.doUploadPom(file) }
-  }
 }
 </script>
 
@@ -81,10 +57,5 @@ export default {
 
 #searcher::v-deep {
   margin-top: 30vh;
-}
-
-#searcher-pom-uploader {
-  width: 30%;
-  margin: 1em auto;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <el-container direction="vertical">
     <page-header>
-      <searcher category="dependencyInfo" @search="doSearch"/>
+      <searcher :init-param-values="$props" category="dependencyInfo" @search="doSearch"/>
     </page-header>
     <el-container>
       <el-aside>
