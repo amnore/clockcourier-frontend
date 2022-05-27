@@ -223,9 +223,9 @@ export default {
             source: n.fromLibInfo.libId.toString(),
             target: e.toId.toString(),
             style: {
-              lineWidth: Math.max(20 * e.confidence, 0.5),
+              lineWidth: Math.min(Math.max(10 * e.confidence, 0.5), 10),
               endArrow: {
-                path: G6.Arrow.vee(Math.max(15 * e.confidence, 7), Math.max(20 * e.confidence, 10), 0),
+                path: G6.Arrow.vee(Math.min(Math.max(10 * e.confidence, 7), 10), Math.min(Math.max(10 * e.confidence, 10), 10), 0),
                 d: 0,
                 fill: '#e0e0e0'
               },
