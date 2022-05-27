@@ -1,5 +1,5 @@
 <template>
-    <div><p>jump failed</p></div>
+    <div><p>等待跳转...</p></div>
 </template>
 
 <script>
