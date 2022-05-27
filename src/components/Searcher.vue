@@ -89,7 +89,7 @@ export default {
   data() {
     console.log('initParamValues', this.initParamValues)
     return {
-      paramValues: this.initParamValues || {},
+      paramValues: Object.assign({}, this.initParamValues) || {},
     };
   },
   watch: {

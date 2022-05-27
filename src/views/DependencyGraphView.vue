@@ -27,6 +27,8 @@
           ref="dependencyInfo"
           :visible="dependencyInfoVisible"
           placement="top"
+          width="200px"
+          :popper-options="popoverOptions"
         >
           <el-descriptions title="项目信息" :column="1">
             <template v-for="(value, key) in dependencyInfo">
@@ -48,6 +50,8 @@
           ref="migrationInfo"
           :visible="migrationInfoVisible"
           placement="top"
+          width="200px"
+          :popper-options="popoverOptions"
         >
           <el-descriptions title="迁移规则信息" :column="1">
             <template v-for="(value, key) in migrationInfo">
@@ -134,6 +138,18 @@ const migrationInfoLabels = {
   as: 'API Support',
 }
 
+const popoverOptions = {
+  modifiers: [
+    {
+      name: 'flip',
+      options: {
+        padding: 5,
+        fallbackPlacements: ['bottom-start', 'top-start', 'right', 'left'],
+      }
+    }
+  ]
+}
+
 export default {
   components: { PageHeader, Searcher },
   props: searchParams.dependencyInfo,
@@ -159,26 +175,24 @@ export default {
     loadMoreDependencies() {
       console.log(this.$props)
 
-      let request
       if (this.$props.pomUrl) {
         if (this.dependencies.length !== 0) {
           return
         }
 
-        request = fetch(this.$props.pomUrl)
+        fetch(this.$props.pomUrl)
           .then(resp => resp.blob())
           .then(uploadPom)
+          .then(resp => this.dependencies.push(...resp.data))
       } else {
-        request = search(
+        search(
           'dependencyInfo',
           this.$props,
           [this.dependencies.length, this.dependencies.length + 20],
           'GroupId',
           false
-        )
+        ).then(resp => this.dependencies.push(...resp.data.libs))
       }
-
-      request.then(resp => this.dependencies.push(...resp.data.libs))
     },
     loadGraph(id) {
       getGraph(id).then(resp => {
@@ -209,7 +223,7 @@ export default {
             source: n.fromLibInfo.libId.toString(),
             target: e.toId.toString(),
             style: {
-              lineWidth: 10 * e.confidence,
+              lineWidth: Math.max(20 * e.confidence, 0.5),
               endArrow: {
                 path: G6.Arrow.vee(Math.max(15 * e.confidence, 7), Math.max(20 * e.confidence, 10), 0),
                 d: 0,
@@ -287,7 +301,10 @@ export default {
       return Object.fromEntries(
         Object.entries(this.nodes).filter(n => n[0] !== this.selectedDependency.toString())
       )
-    }
+    },
+    popoverOptions() {
+      return popoverOptions
+    },
   },
   watch: {
     '$props': {
@@ -353,10 +370,15 @@ export default {
   position: absolute;
 }
 
+#dependency-info, #migration-info {
+  width: 300px;
+}
+
 #recommendation-list {
   position: absolute;
   top: 100px;
   right: 10px;
+  max-width: 300px;
 }
 
 #recommendation-list .el-menu {
