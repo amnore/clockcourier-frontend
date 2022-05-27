@@ -2,10 +2,34 @@
   <page-header></page-header>
   <el-container>
     <el-main>
-      <my-table
-        :columnInfo="columnInfo"
-        :contentData="rules"
-      ></my-table>
+      <el-descriptions title="迁移信息" column="4" border>
+        <el-descriptions-item label="源库">
+          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+fromLib.mvnCtrUrl)">{{fromLib.artifactId+":"+fromLib.groupId}}</el-link>
+        </el-descriptions-item>
+        <el-descriptions-item label="目标库">
+          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+toLib.mvnCtrUrl)">{{toLib.artifactId+":"+toLib.groupId}}</el-link>
+        </el-descriptions-item>
+        
+        <el-descriptions-item label="置信度">
+          {{confidence}}
+        </el-descriptions-item>
+        <el-descriptions-item label=" ">
+           
+        </el-descriptions-item>
+        <el-descriptions-item label="Rule Support">
+          {{rs}}
+        </el-descriptions-item>
+        <el-descriptions-item label="Distance Support">
+          {{ds}}
+        </el-descriptions-item>
+        <el-descriptions-item label="API Support">
+          {{as}}
+        </el-descriptions-item>
+        <el-descriptions-item label="Message Support">
+          {{ms}}
+        </el-descriptions-item>
+      </el-descriptions>
+      <my-table :columnInfo="columnInfo" :contentData="rules"></my-table>
       <page :goPage="goPage" :pageAll="pageAll"></page>
     </el-main>
   </el-container>
@@ -16,7 +40,8 @@ import MyTable from "../components/Table.vue";
 import Page from "../components/Page.vue";
 import PageHeader from "@/components/PageHeader.vue";
 import { columnInfos } from "../scripts/Constant.js";
-import { searchRule } from "../api/SearchRule";
+import { searchRuleInstance, searchRuleBaseInfo } from "../api/SearchRule";
+import { getLibInfo } from "../api/DependencyGraph.js";
 export default {
   name: "RuleInfo",
   components: { MyTable, Page, PageHeader },
@@ -36,6 +61,13 @@ export default {
       ],
       pageAll: 1,
       pageSize: 10,
+      confidence: 0,
+      rs: 0,
+      ms: 0,
+      ds: 0,
+      as: 0,
+      fromLib: {},
+      toLib:{},
       columnInfo: columnInfos.rulesColumnInfo,
     };
   },
@@ -49,15 +81,41 @@ export default {
     getRules(page) {
       this.id = this.$route.params.id;
       //TODO：获取rule列表
-      searchRule(this.id, page)
+      searchRuleInstance(this.id, page)
         .then((res) => {
           this.rules = res.data.data.instances;
-          this.pageAll = res.data.data.pageAll
+          this.pageAll = res.data.data.pageAll;
         })
         .catch(function (e) {
           console.log(e);
         });
       console.log(page);
+      searchRuleBaseInfo(this.id)
+        .then((res) => {
+          this.confidence = res.data.data.confidence;
+          this.rs = res.data.data.rs;
+          this.ms = res.data.data.ms;
+          this.ds = res.data.data.ds;
+          this.as = res.data.data.as;
+          getLibInfo(res.data.data.fromId)
+            .then((res) => {
+              this.fromLib=res.data
+            })
+            .catch(function (e) {
+              console.log(e);
+            });
+
+          getLibInfo(res.data.data.toId)
+            .then((res) => {
+              this.toLib=res.data
+            })
+            .catch(function (e) {
+              console.log(e);
+            });
+        })
+        .catch(function (e) {
+          console.log(e);
+        });
       return;
     },
     setPageAll(count, pageSize) {
@@ -73,9 +131,9 @@ export default {
       }
     },
   },
-  mounted(){
+  mounted() {
     this.refresh();
-  }
+  },
 };
 </script>
 

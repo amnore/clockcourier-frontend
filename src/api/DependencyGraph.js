@@ -11,3 +11,9 @@ export function getDependencyInfo(libId) {
     headers: { 'Content-Type': 'application/json' },
   }).then(resp => resp.json())
 }
+
+export function getLibInfo(libId) {
+  return fetch(`${backendUrl}/library/mvn/${libId}/get`, {
+    headers: { 'Content-Type': 'application/json' },
+  }).then(resp => resp.json())
+}
