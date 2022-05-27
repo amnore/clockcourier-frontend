@@ -1,31 +1,25 @@
 <template>
-  <el-form id="searcher">
-    <div id="searcher-main-input">
-      <el-input
-        type="text"
-        :placeholder="paramNames[defaultParam]"
-        v-model="paramValues[defaultParam]"
-        @keyup.enter="$emit('search', paramValues)"
-      >
-        <template #suffix>
-          <el-button :icon="searchIcon" @click="$emit('search', paramValues)" />
-          <el-dropdown trigger="click">
-            <el-button :icon="moreIcon"/>
-            <template #dropdown>
-              <div id="searcher-additional-items">
-                <component
-                  v-for="(item, name) in formItems"
-                  :is="item"
-                  :key="name"
-                  :label="paramNames[name]"
-                  v-model="paramValues[name]"
-                />
-              </div>
-            </template>
-          </el-dropdown>
-        </template>
-      </el-input>
-    </div>
+  <el-form
+    id="searcher"
+    @keyup.enter="$emit('search', paramValues)">
+    <el-input
+      type="text"
+      placeholder="groupId"
+      v-model="paramValues.groupId"
+    />
+    <el-input
+      type="text"
+      placeholder="artifactId"
+      v-model="paramValues.artifactId"
+    />
+    <el-button :icon="searchIcon" @click="$emit('search', paramValues)" />
+    <el-upload id="searcher-pom-uploader"
+      ref="uploadRef"
+      accept=".xml"
+      :auto-upload="false"
+      :on-change="doUploadPom">
+      <el-button :icon="uploadIcon" />
+    </el-upload>
   </el-form>
 </template>
 
@@ -34,7 +28,7 @@ import { searchParams } from "@/scripts/DataSchema.js";
 import SearcherBooleanField from "@/components/searcher-fields/SearcherBooleanField.vue";
 import SearcherTextField from "@/components/searcher-fields/SearcherTextField.vue";
 import SearcherPomField from "@/components/searcher-fields/SearcherPomField.vue";
-import { Search, More } from "@element-plus/icons-vue";
+import { Search, More, Upload } from "@element-plus/icons-vue";
 
 const paramNameMapping = {
   projectInfo: {
@@ -100,12 +94,28 @@ export default {
       this.paramValues = {}
     },
   },
+  methods: {
+    doUploadPom(file) {
+      const fileUrl = URL.createObjectURL(file.raw)
+      console.log('doUploadPom', file, fileUrl)
+      this.$refs.uploadRef.clearFiles()
+      this.$router.push({
+        name: 'DependencyGraph',
+        params: {
+          pomUrl: fileUrl
+        }
+      })
+    },
+  },
   computed: {
     searchIcon() {
-      return Search;
+      return Search
+    },
+    uploadIcon() {
+      return Upload
     },
     moreIcon() {
-      return More;
+      return More
     },
     params() {
       return searchParams[this.category];
@@ -133,21 +143,35 @@ export default {
 </script>
 
 <style scoped>
-#searcher-main-input::v-deep .el-input__suffix-inner > * {
-  align-self: center;
-  margin: 0 5px;
+#searcher {
+  margin: auto auto;
+  height: 50px;
+  width: 60vw;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid var(--el-border-color-base);
+  border-radius: var(--el-border-radius-base);
 }
 
-#searcher-main-input::v-deep .el-input {
+#searcher .el-input {
+  margin: auto 20px;
+}
+
+#searcher .el-button {
+  margin: auto 5px;
+}
+
+#searcher > * {
+  height: 65%;
+}
+
+.el-input::v-deep input {
+  font-size: 1.2em;
   height: 100%;
 }
 
-#searcher-main-input::v-deep input {
+#searcher-pom-uploader::v-deep .el-upload, #searcher-pom-uploader::v-deep .el-upload .el-button {
   height: 100%;
-  font-size: 1.5em;
-}
-
-#searcher-additional-items {
-  padding: 10px;
 }
 </style>

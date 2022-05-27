@@ -17,7 +17,6 @@
           >
             <span class="dependency-name">{{dependency.artifactId}}</span>
             <span class="dependency-id">{{dependency.groupId + ':' + dependency.artifactId}}</span>
-            <span class="dependency-description">{{dependency.description}}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -379,9 +378,19 @@ export default {
   top: 100px;
   right: 10px;
   max-width: 300px;
+  max-height: min(calc(100vh - 120px), 500px);
+}
+
+#recommendation-list::v-deep > .el-card__body {
+  overflow: scroll;
+  height: calc(min(calc(100vh - 120px), 500px) - 62px);
 }
 
 #recommendation-list .el-menu {
   border: 0;
+}
+
+#recommendation-list .el-menu .el-menu-item, #dependency-list .el-menu-item {
+  overflow: hidden
 }
 </style>
