@@ -58,8 +58,8 @@ const paramNameMapping = {
     artifactId: "名称",
   },
   dependencyInfo: {
-    groupId: '组织名',
-    artifactId: '名称',
+    groupId: 'groupId',
+    artifactId: 'artifactId',
   },
 };
 
