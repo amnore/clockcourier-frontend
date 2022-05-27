@@ -89,7 +89,10 @@ export default {
   data() {
     console.log('initParamValues', this.initParamValues)
     return {
-      paramValues: Object.assign({}, this.initParamValues) || {},
+      paramValues: {
+        groupId: this.initParamValues?.groupId,
+        artifactId: this.initParamValues?.artifactId,
+      },
     };
   },
   watch: {
