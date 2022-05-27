@@ -84,6 +84,10 @@ export default {
       searchRuleInstance(this.id, page)
         .then((res) => {
           this.rules = res.data.data.instances;
+          for(var i=0;i<this.rules.length;++i){
+            this.rules[i].startCommitBack=this.rules[i].startCommit.substring(this.rules[i].startCommit.length-6,this.rules[i].startCommit.length)
+            this.rules[i].endCommitBack=this.rules[i].endCommit.substring(this.rules[i].endCommit.length-6,this.rules[i].endCommit.length)
+          }
           this.pageAll = res.data.data.pageAll;
         })
         .catch(function (e) {
