@@ -2,6 +2,7 @@
   <page-header>
     <search-category-selector @select="type = $event"/>
   </page-header>
+  <img id='searcher-icon' src='/icon.svg' />
   <searcher :category="searchCategory" @search="doSearch"/>
 </template>
 
@@ -56,6 +57,12 @@ export default {
 }
 
 #searcher::v-deep {
-  margin-top: 30vh;
+  margin-top: 10vh;
+}
+
+#searcher-icon {
+  max-height: 30vh;
+  max-width: 30vw;
+  margin-top: 10vh;
 }
 </style>
