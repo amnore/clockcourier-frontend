@@ -3,22 +3,31 @@
     id="searcher"
     @keyup.enter="$emit('search', paramValues)">
     <el-input
+      class="searcher-groupid"
       type="text"
       placeholder="groupId"
       v-model="paramValues.groupId"
     />
     <el-input
+      class="searcher-artifactid"
       type="text"
       placeholder="artifactId"
       v-model="paramValues.artifactId"
     />
-    <el-button :icon="searchIcon" @click="$emit('search', paramValues)" />
-    <el-upload id="searcher-pom-uploader"
+    <el-button
+      class="searcher-button"
+      :icon="searchIcon"
+      @click="$emit('search', paramValues)"
+    />
+    <el-upload
+      id="searcher-pom-uploader"
+      class="searcher-button"
       ref="uploadRef"
       accept=".xml"
       :auto-upload="false"
       :on-change="doUploadPom">
-      <el-button :icon="uploadIcon" />
+      <el-button :icon="uploadIcon"
+    />
     </el-upload>
   </el-form>
 </template>
@@ -154,21 +163,26 @@ export default {
   border-radius: var(--el-border-radius-base);
 }
 
-#searcher .el-input {
-  margin: auto 20px;
-}
-
 #searcher .el-button {
   margin: auto 5px;
 }
 
-#searcher > * {
+#searcher > .searcher-button {
   height: 65%;
 }
 
-.el-input::v-deep input {
-  font-size: 1.2em;
+#searcher > .el-input {
   height: 100%;
+}
+
+#searcher > .el-input::v-deep input {
+  font-size: 1.5em;
+  height: 100%;
+  box-shadow: none;
+}
+
+.searcher-artifactid {
+  border-left: 1px solid var(--el-border-color-base);
 }
 
 #searcher-pom-uploader::v-deep .el-upload, #searcher-pom-uploader::v-deep .el-upload .el-button {

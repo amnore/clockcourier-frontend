@@ -15,8 +15,7 @@
             :key="dependency.libId"
             :index="dependency.libId.toString()"
           >
-            <span class="dependency-name">{{dependency.artifactId}}</span>
-            <span class="dependency-id">{{dependency.groupId + ':' + dependency.artifactId}}</span>
+            <span class="dependency-name">{{dependency.groupId + ':' + dependency.artifactId}}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -80,8 +79,7 @@
               :key="libId"
               :index="libId.toString()"
             >
-              <span class="dependency-name">{{node.artifactId}}</span>
-              <span class="dependency-id">{{node.groupId + ':' + node.artifactId}}</span>
+              <span class="dependency-name">{{node.groupId + ':' + node.artifactId}}</span>
             </el-menu-item>
           </el-menu>
         </el-card>
@@ -188,8 +186,8 @@ export default {
           'dependencyInfo',
           this.$props,
           [this.dependencies.length, this.dependencies.length + 20],
-          'GroupId',
-          false
+          'RuleNum',
+          true
         ).then(resp => this.dependencies.push(...resp.data.libs))
       }
     },
@@ -392,5 +390,12 @@ export default {
 
 #recommendation-list .el-menu .el-menu-item, #dependency-list .el-menu-item {
   overflow: hidden
+}
+
+::v-deep #searcher {
+  margin-right: 10px;
+  margin-top: 10px;
+  width: 50vw;
+  height: 40px;
 }
 </style>

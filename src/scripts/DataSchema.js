@@ -82,6 +82,7 @@ export const sortableKeys = {
   dependencyInfo: [
     'GroupId',
     'ArtifactId',
+    'RuleNum',
   ]
 }
 
