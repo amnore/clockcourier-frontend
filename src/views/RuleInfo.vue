@@ -96,11 +96,11 @@ export default {
       console.log(page);
       searchRuleBaseInfo(this.id)
         .then((res) => {
-          this.confidence = res.data.data.confidence;
-          this.rs = res.data.data.rs;
-          this.ms = res.data.data.ms;
-          this.ds = res.data.data.ds;
-          this.as = res.data.data.as;
+          this.confidence = Math.floor(res.data.data.confidence*10000)/10000;
+          this.rs = Math.floor(res.data.data.rs*10000)/10000;
+          this.ms = Math.floor(res.data.data.ms*10000)/10000;
+          this.ds = Math.floor(res.data.data.ds*10000)/10000;
+          this.as = Math.floor(res.data.data.as*10000)/10000;
           getLibInfo(res.data.data.fromId)
             .then((res) => {
               this.fromLib=res.data
