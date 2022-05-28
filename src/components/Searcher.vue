@@ -26,8 +26,7 @@
       accept=".xml"
       :auto-upload="false"
       :on-change="doUploadPom">
-      <el-button :icon="uploadIcon"
-    />
+      <el-button :icon="uploadIcon">Upload POM</el-button>
     </el-upload>
   </el-form>
 </template>
