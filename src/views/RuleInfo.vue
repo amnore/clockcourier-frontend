@@ -4,10 +4,10 @@
     <el-main>
       <el-descriptions title="迁移信息" column="4" border>
         <el-descriptions-item label="源库">
-          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+fromLib.mvnCtrUrl)">{{fromLib.artifactId+":"+fromLib.groupId}}</el-link>
+          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+fromLib.mvnCtrUrl)">{{fromLib.groupId+":"+fromLib.artifactId}}</el-link>
         </el-descriptions-item>
         <el-descriptions-item label="目标库">
-          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+toLib.mvnCtrUrl)">{{toLib.artifactId+":"+toLib.groupId}}</el-link>
+          <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+toLib.mvnCtrUrl)">{{toLib.groupId+":"+toLib.artifactId}}</el-link>
         </el-descriptions-item>
         
         <el-descriptions-item label="置信度">
