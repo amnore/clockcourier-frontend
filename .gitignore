@@ -300,3 +300,5 @@ yarn-error.log
 
 # End of https://www.toptal.com/developers/gitignore/api/vuejs,vue,visualstudiocode,intellij+all,macos,node
 
+.envrc
+.direnv
