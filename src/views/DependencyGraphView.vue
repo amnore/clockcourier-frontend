@@ -107,11 +107,14 @@ const graphOptions = {
   defaultNode: {
     type: 'circle',
     size: 50,
+    style: {
+      cursor: 'pointer',
+    },
   },
   defaultEdge: {
     type: 'quadratic',
     style: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
   },
   animate: true,
@@ -275,7 +278,21 @@ export default {
     gotoMigrationRulePage() {
       const _this = this
       return ev => {
-        const model = ev.item._cfg.model
+        const cfg = ev.item._cfg
+        let model // server returned data of the edge
+
+        if (cfg.type === 'edge') {
+          model = cfg.model
+        } else /* cfg.type === 'node' */ {
+          const edges = cfg.edges
+          if (edges.length > 1) {
+            // is the source repo
+            return
+          } else {
+            model = edges[0]._cfg.model
+          }
+        }
+
         const edge = _this.edges[parseInt(model.source)][parseInt(model.target)]
         _this.$router.push({
           name: 'RuleInfo',
@@ -325,6 +342,7 @@ export default {
 
     this.graph.on('node:mouseover', this.showDependencyInfo())
     this.graph.on('node:mouseout', this.hideDependencyInfo())
+    this.graph.on('node:click', this.gotoMigrationRulePage())
     this.graph.on('edge:mouseover', this.showMigrationInfo())
     this.graph.on('edge:mouseout', this.hideMigrationInfo())
     this.graph.on('edge:click', this.gotoMigrationRulePage())
