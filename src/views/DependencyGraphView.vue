@@ -169,7 +169,7 @@ export default {
     doSearch(params) {
       this.$router.push({
         name: 'DependencyGraph',
-        params,
+        query: params,
       })
     },
     loadMoreDependencies() {

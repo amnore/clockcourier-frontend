@@ -42,7 +42,7 @@ export default {
     doSearch(paramValues) {
       this.$router.push({
         name: searchPaths[this.type],
-        params: paramValues,
+        query: paramValues,
       })
     },
   },
