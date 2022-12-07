@@ -66,7 +66,7 @@
             <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
           </template>
         </el-popover>
-        <el-card
+        <!--<el-card
           id="recommendation-list"
           v-if="selectedDependency !== null"
         >
@@ -82,7 +82,7 @@
               <span class="dependency-name">{{node.groupId + ':' + node.artifactId}}</span>
             </el-menu-item>
           </el-menu>
-        </el-card>
+        </el-card>-->
       </el-main>
     </el-container>
   </el-container>
@@ -110,6 +110,11 @@ const graphOptions = {
     style: {
       cursor: 'pointer',
     },
+    labelCfg: {
+      style: {
+        cursor: 'pointer',
+      },
+    },
   },
   defaultEdge: {
     type: 'quadratic',
@@ -124,8 +129,8 @@ const dependencyInfoLabels = {
   groupId: 'GroupId',
   artifactId: 'ArtifactId',
   transitiveConfidence: '推荐度',
-  mvnCtrUrl: 'Maven Central 地址',
-  repoUrl: '项目地址',
+  //mvnCtrUrl: 'Maven Central 地址',
+  //repoUrl: '项目地址',
   description: '描述',
 }
 
@@ -223,7 +228,7 @@ export default {
             source: n.fromLibInfo.libId.toString(),
             target: e.toId.toString(),
             style: {
-              lineWidth: Math.min(Math.max(10 * e.confidence, 0.5), 10),
+              lineWidth: Math.min(Math.max(10 * e.confidence, 3), 10),
               endArrow: {
                 path: G6.Arrow.vee(Math.min(Math.max(10 * e.confidence, 7), 10), Math.min(Math.max(10 * e.confidence, 10), 10), 0),
                 d: 0,
