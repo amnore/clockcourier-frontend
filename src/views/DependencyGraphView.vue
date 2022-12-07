@@ -58,7 +58,7 @@
                 :key="key"
                 :label="migrationInfoLabels[key]"
               >
-                {{value}}
+                {{this.formatEdgeLabel(value)}}
               </el-descriptions-item>
             </template>
           </el-descriptions>
@@ -171,6 +171,13 @@ export default {
     }
   },
   methods: {
+    formatEdgeLabel(value) {
+      if (typeof(value) === 'number') {
+        return value.toFixed(3)
+      } else {
+        return value
+      }
+    },
     doSearch(params) {
       this.$router.push({
         name: 'DependencyGraph',
