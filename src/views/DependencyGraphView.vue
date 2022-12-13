@@ -11,11 +11,16 @@
           @select="loadGraph"
         >
           <el-menu-item
+            class="dependency-item"
             v-for="dependency in dependencies"
             :key="dependency.libId"
             :index="dependency.libId.toString()"
           >
-            <span class="dependency-name">{{dependency.groupId + ':' + dependency.artifactId}}</span>
+            <div>
+              <p class="dependency-group-id">{{dependency.groupId}}</p>
+              <p class="dependency-artifact-id">{{dependency.artifactId}}</p>
+            </div>
+            <!-- <span class="dependency-name">{{dependency.groupId + ':' + dependency.artifactId}}</span> -->
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -28,7 +33,7 @@
           width="200px"
           :popper-options="popoverOptions"
         >
-          <el-descriptions title="项目信息" :column="1">
+          <el-descriptions title="Project Information" :column="1">
             <template v-for="(value, key) in dependencyInfo">
               <el-descriptions-item
                 v-if="dependencyInfoLabels[key]"
@@ -43,29 +48,29 @@
             <div id="dependency-info-anchor" ref="dependencyInfoAnchor"/>
           </template>
         </el-popover>
-        <el-popover
-          id="migration-info"
-          ref="migrationInfo"
-          :visible="migrationInfoVisible"
-          placement="top"
-          width="200px"
-          :popper-options="popoverOptions"
-        >
-          <el-descriptions title="迁移规则信息" :column="1">
-            <template v-for="(value, key) in migrationInfo">
-              <el-descriptions-item
-                v-if="migrationInfoLabels[key]"
-                :key="key"
-                :label="migrationInfoLabels[key]"
-              >
-                {{this.formatEdgeLabel(value)}}
-              </el-descriptions-item>
-            </template>
-          </el-descriptions>
-          <template #reference>
-            <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
-          </template>
-        </el-popover>
+        <!-- <el-popover
+             id="migration-info"
+             ref="migrationInfo"
+             :visible="migrationInfoVisible"
+             placement="top"
+             width="200px"
+             :popper-options="popoverOptions"
+             >
+             <el-descriptions title="迁移规则信息" :column="1">
+             <template v-for="(value, key) in migrationInfo">
+             <el-descriptions-item
+             v-if="migrationInfoLabels[key]"
+             :key="key"
+             :label="migrationInfoLabels[key]"
+             >
+             {{this.formatEdgeLabel(value)}}
+             </el-descriptions-item>
+             </template>
+             </el-descriptions>
+             <template #reference>
+             <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
+             </template>
+             </el-popover> -->
         <!--<el-card
           id="recommendation-list"
           v-if="selectedDependency !== null"
@@ -119,7 +124,7 @@ const graphOptions = {
   defaultEdge: {
     type: 'quadratic',
     style: {
-      cursor: 'pointer',
+      // cursor: 'pointer',
     },
   },
   animate: true,
@@ -131,7 +136,7 @@ const dependencyInfoLabels = {
   transitiveConfidence: '推荐度',
   //mvnCtrUrl: 'Maven Central 地址',
   //repoUrl: '项目地址',
-  description: '描述',
+  description: 'Description',
 }
 
 const migrationInfoLabels = {
@@ -273,12 +278,13 @@ export default {
     showMigrationInfo() {
       const _this = this
       return ev => {
-        const anchor = _this.$refs.migrationInfoAnchor
-        const model = ev.item._cfg.model
-
-        this.moveAnchor(ev, anchor, ev.canvasX, ev.canvasY)
-        _this.migrationInfoVisible = true
-        _this.migrationInfo = _this.edges[parseInt(model.source)][parseInt(model.target)]
+        _this, ev
+        // const anchor = _this.$refs.migrationInfoAnchor
+        // const model = ev.item._cfg.model
+        //
+        // this.moveAnchor(ev, anchor, ev.canvasX, ev.canvasY)
+        // _this.migrationInfoVisible = true
+        // _this.migrationInfo = _this.edges[parseInt(model.source)][parseInt(model.target)]
       }
     },
     hideMigrationInfo() {
@@ -427,5 +433,19 @@ export default {
   margin-top: 10px;
   width: 50vw;
   height: 40px;
+}
+
+.dependency-group-id, .dependency-artifact-id {
+  margin: 0;
+  line-height: 1em;
+  text-align: start;
+}
+
+.dependency-group-id {
+  font-size: 0.8em;
+}
+
+.dependency-item {
+  border-bottom: 1px solid var(--el-border-color);
 }
 </style>
