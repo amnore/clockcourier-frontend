@@ -111,7 +111,7 @@ export default {
       this.$refs.uploadRef.clearFiles()
       this.$router.push({
         name: 'DependencyGraph',
-        params: {
+        query: {
           pomUrl: fileUrl
         }
       })
