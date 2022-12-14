@@ -396,6 +396,6 @@ export default {
 }
 
 .dependency-item {
-  border-bottom: 1px solid var(--el-border-color);
+  border-bottom: 1px solid #dcdfe6;
 }
 </style>
