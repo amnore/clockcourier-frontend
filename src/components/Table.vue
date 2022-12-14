@@ -11,7 +11,7 @@
       v-for="item in unexpandInfo"
       :key="item"
       :sortable="item.sortable"
-      :label="item.columnName"
+      :label="$t(item.columnName)"
       :prop="item.keyword"
     >
       <template #default="scope">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { dateFormatter } from "@/scripts/DateFormatter.js";
+import { dateFormatter } from "@/scripts/dateFormatter.js";
 import MyDescription from "./Description.vue";
 export default {
   name: "MyTable",

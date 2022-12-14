@@ -1,5 +1,5 @@
-import { sortableKeys } from '@/scripts/DataSchema.js'
-import { backendUrl } from './Url'
+import { sortableKeys } from '@/scripts/dataSchema.js'
+import { backendUrl } from '@/api/url.js'
 
 const queryPath = {
   // mavenProjectInfo: '/project/mvn/query',

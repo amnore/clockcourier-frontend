@@ -1,4 +1,4 @@
-import { backendUrl } from './Url';
+import { backendUrl } from '@/api/url.js';
 import axios from "axios";
 
 const basePath = `/migration/mvn/rule/`

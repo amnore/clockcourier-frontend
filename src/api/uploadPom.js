@@ -1,4 +1,4 @@
-import { backendUrl } from '@/api/Url.js'
+import { backendUrl } from '@/api/url.js'
 
 export default async function uploadPom(content) {
   return fetch(`${backendUrl}/library/mvn/pom/analyse`, {

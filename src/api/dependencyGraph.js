@@ -1,4 +1,4 @@
-import { backendUrl } from './Url'
+import { backendUrl } from '@/api/url.js'
 
 export function getGraph(libId) {
   return fetch(`${backendUrl}/migration/mvn/graph/${libId}/get`, {

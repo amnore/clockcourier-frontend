@@ -5,13 +5,13 @@
     <el-input
       class="searcher-groupid"
       type="text"
-      placeholder="groupId"
+      :placeholder='$t("message.groupId")'
       v-model="paramValues.groupId"
     />
     <el-input
       class="searcher-artifactid"
       type="text"
-      placeholder="artifactId"
+      :placeholder='$t("message.artifactId")'
       v-model="paramValues.artifactId"
     />
     <el-button
@@ -26,13 +26,15 @@
       accept=".xml"
       :auto-upload="false"
       :on-change="doUploadPom">
-      <el-button :icon="uploadIcon">Upload POM</el-button>
+      <el-button :icon="uploadIcon">
+        {{ $t("message.uploadPom") }}
+      </el-button>
     </el-upload>
   </el-form>
 </template>
 
 <script>
-import { searchParams } from "@/scripts/DataSchema.js";
+import { searchParams } from "@/scripts/dataSchema.js";
 import SearcherBooleanField from "@/components/searcher-fields/SearcherBooleanField.vue";
 import SearcherTextField from "@/components/searcher-fields/SearcherTextField.vue";
 import SearcherPomField from "@/components/searcher-fields/SearcherPomField.vue";

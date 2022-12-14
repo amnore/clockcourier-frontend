@@ -2,49 +2,35 @@
   <page-header></page-header>
   <el-container>
     <el-main>
-      <el-descriptions title="迁移信息" column="4" border>
-        <el-descriptions-item label="源库">
+      <el-descriptions :title="$t('message.migInfo')" column="4" border>
+        <el-descriptions-item :label="$t('message.sourceLib')">
           <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+fromLib.mvnCtrUrl)">{{fromLib.groupId+":"+fromLib.artifactId}}</el-link>
         </el-descriptions-item>
-        <el-descriptions-item label="目标库">
+        <el-descriptions-item :label="$t('message.targetLib')">
           <el-link type="primary" v-on:click="$router.push('/jump-to-out?url='+toLib.mvnCtrUrl)">{{toLib.groupId+":"+toLib.artifactId}}</el-link>
         </el-descriptions-item>
-        
-        <el-descriptions-item label="置信度">
+        <el-descriptions-item :label="$t('message.confidence')">
           {{confidence}}
         </el-descriptions-item>
-        <el-descriptions-item label=" ">
-           
-        </el-descriptions-item>
-        <el-descriptions-item label="Rule Support">
-          {{rs}}
-        </el-descriptions-item>
-        <el-descriptions-item label="Distance Support">
-          {{ds}}
-        </el-descriptions-item>
-        <el-descriptions-item label="API Support">
-          {{as}}
-        </el-descriptions-item>
-        <el-descriptions-item label="Message Support">
-          {{ms}}
-        </el-descriptions-item>
       </el-descriptions>
-      <my-table :columnInfo="columnInfo" :contentData="rules"></my-table>
+      <my-table class="detail" :columnInfo="columnInfo" :contentData="rules"></my-table>
       <page :goPage="goPage" :pageAll="pageAll"></page>
     </el-main>
   </el-container>
 </template>
 
 <script>
-import MyTable from "../components/Table.vue";
-import Page from "../components/Page.vue";
+import MyTable from "@/components/Table.vue";
+import Page from "@/components/Page.vue";
 import PageHeader from "@/components/PageHeader.vue";
-import { columnInfos } from "../scripts/Constant.js";
-import { searchRuleInstance, searchRuleBaseInfo } from "../api/SearchRule";
-import { getLibInfo } from "../api/DependencyGraph.js";
+import { columnInfos } from "@/scripts/constant.js";
+import { searchRuleInstance, searchRuleBaseInfo } from "@/api/searchRule.js";
+import { getLibInfo } from "@/api/dependencyGraph.js";
+
 export default {
   name: "RuleInfo",
   components: { MyTable, Page, PageHeader },
+
   data() {
     return {
       id: 0,
@@ -71,16 +57,19 @@ export default {
       columnInfo: columnInfos.rulesColumnInfo,
     };
   },
+
   watch: {
     $route: "refresh",
   },
+
   methods: {
     refresh() {
       this.getRules(1);
     },
+
     getRules(page) {
       this.id = this.$route.params.id;
-      //TODO：获取rule列表
+      // 获取 rules 列表
       searchRuleInstance(this.id, page)
         .then((res) => {
           this.rules = res.data.data.instances;
@@ -122,12 +111,14 @@ export default {
         });
       return;
     },
+
     setPageAll(count, pageSize) {
       this.pageAll = Math.ceil(count / pageSize);
       if (this.pageAll < 1) {
         this.pageAll = 1;
       }
     },
+
     goPage(index) {
       if (Number(index) > 0 && Number(index) <= this.pageAll) {
         this.page = Number(index);
@@ -135,6 +126,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.refresh();
   },
@@ -143,6 +135,10 @@ export default {
 
 <style scoped>
 .el-main {
-  margin: 5%;
+  margin: 2%;
+}
+
+.detail {
+  margin-top: 2%;
 }
 </style>

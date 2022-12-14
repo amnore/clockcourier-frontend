@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { dateFormatter } from "@/scripts/DateFormatter.js";
+import { dateFormatter } from "@/scripts/dateFormatter.js";
 export default {
   name: "MyDescription",
   props: {

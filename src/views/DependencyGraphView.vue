@@ -1,26 +1,26 @@
 <template>
   <el-container direction="vertical">
     <page-header>
-      <searcher :init-param-values="$props" category="dependencyInfo" @search="doSearch"/>
+      <searcher
+        :init-param-values="$props"
+        category="dependencyInfo"
+        @search="doSearch"/>
     </page-header>
     <el-container>
       <el-aside>
         <el-menu
           id="dependency-list"
           v-infinite-scroll="loadMoreDependencies"
-          @select="loadGraph"
-        >
+          @select="loadGraph">
           <el-menu-item
             class="dependency-item"
             v-for="dependency in dependencies"
             :key="dependency.libId"
-            :index="dependency.libId.toString()"
-          >
+            :index="dependency.libId.toString()">
             <div>
               <p class="dependency-group-id">{{dependency.groupId}}</p>
               <p class="dependency-artifact-id">{{dependency.artifactId}}</p>
             </div>
-            <!-- <span class="dependency-name">{{dependency.groupId + ':' + dependency.artifactId}}</span> -->
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -31,15 +31,13 @@
           :visible="dependencyInfoVisible"
           placement="top"
           width="200px"
-          :popper-options="popoverOptions"
-        >
-          <el-descriptions title="Project Information" :column="1">
+          :popper-options="popoverOptions">
+          <el-descriptions :title="$t('message.projectInfo')" :column="1">
             <template v-for="(value, key) in dependencyInfo">
               <el-descriptions-item
                 v-if="dependencyInfoLabels[key]"
                 :key="key"
-                :label="dependencyInfoLabels[key]"
-              >
+                :label='$t(dependencyInfoLabels[key])'>
                 {{value}}
               </el-descriptions-item>
             </template>
@@ -48,46 +46,6 @@
             <div id="dependency-info-anchor" ref="dependencyInfoAnchor"/>
           </template>
         </el-popover>
-        <!-- <el-popover
-             id="migration-info"
-             ref="migrationInfo"
-             :visible="migrationInfoVisible"
-             placement="top"
-             width="200px"
-             :popper-options="popoverOptions"
-             >
-             <el-descriptions title="迁移规则信息" :column="1">
-             <template v-for="(value, key) in migrationInfo">
-             <el-descriptions-item
-             v-if="migrationInfoLabels[key]"
-             :key="key"
-             :label="migrationInfoLabels[key]"
-             >
-             {{this.formatEdgeLabel(value)}}
-             </el-descriptions-item>
-             </template>
-             </el-descriptions>
-             <template #reference>
-             <div id="migration-info-anchor" ref="migrationInfoAnchor"/>
-             </template>
-             </el-popover> -->
-        <!--<el-card
-          id="recommendation-list"
-          v-if="selectedDependency !== null"
-        >
-          <template #header>
-            <div>推荐迁移列表</div>
-          </template>
-          <el-menu @select="focusNode">
-            <el-menu-item
-              v-for="(node, libId) in otherNodes"
-              :key="libId"
-              :index="libId.toString()"
-            >
-              <span class="dependency-name">{{node.groupId + ':' + node.artifactId}}</span>
-            </el-menu-item>
-          </el-menu>
-        </el-card>-->
       </el-main>
     </el-container>
   </el-container>
@@ -96,11 +54,11 @@
 <script>
 import PageHeader from '@/components/PageHeader.vue'
 import Searcher from '@/components/Searcher.vue'
-import { searchParams } from '@/scripts/DataSchema.js'
-import search from '@/api/Search.js'
-import { getGraph } from '@/api/DependencyGraph.js'
+import { searchParams } from '@/scripts/dataSchema.js'
+import search from '@/api/search.js'
+import { getGraph } from '@/api/dependencyGraph.js'
 import G6 from '@antv/g6'
-import uploadPom from '@/api/UploadPom.js'
+import uploadPom from '@/api/uploadPom.js'
 
 const graphOptions = {
   modes: { default: [ 'drag-canvas', 'zoom-canvas' ] },
@@ -131,12 +89,10 @@ const graphOptions = {
 }
 
 const dependencyInfoLabels = {
-  groupId: 'GroupId',
-  artifactId: 'ArtifactId',
-  transitiveConfidence: '推荐度',
-  //mvnCtrUrl: 'Maven Central 地址',
-  //repoUrl: '项目地址',
-  description: 'Description',
+  groupId: 'message.groupId',
+  artifactId: 'message.artifactId',
+  transitiveConfidence: 'message.recommendationIndex',
+  description: 'message.description',
 }
 
 const migrationInfoLabels = {
@@ -279,12 +235,6 @@ export default {
       const _this = this
       return ev => {
         _this, ev
-        // const anchor = _this.$refs.migrationInfoAnchor
-        // const model = ev.item._cfg.model
-        //
-        // this.moveAnchor(ev, anchor, ev.canvasX, ev.canvasY)
-        // _this.migrationInfoVisible = true
-        // _this.migrationInfo = _this.edges[parseInt(model.source)][parseInt(model.target)]
       }
     },
     hideMigrationInfo() {
